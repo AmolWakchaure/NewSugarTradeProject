@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:background="@drawable/new_style_container"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="Requested At: "
+            android:textColor="@color/color_label"
+            android:textSize="@dimen/_12sdp"
+             />
+
+        <TextView
+            android:id="@+id/requested__tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="62452352"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/_12sdp" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/required_quantity_tvlbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="Required Quantity : "
+            android:textColor="@color/color_label"
+            android:textSize="@dimen/_12sdp"
+             />
+
+
+        <TextView
+            android:id="@+id/required_quantity_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="62452352"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/_12sdp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/crc55"
+        android:text="(At the time of booking) "
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/_10sdp"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="Season : "
+            android:textColor="@color/color_label"
+            android:textSize="@dimen/_12sdp"
+           />
+
+
+        <TextView
+            android:id="@+id/season_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="62452352"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/_12sdp" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="Grade: "
+            android:textColor="@color/color_label"
+            android:textSize="@dimen/_12sdp"
+             />
+
+
+        <TextView
+            android:id="@+id/grade_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="62452352"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/_12sdp" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/offered_quantity_tvlbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="Offered Quantity: "
+            android:textColor="@color/color_label"
+            android:textSize="@dimen/_12sdp"
+             />
+
+
+        <TextView
+            android:id="@+id/offered_quantity_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="62452352"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/_12sdp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="Price/Qtl: "
+            android:textColor="@color/color_label"
+            android:textSize="@dimen/_12sdp"
+            />
+
+
+        <TextView
+            android:id="@+id/price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/crc55"
+            android:text="62452352"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/_12sdp" />
+
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/view_id"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@android:color/darker_gray"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/MyRequestAdapterBtnAccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:textSize="@dimen/_20sdp"
+        android:background="@color/color_white"
+        android:text="Accepted"
+        android:textColor="@color/green_500" />
+
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.DetailsShowActivity"
+    tools:showIn="@layout/activity_details_show">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_white"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/_20sdp"
+        android:paddingRight="@dimen/_20sdp">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="Vehicle No."
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/DetailsShowActivityEdtVehicleNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:inputType="textNoSuggestions|textCapCharacters"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/color_black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="Driver Contact No"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/DetailsShowActivityEdtDriverNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/color_black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="Quantity in Qtl"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/DetailsShowActivityEdtQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:inputType="number"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/color_black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="Date of arrival"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/DetailsShowActivityEdtDateArrival"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/color_black" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="Bill To"
+                        android:textAllCaps="true"
+                        android:textColor="@color/color_black"
+                        android:textSize="@dimen/_12sdp" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="Name"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/DetailsShowActivityEdtBillName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:inputType="textNoSuggestions"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/color_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:text="Address"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/DetailsShowActivityEdtBillAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:inputType="textNoSuggestions"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/color_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="GSTIN"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/DetailsShowActivityEdtBillGST"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:inputType="textNoSuggestions"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/color_black" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="Ship To"
+                        android:textAllCaps="true"
+                        android:textColor="@color/color_black"
+                        android:textSize="@dimen/_12sdp" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="Name"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/DetailsShowActivityEdtShipName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:inputType="textNoSuggestions"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/color_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="Address"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/DetailsShowActivityEdtShipAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:inputType="textNoSuggestions"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/color_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:text="GSTIN"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/DetailsShowActivityEdtShipGST"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:inputType="textNoSuggestions"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_20sdp"
+                        android:textColor="@color/color_black" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

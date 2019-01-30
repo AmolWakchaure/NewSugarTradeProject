@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_200sdp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_5sdp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:text="Filter By"
+            android:textColor="@color/color_black"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/RadioButtonOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Grade" />
+
+            <Spinner
+                android:id="@+id/FilterDialogSpnGrade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:background="@drawable/new_style_container"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:theme="@style/mySpinnerItemStyle"
+                android:visibility="gone"></Spinner>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <RadioButton
+                android:id="@+id/RadioButtonTwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Season" />
+
+
+            <Spinner
+                android:id="@+id/FilterDialogSpnSeason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:background="@drawable/new_style_container"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:theme="@style/mySpinnerItemStyle"
+                android:visibility="gone"></Spinner>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <RadioButton
+                android:id="@+id/RadioButtonThree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="State And District" />
+
+            <LinearLayout
+                android:id="@+id/FilterDialogLinearState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <Spinner
+                    android:id="@+id/FilterDialogSpnState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:entries="@array/state_list"
+                    android:theme="@style/mySpinnerItemStyle"></Spinner>
+
+                <Spinner
+                    android:id="@+id/FilterDialogSpnDistrict"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:theme="@style/mySpinnerItemStyle"></Spinner>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <RadioButton
+            android:id="@+id/RadioButtonFour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price Low to high" />
+
+
+        <RadioButton
+            android:id="@+id/RadioButtonFive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price High to Low" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_10sdp">
+
+            <Button
+                android:id="@+id/FilterDialogBtnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/btn_rounded_green_300"
+                android:padding="@dimen/_10sdp"
+                android:text="CANCEL"
+                android:textAllCaps="true"
+                android:textColor="@color/color_white" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".1"></LinearLayout>
+
+            <Button
+                android:id="@+id/FilterDialogBtnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/btn_rounded_green_300"
+                android:padding="@dimen/_10sdp"
+                android:text="OK"
+                android:textAllCaps="true"
+                android:textColor="@color/color_white" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

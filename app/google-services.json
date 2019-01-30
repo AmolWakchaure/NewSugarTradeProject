@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "2542936244",
+    "firebase_url": "https://anekantcatalog-2ba2f.firebaseio.com",
+    "project_id": "anekantcatalog-2ba2f",
+    "storage_bucket": "anekantcatalog-2ba2f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2542936244:android:afbe9b61412c21c4",
+        "android_client_info": {
+          "package_name": "com.prosolstech.sugartrade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2542936244-tlomrjppd77gd6o50fejc4svcp53edma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prosolstech.sugartrade",
+            "certificate_hash": "d8f504912aab157800f939bdc9ff564c896f745e"
+          }
+        },
+        {
+          "client_id": "2542936244-de7m9kk3btk89apibpqsn7iielnk5vdj.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "2542936244-de7m9kk3btk89apibpqsn7iielnk5vdj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiERRTgTEUsT8g1jlz7-RzbHjItMqelH0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2542936244-de7m9kk3btk89apibpqsn7iielnk5vdj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

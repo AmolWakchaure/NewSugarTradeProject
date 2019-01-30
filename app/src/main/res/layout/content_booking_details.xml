@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.BookingDetailsActivity"
+    tools:showIn="@layout/activity_booking_details">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/_20sdp"
+        android:paddingRight="@dimen/_20sdp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+
+                <ImageView
+                    android:id="@+id/SellerListAdapterImgUnFav"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="5pt"
+                    android:layout_marginTop="5pt"
+                    android:src="@drawable/yellow"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Company Name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtCompanyName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Posted At:"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/post_date_time_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Confirmed At:"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/confir_date_time_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+
+                <TextView
+                    android:id="@+id/original_qty_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Original Required Qty"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/original_qty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+                <TextView
+                    android:id="@+id/aquired_qty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Total Acquired Quantity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtAquiredQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <TextView
+                    android:id="@+id/required_qty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Current Required Quantity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <TextView
+                    android:id="@+id/available_qty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="total available Quantity"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtAvailableQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Category"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Season Year"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtProductiionYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Price Per Qtl"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtPricePerQtl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <TextView
+                    android:id="@+id/due_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Due Date of Delivery"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/due_date_of_lifting_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <LinearLayout
+                    android:id="@+id/emdHideLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/emd_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:text="EMD / Qtl"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/emd_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/overlay_dark_40"
+                        android:textColorHint="@color/overlay_dark_40" />
+
+                </LinearLayout>
+
+
+
+                <TextView
+                    android:id="@+id/start_time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Offer Start Time"
+                    android:textAllCaps="true"
+
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+
+                <EditText
+                    android:id="@+id/start_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40"
+                    android:visibility="visible" />
+
+
+
+                <TextView
+                    android:id="@+id/end_time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Offer End Time"
+                    android:textAllCaps="true"
+
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+
+                <EditText
+                    android:id="@+id/end_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40"
+                    android:visibility="visible" />
+
+
+
+                <TextView
+                    android:id="@+id/validity_time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Offer validity Time"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+
+                <EditText
+                    android:id="@+id/validity_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40"
+                    android:visibility="visible" />
+
+
+
+                <TextView
+                    android:id="@+id/type_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Type"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40"
+                    android:visibility="gone" />
+
+
+
+
+
+
+
+                <TextView
+                    android:id="@+id/due_pay_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Due Date of Payment"
+                    android:textAllCaps="true"
+                    android:visibility="gone"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/due_date_of_payment_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:visibility="gone"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Remark"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/remark_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_weight="1.5"
+                        android:text="Total Amount with GST : "
+                        android:textAllCaps="true"
+                        android:textColor="@color/color_black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/BookingDetailsActivityTxtTotalAmount"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_7sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textColor="@color/color_black"
+                        android:textSize="@dimen/_12sdp" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/crc55"
+                    android:gravity="center"
+                    android:text="Bank Details"
+                    android:textAllCaps="true"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Contact No"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/BookingDetailsActivityEdtContactNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint=""
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/overlay_dark_40"
+                        android:textColorHint="@color/overlay_dark_40" />
+
+                    <ImageView
+                        android:id="@+id/BookingDetailsActivityImgCall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:src="@drawable/phone" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Account Name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtAccountName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Account Number"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtAccountNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Bank Name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtBankName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="GSTIN"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtGstin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="IFSC CODE"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/BookingDetailsActivityEdtIFSC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/crc55"
+                    android:gravity="center"
+                    android:text="Vehicle Info"
+                    android:textAllCaps="true"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/BookingDetailsActivityBtnSend"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_rounded_green_300"
+                        android:text="Send"
+                        android:textAllCaps="false"
+                        android:textColor="@color/color_white"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <Button
+                        android:id="@+id/BookingDetailsActivityBtnView"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_rounded_green_300"
+                        android:text="View"
+                        android:textAllCaps="false"
+                        android:textColor="@color/color_white"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/BookingDetailsActivityBtnReview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/btn_rounded_green_300"
+                    android:text="Rating/Review"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/_12sdp" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/grp1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home" />
+    </group>
+
+
+
+    <group
+        android:id="@+id/grp56"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_place"
+            android:title="Place Offer" />
+    </group>
+
+    <group
+        android:id="@+id/grpfdgdf"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_bid"
+            android:title="My Bids"
+            android:visible="true"/>
+    </group>
+
+
+
+    <group
+        android:id="@+id/grp2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_all_seller_post"
+            android:visible="false"
+            android:title="All Seller Offer Post" />
+    </group>
+
+
+
+
+
+    <group
+        android:id="@+id/grp3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_all_seller_list"
+            android:title="All Seller List"
+            android:visible="false"/>
+    </group>
+
+
+    <group
+        android:id="@+id/grp4"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_all_buyer_list"
+            android:title="All Buyer List"
+            android:visible="false"/>
+    </group>
+
+    <group
+        android:id="@+id/grp5"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_profile"
+            android:title="My Profile" />
+    </group>
+
+    <group
+        android:id="@+id/grp6"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_notification"
+            android:title="Notifications" />
+    </group>
+
+    <group
+        android:id="@+id/grp7"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_ask_query"
+            android:title="Ask Query" />
+    </group>
+
+    <group
+        android:id="@+id/grp8"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_contact_us"
+            android:title="Contact Us" />
+    </group>
+
+    <group
+        android:id="@+id/grp9"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_help"
+            android:title="Help" />
+    </group>
+    <group
+        android:id="@+id/grp10"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_terms_con"
+            android:title="Terms And Conditions" />
+    </group>
+    <group
+        android:id="@+id/grp11"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_privacy_policy"
+            android:title="Privacy Policy" />
+    </group>
+
+    <group
+        android:id="@+id/grp12"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Logout" />
+    </group>
+</menu>

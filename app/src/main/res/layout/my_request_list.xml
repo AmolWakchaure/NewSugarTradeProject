@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:background="@drawable/new_style_container">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
+
+        <ImageView
+            android:id="@+id/SellerListAdapterImgUnFav"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/_80sdp"
+            android:src="@drawable/yellow"
+
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="Requested At : "
+                android:textColor="@color/color_label"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/MyRequestAdapterTxtDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="fdgdfgdg"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/_12sdp" />
+
+
+
+
+
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_7sdp"
+
+            android:layout_marginRight="@dimen/_8sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="Co. Name : "
+                android:textColor="@color/color_label"
+                android:textSize="@dimen/_12sdp"
+                 />
+
+            <TextView
+                android:id="@+id/MyRequestAdapterTxtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="fgdg"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_7sdp"
+
+            android:layout_marginRight="@dimen/_8sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/currentReqQty_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="Current Required Qty : "
+                android:textColor="@color/color_label"
+                android:textSize="@dimen/_12sdp"
+                />
+
+            <TextView
+                android:id="@+id/MyRequestAdapterCurrentReqQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="fgdg"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_7sdp"
+
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="Available Qty: "
+                android:textColor="@color/color_label"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/MyRequestAdapterTxtReqQty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="ggfdgdgd"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/crc55"
+                    android:text="Price/Qtl: "
+                    android:textColor="@color/color_label"
+                    android:textSize="@dimen/_12sdp" />
+
+                <TextView
+                    android:id="@+id/MyRequestAdapterTxtRatePerQtl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/crc55"
+                    android:text="gfg"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/allot_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/crc55"
+                    android:text="Alloted: "
+                    android:textColor="@color/color_label"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/MyRequestAdapterEdtAllocate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:fontFamily="@font/crc55"
+                    android:text=""
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/_12sdp" />
+
+            </LinearLayout>
+        <!--</LinearLayout>-->
+
+        <LinearLayout
+            android:id="@+id/MyRequestAdapterLinearLayoutBothBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/MyRequestAdapterBtnAccept"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_rounded_green_300"
+                android:text="Accept"
+                android:textColor="@color/color_white" />
+
+            <Button
+                android:id="@+id/MyRequestAdapterBtnReject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_rounded_green_300"
+                android:text="Reject"
+                android:textColor="@color/color_white" />
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/view_id"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@android:color/darker_gray"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/MyRequestAdapterLinearLayoutSingleBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <Button
+                android:id="@+id/MyRequestAdapterBtnAcceptReject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="View Vehicle Info"
+                android:textColor="@color/color_black"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

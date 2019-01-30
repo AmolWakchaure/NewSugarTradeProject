@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:font="http://schemas.android.com/tools"
+    android:id="@+id/OverwriteLay"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialogue_bg"
+        android:padding="10dp">
+
+
+        <LinearLayout
+            android:id="@+id/diaTitleLay"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/dia_msg_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Test"
+                android:textColor="@color/color_black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                font:customFont="@string/font_latto_bold" />
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/diaTitleLay"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+
+            <LinearLayout
+                android:id="@+id/linearLay"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/yes"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.45"
+                    android:background="@drawable/btn_rounded_green_300"
+                    android:gravity="center"
+                    android:text="Ok"
+                    android:textColor="@color/color_white"
+                    font:customFont="@string/" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="10dip"
+                android:layout_below="@+id/linearLay" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
