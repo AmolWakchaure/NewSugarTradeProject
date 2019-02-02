@@ -37,42 +37,51 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/hideLayout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/required_quantity_tvlbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="Required Quantity : "
+                android:textColor="@color/color_label"
+                android:textSize="@dimen/_12sdp"
+                />
+
+
+            <TextView
+                android:id="@+id/required_quantity_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="62452352"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/required_quantity_tvlbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/crc55"
-            android:text="Required Quantity : "
-            android:textColor="@color/color_label"
-            android:textSize="@dimen/_12sdp"
-             />
-
-
-        <TextView
-            android:id="@+id/required_quantity_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/crc55"
-            android:text="62452352"
+            android:text="(At the time of booking) "
             android:textColor="@color/color_black"
-            android:textSize="@dimen/_12sdp" />
-
+            android:textSize="@dimen/_10sdp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/crc55"
-        android:text="(At the time of booking) "
-        android:textColor="@color/color_black"
-        android:textSize="@dimen/_10sdp"
-        android:textStyle="bold" />
 
 
     <LinearLayout
@@ -201,11 +210,12 @@
 
     <TextView
         android:id="@+id/MyRequestAdapterBtnAccept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="25pt"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:textSize="@dimen/_20sdp"
+        android:gravity="center"
         android:background="@color/color_white"
         android:text="Accepted"
         android:textColor="@color/green_500" />

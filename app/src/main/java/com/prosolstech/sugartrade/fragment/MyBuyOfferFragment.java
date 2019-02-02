@@ -81,13 +81,16 @@ public class MyBuyOfferFragment extends Fragment {
                         startActivity(new Intent(context, PlaceSellBidActivity.class));
                     }
 
-                } else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
+                }
+                else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer"))
+                {
 
                     if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false)) {
                         Toast.makeText(context, "Create Buyer offer", Toast.LENGTH_SHORT).show();
                        // startActivity(new Intent(context, PlaceBuyBidActivity.class));
                         Intent in = new Intent(context, PlaceBuyBidActivity.class);
                         in.putExtra("flag", "insert");
+                        in.putExtra("post_status", "single_postxd");
                         in.putExtra("data", "");
                         startActivity(in);
                         ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
@@ -95,6 +98,7 @@ public class MyBuyOfferFragment extends Fragment {
                        // startActivity(new Intent(context, PlaceBuyBidActivity.class));
                         Intent in = new Intent(context, PlaceBuyBidActivity.class);
                         in.putExtra("flag", "insert");
+                        in.putExtra("post_status", "single_postxd");
                         in.putExtra("data", "");
                         startActivity(in);
                     }
@@ -138,9 +142,7 @@ public class MyBuyOfferFragment extends Fragment {
         pDialog.show();
 
         RequestQueue queue = Volley.newRequestQueue(context);
-
         String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/buyBidsById";
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -173,22 +175,27 @@ public class MyBuyOfferFragment extends Fragment {
     }
 
     private void setListAdapter(String result) {
-        try {
+        try
+        {
             JSONArray array;
-
             Log.e("setListAdapter", " RESULT " + result.trim());
             array = new JSONArray(result);
-            if (array != null && array.length() > 0) {
+            if (array != null && array.length() > 0)
+            {
                 recyclerView.setVisibility(View.VISIBLE);
                 buyOfferAdapter = new MyBuyOfferAdapter(getActivity(), array, animation_type, tabLayout);
                 recyclerView.setAdapter(buyOfferAdapter);
-            } else {
+            }
+            else
+            {
                 recyclerView.setVisibility(View.GONE);
 
                 tabLayout.getTabAt(1).setText("My Post");
                 Toast.makeText(context, "No Data Found", Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+        }
+        catch (JSONException e)
+        {
             e.printStackTrace();
         }
     }

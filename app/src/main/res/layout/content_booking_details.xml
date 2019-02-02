@@ -193,7 +193,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:text="total available Quantity"
+                    android:text="available Quantity"
                     android:textAllCaps="true"
                     android:textColor="@color/grey_40"
                     android:textSize="@dimen/_12sdp" />
@@ -218,7 +218,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:text="Category"
+                    android:text="Grade"
                     android:textAllCaps="true"
                     android:textColor="@color/grey_40"
                     android:textSize="@dimen/_12sdp" />
@@ -242,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:text="Season Year"
+                    android:text="Season"
                     android:textAllCaps="true"
                     android:textColor="@color/grey_40"
                     android:textSize="@dimen/_12sdp" />
@@ -267,7 +267,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:text="Price Per Qtl"
+                    android:text="price /Qtl"
                     android:textAllCaps="true"
                     android:textColor="@color/grey_40"
                     android:textSize="@dimen/_12sdp" />
@@ -305,6 +305,33 @@
                     android:background="@drawable/new_style_container"
                     android:backgroundTint="@color/grey_10"
                     android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint=""
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:textColor="@color/overlay_dark_40"
+                    android:textColorHint="@color/overlay_dark_40" />
+
+                <TextView
+                    android:id="@+id/due_lifting_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Due Date of Delivery"
+                    android:textAllCaps="true"
+                    android:visibility="gone"
+                    android:textColor="@color/grey_40"
+                    android:textSize="@dimen/_12sdp" />
+
+                <EditText
+                    android:id="@+id/due_lifting_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/new_style_container"
+                    android:backgroundTint="@color/grey_10"
+                    android:editable="false"
+                    android:visibility="gone"
                     android:focusableInTouchMode="false"
                     android:hint=""
                     android:paddingLeft="@dimen/_10sdp"
@@ -481,7 +508,7 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Due Date of Payment"
                     android:textAllCaps="true"
-                    android:visibility="gone"
+
                     android:textColor="@color/grey_40"
                     android:textSize="@dimen/_12sdp" />
 

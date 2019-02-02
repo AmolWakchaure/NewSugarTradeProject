@@ -1,7 +1,19 @@
 package com.prosolstech.sugartrade.model;
 
+import java.util.Comparator;
+
 public class SellBidModel {
     String id;
+
+    public String getProduction_year() {
+        return production_year;
+    }
+
+    public void setProduction_year(String production_year) {
+        this.production_year = production_year;
+    }
+
+    String production_year;
 
     public String getId() {
         return id;
@@ -166,4 +178,53 @@ public class SellBidModel {
     }
 
     String price_per_qtl;
+
+
+    //category
+    public static Comparator<SellBidModel> SortByCategory = new Comparator<SellBidModel>()
+    {
+
+        public int compare(SellBidModel s1,SellBidModel s2)
+        {
+            String bookName1 = s1.getCategory().toUpperCase();
+            String bookName2 = s2.getCategory().toUpperCase();
+
+            //descending order
+            return bookName2.compareTo(bookName1);
+        }
+    };
+    //price low to high
+    public static Comparator<SellBidModel> priceLowTohigh = new Comparator<SellBidModel>()
+    {
+
+        public int compare(SellBidModel s1,SellBidModel s2)
+        {
+            double price1 = Double.valueOf(s1.getPrice_per_qtl());
+            double price2 = Double.valueOf(s2.getPrice_per_qtl());
+
+            if (price1 == price2)
+                return 0;
+            else if (price1 > price2)
+                return 1;
+            else
+                return -1;
+        }
+    };
+    //price high to low
+    public static Comparator<SellBidModel> priceHighTolow = new Comparator<SellBidModel>()
+    {
+
+        public int compare(SellBidModel s1,SellBidModel s2)
+        {
+            double price1 = Double.valueOf(s1.getPrice_per_qtl());
+            double price2 = Double.valueOf(s2.getPrice_per_qtl());
+
+            if (price1 == price2)
+                return 0;
+            else if (price1 < price2)
+                return 1;
+            else
+                return -1;
+        }
+    };
 }

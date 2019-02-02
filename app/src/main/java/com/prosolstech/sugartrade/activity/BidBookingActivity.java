@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.R;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.util.ACU;
 import com.prosolstech.sugartrade.util.VU;
 
@@ -66,6 +67,7 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
         btnOffer = (Button) findViewById(R.id.BidBookingActivityBtnOffer);
 
 
+        //jsonObject.getString("original_qty")
 
 
 
@@ -120,22 +122,45 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
                 if (VU.isConnectingToInternet(context)) {
                     if (Validate()) {
 
-                        if (checkValueFor()) {
+                        if (checkValueFor())
+                        {
                             if (checkValue()) {
-                                if (checkQuantitiy()) {
-                                    bookOffer();
-                                } else {
-                                    Toast.makeText(context, "Required Qty Should not be greater then Available Qty", Toast.LENGTH_SHORT).show();
+
+                                String available_qty = edtReqQty.getText().toString().trim();
+
+                                if(Integer.valueOf(available_qty) > Integer.valueOf(current_required_qty))
+                                {
+                                    if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equalsIgnoreCase("Buyer"))
+                                    {
+                                        T.t("Required qty can not greater than current available qty.");
+                                    }
+                                    else
+                                    {
+                                        T.t("Required qty can not greater than current available qty.");
+                                    }
+
                                 }
-                            } else {
-                                Toast.makeText(context, "Price/Qtl cannot be zero", Toast.LENGTH_SHORT).show();
+                                else
+                                {
+                                    bookOffer();
+                                }
+
 
 
                             }
-                        }else {
-                            if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equalsIgnoreCase("Buyer")) {
+                            else
+                            {
+                                Toast.makeText(context, "Price/Qtl cannot be zero", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else
+                        {
+                            if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equalsIgnoreCase("Buyer"))
+                            {
                                 Toast.makeText(context, "Required Qty cannot be zero", Toast.LENGTH_SHORT).show();
-                            }else{
+                            }
+                            else
+                            {
                                 Toast.makeText(context, "Available Qty cannot be zero", Toast.LENGTH_SHORT).show();
 
                             }
@@ -214,11 +239,16 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    String current_required_qty;
     private void setData(String strValue) {
         try {
             JSONObject jobj = new JSONObject(strValue);
             edtCompanyName.setText(jobj.getString("company_name"));
-            if (strFlag.equalsIgnoreCase("Seller")) {                               // if seller login than data set on this condition
+
+            if (strFlag.equalsIgnoreCase("Seller"))
+            {
+                current_required_qty = jobj.getString("curr_req_qty");
+                // if seller login than data set on this condition
                 Log.e("setData_SELLER", " : " + jobj.toString());
                 strOfferId = jobj.getString("id");
                 edtBookingRate.setBackgroundDrawable(getResources().getDrawable(R.drawable.new_style_container_grey));
@@ -228,17 +258,24 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
                 if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
                     edtBookingQty.setText(jobj.getString("original_qty"));
                 } else {
-                    edtBookingQty.setText(jobj.getString("required_qty"));
+                    //edtBookingQty.setText(jobj.getString("required_qty"));
                     txtRequiredQty.setText("Available Quantity");                       // here text change if buyer login
-                    txtAvailableQty.setText("Required Quantity");                       // here text change if buyer login
+                    txtAvailableQty.setText("Current Required Quantity");
+                    edtBookingQty.setText(current_required_qty);// here text change if buyer login
                 }
-            } else if (strFlag.equalsIgnoreCase("Buyer")) {                        // if buyer login than data set on this condition
+            }
+            else if (strFlag.equalsIgnoreCase("Buyer"))
+            {                        // if buyer login than data set on this condition
                 strOfferId = jobj.getString("id");
                 strType = jobj.getString("type");
                 Log.e("strType", ": " + strType);
 
+                current_required_qty = jobj.getString("original_qty");
+
                 Log.e("setData_BUYER", " : " + jobj.toString());
-                if (!jobj.getString("type").equalsIgnoreCase("Tender")) {
+                if (!jobj.getString("type").equalsIgnoreCase("Tender"))
+                {
+
                     edtBookingRate.setBackgroundDrawable(getResources().getDrawable(R.drawable.new_style_container_grey));
                     edtBookingRate.setText(jobj.getString("price_per_qtl"));
                     edtBookingRate.setEnabled(false);
@@ -251,11 +288,14 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
                 }
                 if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
                     edtBookingQty.setText(jobj.getString("original_qty"));
+
+
                 } else {
                     edtBookingQty.setText(jobj.getString("required_qty"));
                 }
             }
         } catch (JSONException e) {
+            T.e(""+e);
             e.printStackTrace();
         }
     }
@@ -305,11 +345,14 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
                 Map<String, String> params = new HashMap<>();
 
                 params.put("role", ACU.MySP.getFromSP(context, ACU.MySP.ROLE, ""));
+                params.put("id", ACU.MySP.getFromSP(BidBookingActivity.this, ACU.MySP.ID, ""));
                 params.put("type", strType);
                 params.put("offer_id", strOfferId);
                 params.put("required_qty", edtReqQty.getText().toString().trim());
                 params.put("tender_price", edtBookingRate.getText().toString().trim());
+                params.put("reqd_qty_bid_placed", edtBookingQty.getText().toString().trim());
                 params.put("required_qty_id", ACU.MySP.getFromSP(context, ACU.MySP.ID, ""));
+
                 Log.e("bookOffer_PARAMS", " " + params.toString());
 
                 return params;

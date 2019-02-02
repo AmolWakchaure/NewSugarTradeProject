@@ -35,6 +35,18 @@ import java.util.Locale;
 public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
+    /*
+    a. Sell Post id :12
+    b. Posted At : DD-MM-YYYY HH:MM
+    c. Type : Tender/Open
+    d. Start Time : HH:MM
+    e. End Time : HH:MM
+    f. Original Sell Qty : 600
+    g. Current Available Qty : 400
+    h. Claimed Qty : 200
+    i. Grade – Sugar –L
+    j. Price /Qtl : 120
+     */
     private Context ctx;
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
@@ -61,7 +73,7 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public TextView txtType, txtRate, txtDate, txtGrade, txtQuantity, txtId, typeTxt, id_tv, qty_val, start_time_tv, end_time_tv, org_sell_tv, claimed_tv;
-        LinearLayout llRevert, llRate, llBlank;
+        LinearLayout llRevert, llRate, llBlank,aquired_qty_li,startTime_li,endTime_li;
 
         public OriginalViewHolder(View v) {
             super(v);
@@ -74,6 +86,9 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             llRate = (LinearLayout) v.findViewById(R.id.MyOfferAdapterLInearLayoutRate);
             llBlank = (LinearLayout) v.findViewById(R.id.MyOfferAdapterLInearLayoutBlank);
             llRevert = (LinearLayout) v.findViewById(R.id.MyOfferActivityLinearLayoutRevert);
+            startTime_li = (LinearLayout) v.findViewById(R.id.startTime_li);
+            endTime_li = (LinearLayout) v.findViewById(R.id.endTime_li);
+            aquired_qty_li = (LinearLayout) v.findViewById(R.id.aquired_qty_li);
             typeTxt = v.findViewById(R.id.typeTxt);
             id_tv = v.findViewById(R.id.id_tv);
             qty_val = v.findViewById(R.id.qty_val);
@@ -113,20 +128,43 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 String timeLeftFormatted1 = String.format(Locale.getDefault(), "%02d:%02d", hours5, minutes5);
                 view.end_time_tv.setText(timeLeftFormatted1);
 
+                view.startTime_li.setVisibility(View.GONE);
+                view.endTime_li.setVisibility(View.GONE);
 
-                if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller")) {
+                if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller"))
+                {
+                    view.aquired_qty_li.setVisibility(View.GONE);
                     view.org_sell_tv.setText(array.getJSONObject(position).getString("available_qty"));
-                    if (array.getJSONObject(position).getString("claimed").equalsIgnoreCase("null")) {
-                        view.claimed_tv.setText("0");
-                    } else {
-                        view.claimed_tv.setText(array.getJSONObject(position).getString("claimed"));
-                        }
 
-                    view.qty_val.setText("Current Available Qty: ");
-                    view.id_tv.setText("Sell Post Id:");
-                } else {
+                    if (array.getJSONObject(position).getString("claimed").equalsIgnoreCase("null"))
+                    {
+                        view.claimed_tv.setText("0");
+                    }
+                    else
+                    {
+                        view.claimed_tv.setText(array.getJSONObject(position).getString("claimed"));
+                    }
+
+                    view.qty_val.setText("Current Available Qty : ");
+                    view.id_tv.setText("Sell Post Id : ");
+
+                    if (array.getJSONObject(position).getString("current_available_qty").equalsIgnoreCase("null"))
+                    {
+                        view.txtQuantity.setText(array.getJSONObject(position).getString("original_qty"));
+                    }
+                    else
+                    {
+                        view.txtQuantity.setText(array.getJSONObject(position).getString("current_available_qty"));
+                    }
+
+
+
+                }
+                else
+                {
                     view.qty_val.setText("Required Qty");
-                    view.id_tv.setText("Buy Post Id:");
+                    view.id_tv.setText("Buy Post Id :");
+                    view.txtQuantity.setText(array.getJSONObject(position).getString("original_qty"));
                 }
                 view.txtId.setText(array.getJSONObject(position).getString("id"));
                 view.txtType.setText(array.getJSONObject(position).getString("type"));
@@ -136,7 +174,7 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 view.txtGrade.setText(array.getJSONObject(position).getString("category"));
 
 
-                view.txtQuantity.setText(array.getJSONObject(position).getString("original_qty"));
+
 
 
                 if (!array.getJSONObject(position).getString("price_per_qtl").equalsIgnoreCase("0")) {
@@ -169,6 +207,7 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     try {
                         Intent in = new Intent(ctx, PlaceSellBidActivity.class);
                         in.putExtra("flag", "update");
+                        in.putExtra("post_status", "dfsdf");
                         in.putExtra("data", String.valueOf(array.getJSONObject(position)));
                         ctx.startActivity(in);
                     } catch (Exception e) {

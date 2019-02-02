@@ -38,7 +38,7 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout llPricePerQtl, llPaymentDate;
     Toolbar toolbar;
     private EditText posted_at,SellDetailsActivityOriginalRequiredQuantity,SellDetailsActivityTotalAquiredQuantity;
-    private TextView original_tv;
+    private TextView original_tv,original_quantity_text,aquired_qtyTxt;
     private ImageView SellerListAdapterImgUnFav;
 
     //private EditText original_required_et;
@@ -59,17 +59,6 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
 
 
 
-
-        //original_required_tv =  findViewById(R.id.original_required_tv);
-       // totoal_required_tv =  findViewById(R.id.totoal_required_tv);
-        //original_required_et =  findViewById(R.id.original_required_et);
-
-
-
-
-
-
-
         llPricePerQtl = (LinearLayout) findViewById(R.id.SellDetailsActivityLinearLayoutPricePerQtl);
         llPaymentDate = (LinearLayout) findViewById(R.id.SellDetailsActivityLinearLayoutPaymentDate);
         edtPaymentDate = (EditText) findViewById(R.id.SellDetailsActivityPaymentDate);
@@ -85,6 +74,9 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
         edtRemark = (EditText) findViewById(R.id.SellDetailsActivityRemark);
         emd_et = (EditText) findViewById(R.id.emd_et);
         emd_tv = (TextView) findViewById(R.id.emd_tv);
+        original_quantity_text = (TextView) findViewById(R.id.original_quantity_text);
+        aquired_qtyTxt = (TextView) findViewById(R.id.aquired_qtyTxt);
+
 
         SellDetailsActivityOriginalRequiredQuantity = (EditText) findViewById(R.id.SellDetailsActivityOriginalRequiredQuantity);
         SellDetailsActivityTotalAquiredQuantity = (EditText) findViewById(R.id.SellDetailsActivityTotalAquiredQuantity);
@@ -252,13 +244,12 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
                 edtCategory.setText(jsonObject.getString("CategoryName"));
                 edtProdYear.setText(jsonObject.getString("production_year"));
                 edtPriQty.setText(jsonObject.getString("price_per_qtl"));
-                SellDetailsActivityOriginalRequiredQuantity.setText(jsonObject.getString("required_qty"));
-                SellDetailsActivityTotalAquiredQuantity.setText(jsonObject.getString("acquired_qty"));
+
+
+
 
                 emd_et.setVisibility(View.GONE);
                 emd_tv.setVisibility(View.GONE);
-//                emd_et.setText(jsonObject.getString("emd"));
-
 
                 if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
 
@@ -268,22 +259,35 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
                     original_et.setText(jsonObject.getString("available_qty"));
 
 
-                } else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller")) {
+                }
+                else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller"))
+                {
                     original_tv.setVisibility(View.GONE);
                     original_et.setVisibility(View.GONE);
 
-                    SellDetailsActivityRequiredQuantity.setText(jsonObject.getString("required_qty"));
-                    txtQty.setText("Current Required Quantity  (in Quintal)");
+                    String original_req_qty = jsonObject.getString("required_qty");
+                    String acquired_qty = jsonObject.getString("acquired_qty");
+                    String curr_req_qty = jsonObject.getString("curr_req_qty");
+                     //original req quantity
+                    SellDetailsActivityOriginalRequiredQuantity.setText(original_req_qty);
+
+                    //aquired_qtyTxt.setVisibility(View.GONE);
+                    //SellDetailsActivityTotalAquiredQuantity.setVisibility(View.GONE);
+                    //total acquired qty
+
+
+                    int total_acq_qty = Integer.valueOf(original_req_qty) - Integer.valueOf(curr_req_qty);
+                    SellDetailsActivityTotalAquiredQuantity.setText(""+String.valueOf(total_acq_qty));
+                    //current req qty
+                    SellDetailsActivityRequiredQuantity.setText(jsonObject.getString("curr_req_qty"));
+
+                    //txtQty.setText("Available Quantity  (in Quintal)");
+                    //original_et.setText(jsonObject.getString("available_qty"));
+
                 }
                 edtLiftingDate.setText(VU.getddmmyyDate(jsonObject.getString("due_delivery_date")));
                 edtRemark.setText(jsonObject.getString("remark"));
 
-                //txtTotalQtyValue.setVisibility(View.GONE);
-//                if (!jsonObject.getString("claimed").equalsIgnoreCase("null")) {
-//                    txtTotalQtyValue.setText("Total Acquired quantity : " + jsonObject.getString("claimed"));
-//                } else {
-//                    txtTotalQtyValue.setText("Total Acquired quantity : (0)");
-//                }
 
 
                 if (jsonObject.getString("is_favorite").equalsIgnoreCase("y")) {
@@ -314,9 +318,9 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
                 strUserBy = jsonObject.getString("userby");
 
                 edtCompanyName.setText(jsonObject.getString("company_name"));
-                original_tv.setVisibility(View.VISIBLE);
-                original_et.setVisibility(View.VISIBLE);
-                original_et.setText(jsonObject.getString("available_qty"));
+                //original_tv.setVisibility(View.VISIBLE);
+               // original_et.setVisibility(View.VISIBLE);
+                //original_et.setText(jsonObject.getString("available_qty"));
 
                 long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
                 long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
@@ -342,9 +346,18 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
                     edtPriQty.setText("");
                 }
 
+                original_quantity_text.setText("Original Sell Qty (In Quintal)");
+                SellDetailsActivityOriginalRequiredQuantity.setText(jsonObject.getString("available_qty"));
+
+                aquired_qtyTxt.setText("Total Claimed Quantity");
+                SellDetailsActivityTotalAquiredQuantity.setText(jsonObject.getString("claimed"));
+
+                txtQty.setText("Current Available Quantity  (in Quintal)");
+                SellDetailsActivityRequiredQuantity.setText(jsonObject.getString("original_qty"));
+
                 if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
-                    SellDetailsActivityRequiredQuantity.setText(jsonObject.getString("original_qty"));
-                    txtQty.setText("Current Available Quantity  (in Quintal)");
+                    //SellDetailsActivityRequiredQuantity.setText(jsonObject.getString("original_qty"));
+                    //txtQty.setText("Current Available Quantity  (in Quintal)");
                     llPaymentDate.setVisibility(View.VISIBLE);                                              // if record is sell bid than due dat of payment field show
                     edtPaymentDate.setText(VU.getddmmyyDate(jsonObject.getString("payment_date")));
                 } else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller")) {

@@ -37,6 +37,7 @@ import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.DialogListner;
 import com.prosolstech.sugartrade.MandatoryFieldsDialog;
 import com.prosolstech.sugartrade.R;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.database.DataBaseConstants;
 import com.prosolstech.sugartrade.database.DataBaseHelper;
 import com.prosolstech.sugartrade.model.CategoryModel;
@@ -59,10 +60,27 @@ import java.util.Locale;
 import java.util.Map;
 
 public class PlaceSellBidActivity extends AppCompatActivity implements View.OnClickListener {
+    /*
+    Seller Login - My Post - Create Sell Offer on Fab Button tap
+    1. Type - Tender or Open
+    2. Sell Quantity
+    3. Grade/Category
+    4. Season Year
+    5. Price/qtl (If type is Open)
+    6. Due Date of Payment
+    7. Due Date of Lifting
+    8. EMD/Qtl
+    9. Offer Start Time
+    10. Offer Validity time
+    11. Remark
+    12. Send to favourites/all radio button
+    13. 'Place Sell Offer' button
+     */
     Context context;
-    EditText edtValidityTime, edtStartTime, edtProdYear, edtPriQty, edtAvailableQty, edtPaymentDate, edtLiftingDate, edtRemark, edtEMD;
+    EditText  edtProdYear, edtPriQty, edtAvailableQty, edtRemark, edtEMD;
     Spinner spnCategory, spnProdYear;
-    Button btnPlaceBid;
+    Button btnPlaceBid,edtPaymentDate,edtLiftingDate,selectStart_time_btn,select_val_time_btn;
+    EditText edtValidityTime,edtStartTime;
     String strFlag = "", strType = "", strCatID = "", strUserId = "", strSendTo = "";
     ArrayList<String> listCategory;
     ArrayList<String> listCatId;
@@ -71,8 +89,8 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
     JSONObject jsonObject;
     RadioGroup rgType;
     RadioButton rbTendor, rbOpen, rbSendToFav, rbSendToAll;
-    LinearLayout llPerQtl;
-    TextView txtGstValue;
+    LinearLayout llPerQtl,hideLayout_li,hideLayout_emd;
+    TextView txtGstValue,total_aquired_qty;
     double totalGst;
     ImageView imgSeasonRefresh, imgCategoryRefresh;
     private TextView start_time_error, avail_id_tv, original_tv, SellDetailsActivityTotalQtyValue;
@@ -93,8 +111,11 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
         imgCategoryRefresh = (ImageView) findViewById(R.id.PlaceSellBidActivityImageCategoryRefresh);
 
         llPerQtl = (LinearLayout) findViewById(R.id.PlaceSellBidActivityLinearLayoutPerQtl);
+        hideLayout_li = (LinearLayout) findViewById(R.id.hideLayout_li);
+        hideLayout_emd = (LinearLayout) findViewById(R.id.hideLayout_emd);
         txtGstValue = (TextView) findViewById(R.id.PlaceSellBidActivityTxtGstValue);
         avail_id_tv = (TextView) findViewById(R.id.avail_id_tv);
+        total_aquired_qty = (TextView) findViewById(R.id.total_aquired_qty);
 
 
         original_tv = (TextView) findViewById(R.id.original_tv);
@@ -110,9 +131,12 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
         edtPriQty = (EditText) findViewById(R.id.PlaceSellBidActivityPriceQuantity);
         edtAvailableQty = (EditText) findViewById(R.id.PlaceSellBidActivityAvailableQuantity);
 
-        edtPaymentDate = (EditText) findViewById(R.id.PlaceSellBidActivityPaymentDate);         // add on 24-08-18
+        edtPaymentDate = (Button) findViewById(R.id.PlaceSellBidActivityPaymentDate);         // add on 24-08-18
 
-        edtLiftingDate = (EditText) findViewById(R.id.PlaceSellBidActivityLiftingDate);
+        selectStart_time_btn= (Button) findViewById(R.id.selectStart_time_btn);
+                select_val_time_btn= (Button) findViewById(R.id.select_val_time_btn);
+
+        edtLiftingDate = (Button) findViewById(R.id.PlaceSellBidActivityLiftingDate);
         edtRemark = (EditText) findViewById(R.id.PlaceSellBidActivityRemark);
         edtEMD = (EditText) findViewById(R.id.PlaceSellBidActivityEMD);
 
@@ -138,6 +162,8 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
         edtPaymentDate.setOnClickListener(this);
         imgSeasonRefresh.setOnClickListener(this);
         imgCategoryRefresh.setOnClickListener(this);
+        selectStart_time_btn.setOnClickListener(this);
+        select_val_time_btn.setOnClickListener(this);
 
         edtPriQty.addTextChangedListener(new TextWatcher() {
 
@@ -181,6 +207,8 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
                 if (VU.isConnectingToInternet(context)) {
                     if (testVal()) {
 //                        if (isValidateZero(edtAvailableQty)) {
+
+                       // T.t("Success");
                             AddSellBid();
                         }
 
@@ -246,13 +274,13 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
 
-            case R.id.PlaceSellBidActivityValidityTime:
+            case R.id.select_val_time_btn:
                 showTime24HourPickerDialogWithMinute(context, DTU.getCurrentDateTimeStamp(DTU.HM), edtValidityTime);
                 edtValidityTime.setError(null);
                 edtStartTime.setError(null);
                 break;
 
-            case R.id.PlaceSellBidActivityBidStartTime:
+            case R.id.selectStart_time_btn:
 //                DTU.showTime24HourPickerDialog(context, DTU.getCurrentDateTimeStamp(DTU.HM), edtStartTime);
 
                 showTime(context, DTU.getCurrentDateTimeStamp(DTU.HM), edtStartTime);
@@ -488,7 +516,7 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
                     edtEMD.requestFocus();
                     isValid = false;
 
-                } else if (TextUtils.isEmpty(edtStartTime.getText().toString().trim()) || edtStartTime.getText().toString().trim().equalsIgnoreCase("")) {
+                }else if (TextUtils.isEmpty(edtStartTime.getText().toString().trim()) || edtStartTime.getText().toString().trim().equalsIgnoreCase("")) {
                     edtStartTime.setError("Please Enter Start Time");
                     edtStartTime.requestFocus();
                     isValid = false;
@@ -806,110 +834,190 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
 
     long offerId;
 
-    private void getIntentData() {
+    private void getIntentData()
+    {
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            try {
+        if (extras != null)
+        {
+
+            try
+            {
                 strFlag = extras.getString("flag");
-                jsonObject = new JSONObject(extras.getString("data"));
-
-//                offerId = Long.parseLong(jsonObject.getString("id"));
 
 
-                MySellOffer(jsonObject.getString("id"));
+                if(strFlag.equals("update"))
+                {
+                    //display data
+                    jsonObject = new JSONObject(extras.getString("data"));
+                    toolbar.setTitle("Sell Post Id:" + jsonObject.getString("id"));
+                    setSupportActionBar(toolbar);
+
+                    btnPlaceBid.setVisibility(View.GONE);
+                    btnPlaceBid.setText("Update Place Sell Offer");
+                    llPerQtl.setVisibility(View.GONE);
+
+                    String post_status = extras.getString("post_status");
+
+                    if(post_status.equals("single_post"))
+                    {
+                        rbSendToFav.setVisibility(View.GONE);
+                        rbSendToAll.setVisibility(View.GONE);
+                    }
+
+                    rbSendToFav.setEnabled(false);
+                    rbSendToAll.setEnabled(false);
+
+                    rbOpen.setEnabled(false);
+                    rbTendor.setEnabled(false);
+
+                    select_val_time_btn.setVisibility(View.GONE);
+                    selectStart_time_btn.setVisibility(View.GONE);
+
+                    setData(jsonObject);
+                }
+                else
+                {
+                    hideLayout_li.setVisibility(View.GONE);
+                    avail_id_tv.setText("Sell Quantity (In Qtl)");
+                    //set current year
+                    spnProdYear.setSelection(listSeason.size() - 1);
+                }
 
 
-                toolbar.setTitle("Sell Post Id:" + jsonObject.getString("id"));
-                setSupportActionBar(toolbar);
-                Log.e("strFlag", " " + strFlag);
-                Log.e("Sell_jsonObject", " " + jsonObject);
-                avail_id_tv.setText("Current Available  Qty (Unit in quintal)");
-
-
-//                original_et.setVisibility(View.VISIBLE);
-//                original_tv.setVisibility(View.VISIBLE);
-//                SellDetailsActivityTotalQtyValue.setVisibility(View.VISIBLE);
-//
-//                original_et.setText(jsonObject.getString("available_qty"));
-//
-//                if (!jsonObject.getString("claimed").equalsIgnoreCase("null")) {
-//                    SellDetailsActivityTotalQtyValue.setText("Total Acquired quantity : " + jsonObject.getString("claimed"));
-//                } else {
-//                    SellDetailsActivityTotalQtyValue.setText("Total Acquired quantity : (0)");
-//                }
-//
-//
-//                setData(jsonObject);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    public void setData(JSONObject jsonObject) {
-        try {
-            btnPlaceBid.setVisibility(View.GONE);
-            btnPlaceBid.setText("Update Place Sell Offer");
+    public void setData(JSONObject jsonObject)
+    {
+        try
+        {
 
-            strUserId = jsonObject.getString("id");
+                //rbSendToAll.setVisibility(View.GONE);
+                //rbSendToFav.setVisibility(View.GONE);
 
-//            edtValidityTime.setText(jsonObject.getString("validity_time"));
+                //set seller data
+
+                //set type data
+                if (!jsonObject.getString("type").equalsIgnoreCase("Tender"))
+                {
+                    rbOpen.setChecked(true);
+                    rbTendor.setVisibility(View.GONE);
+                    strType = rbOpen.getText().toString();
+                    Log.e("strType_IF", ": " + strType);
+                    llPerQtl.setVisibility(View.VISIBLE);
+                    edtPriQty.setText(jsonObject.getString("price_per_qtl"));
+                    //txtGstValue.setText("WITH GST (" + jsonObject.getString("price_per_qtl") + ")");
+                }
+                else
+                {
+                    rbTendor.setChecked(true);
+                    rbOpen.setVisibility(View.GONE);
+                    strType = rbTendor.getText().toString();
+                    llPerQtl.setVisibility(View.GONE);
+                    edtPriQty.setText("");
+                    txtGstValue.setText("");
+                    Log.e("strType_ELSE", ": " + strType);
+                }
+
+                //set original sell quantity
+                original_et.setText(jsonObject.getString("available_qty"));
+
+                //
+
+                if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller"))
+                {
+                    if (jsonObject.getString("claimed").equalsIgnoreCase("null"))
+                    {
+                        //set total aquired qty
+                        total_aquired_qty.setText("0");
+                    }
+                    else
+                    {
+                        //set total aquired qty
+                        total_aquired_qty.setText(jsonObject.getString("claimed"));
+                    }
 
 
-            long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
-            long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
+                }
+                else
+                {
+                    //total_aquired_qty.setVisibility(View.GONE);
+                    //SellDetailsActivityTotalQtyValue.setVisibility(View.GONE);
+                    //set total aquired qty
+                    total_aquired_qty.setText(jsonObject.getString("claimed"));
+                }
 
 
-            String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
-            edtValidityTime.setText(timeLeftFormatted);
-            edtStartTime.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
-//            if (jsonObject.getString("original_qty").contains("-")) {
-//                edtAvailableQty.setText("0");
-//            } else {
-            edtAvailableQty.setText(jsonObject.getString("original_qty"));
-//            }
-
-            edtLiftingDate.setText(VU.getddmmyyDate(jsonObject.getString("due_lifting_date")));
-            edtPaymentDate.setText(VU.getddmmyyDate(jsonObject.getString("payment_date")));
-            edtRemark.setText(jsonObject.getString("remark"));
-            edtEMD.setText(jsonObject.getString("emd"));
+                if (jsonObject.getString("current_available_qty").equalsIgnoreCase("null"))
+                {
+                    //set currentavailable qty
+                    edtAvailableQty.setText(jsonObject.getString("original_qty"));
+                }
+                else
+                {
+                    //set currentavailable qty
+                    edtAvailableQty.setText(jsonObject.getString("current_available_qty"));
+                }
 
 
-            if (!jsonObject.getString("category").equals("")) {
-                int index = listCategory.indexOf("" + jsonObject.getString("category"));
-                spnCategory.setSelection(index);
-                Log.e("spnCategory", " " + index + "  " + jsonObject.getString("category"));
-            }
+                //set grade / category
+                if (!jsonObject.getString("category").equals(""))
+                {
+                    int index = listCategory.indexOf("" + jsonObject.getString("category"));
+                    spnCategory.setSelection(index);
 
-            if (!jsonObject.getString("type").equalsIgnoreCase("Tender")) {
-                rbOpen.setChecked(true);
-                strType = rbOpen.getText().toString();
-                Log.e("strType_IF", ": " + strType);
-                llPerQtl.setVisibility(View.VISIBLE);
-                edtPriQty.setText(jsonObject.getString("price_per_qtl"));
-                //txtGstValue.setText("WITH GST (" + jsonObject.getString("price_per_qtl") + ")");
-            } else {
-                rbTendor.setChecked(true);
-                strType = rbTendor.getText().toString();
-                llPerQtl.setVisibility(View.GONE);
-                edtPriQty.setText("");
-                txtGstValue.setText("");
-                Log.e("strType_ELSE", ": " + strType);
-            }
-            if (!jsonObject.getString("send_to").equalsIgnoreCase("send_to_all")) {
-                rbSendToFav.setChecked(true);
-                strSendTo = "send_to_favorites";
-            } else {
-                rbSendToAll.setChecked(true);
-                strSendTo = "send_to_all";
-            }
+                }
 
-            if (!jsonObject.getString("production_year").equals("")) {
-                int index = listSeason.indexOf("" + jsonObject.getString("production_year"));
-                spnProdYear.setSelection(index);
-                Log.e("spnProdYear", " " + index + "  " + jsonObject.getString("production_year"));
-            }
+                //season year
+                if (!jsonObject.getString("production_year").equals(""))
+                {
+                    int index = listSeason.indexOf("" + jsonObject.getString("production_year"));
+                    spnProdYear.setSelection(index);
+
+                }
+
+                //due date of payment
+                edtPaymentDate.setText(VU.getddmmyyDate(jsonObject.getString("payment_date")));
+
+                //set due date of lifting
+                edtLiftingDate.setText(VU.getddmmyyDate(jsonObject.getString("due_lifting_date")));
+
+                //set emd / qtl
+                edtEMD.setText(jsonObject.getString("emd"));
+
+                //offer start time
+                edtStartTime.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+
+                //offer validity time
+                edtValidityTime.setText(T.returnEndTime(jsonObject.getString("validity_time")));
+
+                //set remark
+                edtRemark.setText(jsonObject.getString("remark"));
+
+
+
+                strUserId = jsonObject.getString("id");
+
+                if (!jsonObject.getString("send_to").equalsIgnoreCase("send_to_all"))
+                {
+                    rbSendToFav.setChecked(true);
+                    strSendTo = "send_to_favorites";
+                }
+                else
+                {
+                    rbSendToAll.setChecked(true);
+                    strSendTo = "send_to_all";
+                }
+
+
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1088,7 +1196,7 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
             e.printStackTrace();
         }
 
-        int year = Calendar.getInstance().get(Calendar.YEAR);
+        /*int year = Calendar.getInstance().get(Calendar.YEAR);
 
 
         ArrayList<String> arrayList = new ArrayList<>();
@@ -1101,11 +1209,11 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
                 arrayList.add(listSeason.get(i));
             }
 
-        }
+        }*/
 
 
         ArrayAdapter<String> adpSeason;
-        adpSeason = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_item, arrayList);
+        adpSeason = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_item, listSeason);
         spnProdYear.setAdapter(adpSeason);
     }
 
@@ -1152,7 +1260,7 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
                                     }
 
 
-                                    setData(object);
+
 
                                 }
 

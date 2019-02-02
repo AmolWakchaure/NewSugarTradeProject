@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -202,7 +203,7 @@ public class DTU {
     }
 
     public static void showDatePickerDialog(Context context, final int dateFlg,
-                                            final EditText dateEditText) {
+                                            final Button dateEditText) {
         // Displays Date picker
         final Calendar c = Calendar.getInstance();
         currentYear = c.get(Calendar.YEAR);

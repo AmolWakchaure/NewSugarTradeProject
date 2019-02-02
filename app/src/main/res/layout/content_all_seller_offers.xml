@@ -27,10 +27,10 @@
                 android:layout_height="0dp" />
 
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/AllSellOffersActivityAutoTexViewSearch"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
@@ -41,7 +41,7 @@
                 android:paddingLeft="@dimen/_5sdp"
                 android:singleLine="true">
                 <requestFocus />
-            </AutoCompleteTextView>
+            </EditText>
 
             <ImageButton
                 android:id="@+id/AllSellOffersActivityImgSearch"
@@ -50,6 +50,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
                 android:clickable="true"
+                android:visibility="gone"
                 android:tint="@color/grey_60" />
 
             <ImageButton

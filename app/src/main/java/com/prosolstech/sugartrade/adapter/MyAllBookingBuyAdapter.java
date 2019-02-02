@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -40,7 +41,7 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
     private JSONArray array;
-
+    String typeOne;
 
 
 
@@ -53,12 +54,13 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public MyAllBookingBuyAdapter(Activity context, JSONArray array, int animation_type) {
+    public MyAllBookingBuyAdapter(Activity context, JSONArray array, int animation_type,String typeOne) {
         ctx = context;
         this.array = array;
         this.animation_type = animation_type;
+        this.typeOne = typeOne;
 
-        this.array = sortJsonArray(array);
+        //this.array = sortJsonArray(array);
 
 
     }
@@ -104,7 +106,7 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public TextView txtMillName, txtDate, txtRatePerQtl, txtReqQuantity, txtGrade, id, start, type,
                 start_time,
-                end_time;
+                end_time,availableQty,currReqQty_tv,availableQty_tv;
         public LinearLayout type_lv;
         public ImageView SellerListAdapterImgUnFav;
 
@@ -122,7 +124,9 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             SellerListAdapterImgUnFav = v.findViewById(R.id.SellerListAdapterImgUnFav);
             start_time = (TextView) v.findViewById(R.id.start_time);
             end_time = (TextView) v.findViewById(R.id.end_time);
-            //recieved_qty = (TextView) v.findViewById(R.id.recieved_qty);
+            availableQty = (TextView) v.findViewById(R.id.availableQty);
+            currReqQty_tv = (TextView) v.findViewById(R.id.currReqQty_tv);
+            availableQty_tv = (TextView) v.findViewById(R.id.availableQty_tv);
         }
     }
 
@@ -140,72 +144,141 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Log.e("onBindViewHolder", "onBindViewHolder : " + position);
-        if (holder instanceof OriginalViewHolder) {
+        if (holder instanceof OriginalViewHolder)
+        {
             OriginalViewHolder view = (OriginalViewHolder) holder;
 
             Log.e("array_TOSTRING", ": " + array.toString());
-            try {
-                if (array.getJSONObject(position).getString("role").equalsIgnoreCase("Buyer")) {
-                    view.start.setText("Buy Post id: ");
-                    if (array.getJSONObject(position).getString("type").equalsIgnoreCase("")) {
-                        view.type_lv.setVisibility(View.GONE);
-                    } else {
-                        view.type_lv.setVisibility(View.VISIBLE);
-                        view.type.setText(array.getJSONObject(position).getString("type"));
-                    }
-
-                } else {
-
-                    view.start.setText("Sell Post id: ");
-
-                    if (array.getJSONObject(position).getString("type").equalsIgnoreCase("")) {
-                        view.type_lv.setVisibility(View.GONE);
-                    } else {
-                        view.type_lv.setVisibility(View.VISIBLE);
-                        view.type.setText(array.getJSONObject(position).getString("type"));
-                    }
-
-                }
-
-                if (array.getJSONObject(position).getString("is_favorite").equalsIgnoreCase("Y")) {
+            try
+            {
+                if (array.getJSONObject(position).getString("is_favorite").equalsIgnoreCase("Y"))
+                {
                     view.SellerListAdapterImgUnFav.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else
+                {
                     view.SellerListAdapterImgUnFav.setVisibility(View.GONE);
 
                 }
 
+                if (array.getJSONObject(position).getString("role").equalsIgnoreCase("Buyer"))
+                {
+                    view.start.setText("Buy Post id: ");
+                    if (array.getJSONObject(position).getString("type").equalsIgnoreCase(""))
+                    {
+                        view.type_lv.setVisibility(View.GONE);
+
+                        view.availableQty_tv.setText("Available Qty : ");
+
+                        String required_qty = array.getJSONObject(position).getString("required_qty");
+
+                        String curr_req_qty = array.getJSONObject(position).getString("curr_req_qty");
+
+                        int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+
+                        int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(total_acq_qty);
+
+                        //available qty
+                        view.availableQty.setText(""+available_qty);
+                    }
+                    else
+                    {
+                        view.type_lv.setVisibility(View.VISIBLE);
+                        String type = array.getJSONObject(position).getString("type");
+                        if(type.equals("buy"))
+                        {
+                            view.availableQty_tv.setText("Available Qty : ");
+
+                            String required_qty = array.getJSONObject(position).getString("required_qty");
+
+                            String curr_req_qty = array.getJSONObject(position).getString("curr_req_qty");
+
+                            int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+
+                            int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(total_acq_qty);
+
+                            //available qty
+                            view.availableQty.setText(""+available_qty);
+                        }
+                        else
+                        {
+                            view.availableQty_tv.setText("Required qty : ");
+                            // view.currReqQty_tv.setText("Current Available Qty : ");
+                            //Required qty
+                            view.availableQty.setText(array.getJSONObject(position).getString("required_qty"));
+                        }
+                        view.type.setText(type);
+
+                    }
+                    //current required quantity
+                    view.txtReqQuantity.setText(array.getJSONObject(position).getString("curr_req_qty"));
+                    T.e("typeOne : "+ typeOne);
+
+                }
+                else
+                {
+
+                    view.start.setText("Sell Post id: ");
+                    view.currReqQty_tv.setText("Current Available Qty : ");
+                    view.availableQty_tv.setText("Required Qty : ");
+
+                    if (array.getJSONObject(position).getString("type").equalsIgnoreCase("")) {
+                        view.type_lv.setVisibility(View.GONE);
+                    } else {
+                        view.type_lv.setVisibility(View.VISIBLE);
+                        view.type.setText(array.getJSONObject(position).getString("type"));
+                    }
+
+                    String required_qty = array.getJSONObject(position).getString("available_qty");
+                    String curr_req_qty = array.getJSONObject(position).getString("curr_req_qty");
+                    int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+                    int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(total_acq_qty);
+                    //current available qty
+                    view.txtReqQuantity.setText(""+available_qty);             // last qty gave by user which is accept the record
+
+                    //available qty
+                    view.availableQty.setText(""+required_qty);
+                }
+
+
+
 
                 view.id.setText(array.getJSONObject(position).getString("offer_id"));
                 view.txtMillName.setText(array.getJSONObject(position).getString("company_name"));
-                view.txtReqQuantity.setText(array.getJSONObject(position).getString("required_qty"));             // last qty gave by user which is accept the record
+
                 view.txtGrade.setText(array.getJSONObject(position).getString("category"));
 
                 view.start_time.setText(array.getJSONObject(position).getString("bid_start_time").substring(0,5));
-                view.end_time.setText(T.returnTimeFormat(Integer.valueOf(array.getJSONObject(position).getString("validity_time"))));
-                //view.recieved_qty.setText(array.getJSONObject(position).getString("allotted"));
 
+                long hours5 = Long.parseLong(array.getJSONObject(position).getString("bid_end_time")) / 60; //since both are ints, you get an int
+                long minutes5 = Long.parseLong(array.getJSONObject(position).getString("bid_end_time")) % 60;
 
+                String bid_end_time = String.format(Locale.getDefault(), "%02d:%02d", hours5, minutes5);
+
+                view.end_time.setText(bid_end_time);
 
 
                 view.txtDate.setText(DTU.changeTimeFormat(array.getJSONObject(position).getString("date"), array.getJSONObject(position).getString("time")));
 
-
-//                String time = array.getJSONObject(position).getString("time");
-//
-//
-//                view.txtDate.setText(VU.getddmmyyDate(array.getJSONObject(position).getString("date") + time));         // this key data is when this record upload by user
-
-                if (array.getJSONObject(position).has("type")) {
-                    if (array.getJSONObject(position).getString("type").equalsIgnoreCase("Tender")) {
+                if (array.getJSONObject(position).has("type"))
+                {
+                    if (array.getJSONObject(position).getString("type").equalsIgnoreCase("Tender"))
+                    {
                         view.txtRatePerQtl.setText(array.getJSONObject(position).getString("tender_price"));
-                    } else {
+                    }
+                    else
+                    {
                         view.txtRatePerQtl.setText(array.getJSONObject(position).getString("price_per_qtl"));
                     }
-                } else {
+                }
+                else
+                 {
                     view.txtRatePerQtl.setText(array.getJSONObject(position).getString("price_per_qtl"));
                 }
 
             } catch (JSONException e) {
+
+                T.e("onBindViewHolder : "+e);
                 e.printStackTrace();
             }
 
@@ -216,6 +289,8 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         Intent in = new Intent(ctx, BookingDetailsActivity.class);
                         in.putExtra("flag", "Buyer");
                         in.putExtra("data", String.valueOf(array.getJSONObject(position)));
+                        in.putExtra("typeStatus", typeOne);
+                        in.putExtra("type", typeOne);
                         ctx.startActivity(in);
                         ctx.finish();
                     } catch (Exception e) {

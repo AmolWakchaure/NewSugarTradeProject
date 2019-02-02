@@ -80,7 +80,9 @@ public class VehicleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
 
                 view.txtVehicleNo.setText(array.getJSONObject(position).getString("vehicle_number"));
-                view.txtDate.setText(VU.getddmmyyDate(array.getJSONObject(position).getString("date_of_arrival")));
+                //view.txtDate.setText(VU.formatDate(array.getJSONObject(position).getString("date_of_arrival")));
+                view.txtDate.setText(VU.getddmmyyDate(VU.formatDate(array.getJSONObject(position).getString("date_of_arrival"))));
+               // view.txtDate.setText(VU.formatDate(array.getJSONObject(position).getString("date_of_arrival")));
                 view.txtQty.setText(array.getJSONObject(position).getString("quantity"));
                 view.txtDriverNo.setText(array.getJSONObject(position).getString("driver_contact"));
             } catch (JSONException e) {

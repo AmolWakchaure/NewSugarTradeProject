@@ -9,10 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.prosolstech.sugartrade.R;
+import com.prosolstech.sugartrade.model.AllSellerOfferInfo;
+import com.prosolstech.sugartrade.model.BuyBidModel;
 import com.prosolstech.sugartrade.util.ItemAnimation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.ArrayList;
 
 public class AllSellerOffersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -20,7 +24,8 @@ public class AllSellerOffersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private Context ctx;
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
-    JSONArray array;
+    //JSONArray array;
+    ArrayList<AllSellerOfferInfo> SELLER_OFFER_INFO;
 
     public interface OnItemClickListener {
         void onItemClick(View view, Integer obj, int position);
@@ -31,9 +36,10 @@ public class AllSellerOffersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AllSellerOffersAdapter(Context context, JSONArray array, int animation_type) {
+    public AllSellerOffersAdapter(Context context,  int animation_type,ArrayList<AllSellerOfferInfo> SELLER_OFFER_INFO) {
         ctx = context;
-        this.array = array;
+        //this.array = array;
+        this.SELLER_OFFER_INFO = SELLER_OFFER_INFO;
         this.animation_type = animation_type;
     }
 
@@ -65,16 +71,15 @@ public class AllSellerOffersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         Log.e("MyReqADAPTER", "onBindViewHolder : " + position);
         if (holder instanceof OriginalViewHolder) {
             final OriginalViewHolder view = (OriginalViewHolder) holder;
-            Log.e("MyReqADAPTER_ARRAY", ": " + array.toString());
+            //Log.e("MyReqADAPTER_ARRAY", ": " + array.toString());
 
-            try {
-                view.txtMillName.setText(array.getJSONObject(position).getString("company_name"));
-                view.txtGrade.setText(array.getJSONObject(position).getString("category"));
-                view.txtSeason.setText(array.getJSONObject(position).getString("production_year"));
-                view.txtRate.setText(array.getJSONObject(position).getString("price_per_qtl"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            AllSellerOfferInfo allSellerOfferInfo = SELLER_OFFER_INFO.get(position);
+
+            view.txtMillName.setText(allSellerOfferInfo.getCompanyName());
+            view.txtGrade.setText(allSellerOfferInfo.getGrade());
+            view.txtSeason.setText(allSellerOfferInfo.getSeason());
+            view.txtRate.setText(allSellerOfferInfo.getPricePerQtl());
+
             setAnimation(view.itemView, position);
         }
     }
@@ -93,7 +98,7 @@ public class AllSellerOffersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return array.length();
+        return SELLER_OFFER_INFO.size();
     }
 
     private int lastPosition = -1;
@@ -104,5 +109,12 @@ public class AllSellerOffersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ItemAnimation.animate(view, on_attach ? position : -1, animation_type);
             lastPosition = position;
         }
+    }
+
+    public void setFilter(ArrayList<AllSellerOfferInfo> countryModels)
+    {
+        SELLER_OFFER_INFO = new ArrayList<>();
+        SELLER_OFFER_INFO.addAll(countryModels);
+        notifyDataSetChanged();
     }
 }

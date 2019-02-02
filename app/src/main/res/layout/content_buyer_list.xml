@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:layout_margin="@dimen/_10sdp"
             android:background="@drawable/search"
             android:orientation="horizontal"
@@ -27,7 +27,7 @@
                 android:layout_height="0dp" />
 
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/BuyerListActivityAutoTxtName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -41,10 +41,7 @@
                 android:paddingLeft="@dimen/_5sdp"
                 android:singleLine="true">
 
-                <requestFocus />
-
-
-            </AutoCompleteTextView>
+            </EditText>
 
             <ImageButton
                 android:id="@+id/BuyerListActivityImgSearch"
@@ -53,6 +50,7 @@
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:tint="@color/grey_60"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_search" />
         </LinearLayout>
 

@@ -25,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.R;
 import com.prosolstech.sugartrade.activity.VehicleDetailsActivity;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.util.ACU;
 import com.prosolstech.sugartrade.util.DTU;
 import com.prosolstech.sugartrade.util.ItemAnimation;
@@ -124,7 +125,7 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             {
 
 
-                if (array.getJSONObject(position).getString("is_favorite").equalsIgnoreCase("Y"))
+                if (array.getJSONObject(position).getString("iss_favorite").equalsIgnoreCase("Y"))
                 {
                     view.SellerListAdapterImgUnFav.setVisibility(View.VISIBLE);
                 }
@@ -140,22 +141,39 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 {
                     //Current Available Qty
                     view.currentReqQty_tv.setText("Current Available Qty : ");
-                    view.MyRequestAdapterCurrentReqQuantity.setText(array.getJSONObject(position).getString("available_qty"));
+                    view.MyRequestAdapterCurrentReqQuantity.setText(array.getJSONObject(position).getString("curr_req_qty"));
                     //Required Qty
                     view.txt.setText("Required Qty : ");
-                    view.txtQty.setText(array.getJSONObject(position).getString("original_qty"));
+                    view.txtQty.setText(array.getJSONObject(position).getString("offer_required_qty"));
                     view.allot_tv.setVisibility(View.VISIBLE);
                     view.allot_tv.setText("Alloted Qty: ");
                     view.edtAllocate.setVisibility(View.VISIBLE);
+                    view.allot_tv.setVisibility(View.GONE);
+                    view.edtAllocate.setVisibility(View.GONE);
                 }
                 else
                 {
                     //Current Required Qty
-                    view.currentReqQty_tv.setText("Current Required Qty : ");
-                    view.MyRequestAdapterCurrentReqQuantity.setText(array.getJSONObject(position).getString("curr_req_qty"));
+                    view.currentReqQty_tv.setText("Reqd qty while bid placed : ");
+                    String curr_req_qty = array.getJSONObject(position).getString("original_required_qty");
+
+                    if(curr_req_qty.equals("0") || curr_req_qty.equals(""))
+                    {
+                        String original_required_qty = array.getJSONObject(position).getString("original_required_qty");
+                        view.MyRequestAdapterCurrentReqQuantity.setText(original_required_qty);
+                    }
+                    else
+                    {
+                        view.MyRequestAdapterCurrentReqQuantity.setText(curr_req_qty);
+                    }
+
+                    //hide here
+                    view.currentReqQty_tv.setVisibility(View.GONE);
+                    view.MyRequestAdapterCurrentReqQuantity.setVisibility(View.GONE);
+
                     //Available Qty
                     view.txt.setText("Available Qty : ");
-                    view.txtQty.setText(array.getJSONObject(position).getString("available_qty"));
+                    view.txtQty.setText(array.getJSONObject(position).getString("ordered_qty"));
                     view.allot_tv.setVisibility(View.GONE);
                     view.edtAllocate.setVisibility(View.GONE);
                 }
@@ -195,9 +213,12 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         try {
-                            if (!userType.equalsIgnoreCase("Seller")) {
+                            if (!userType.equalsIgnoreCase("Seller"))
+                            {
                                 strRecId = array.getJSONObject(position).getString("buy_offer_id");
-                            } else {
+                            }
+                            else
+                            {
                                 strRecId = array.getJSONObject(position).getString("sell_offer_id");
                             }
                             strAllocate = view.edtAllocate.getText().toString();
@@ -207,18 +228,45 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             Log.e("edtAllocate", " : " + view.edtAllocate.getText().toString().trim());
                             if (VU.isConnectingToInternet(ctx)) {
 
-                                if (checkValueFor(view.edtAllocate)) {
-                                    if (checkValue(view.txtQty, view.edtAllocate)) {
-                                        requestSend(view, btnAcc, strRecId, strAllocate,strRecordID);
-                                    } else {
-                                        Toast.makeText(ctx, "Alloted value cannot be gretaer then Available Qty", Toast.LENGTH_SHORT).show();
+                                String ordered_qty = null,current_required_qty = null;
+                                if (checkValueFor(view.edtAllocate))
+                                {
+                                    //add validation for ordered quantity not greater than available qty
+                                    if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller"))
+                                    {
+                                        ordered_qty = array.getJSONObject(position).getString("offer_required_qty");
+                                        current_required_qty = array.getJSONObject(position).getString("curr_req_qty");
                                     }
-                                } else {
+                                    else
+                                    {
+                                        ordered_qty = array.getJSONObject(position).getString("ordered_qty");
+                                        current_required_qty = array.getJSONObject(position).getString("current_required_qty");
+                                    }
+
+
+
+                                    T.e("ordered_qty : "+ordered_qty);
+                                    T.e("current_required_qty : "+current_required_qty);
+
+                                    if (Integer.valueOf(ordered_qty) > Integer.valueOf(current_required_qty))
+                                    {
+                                        Toast.makeText(ctx, "Available quantity can not be greater then Current Available Qty", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+                                        requestSend(view, btnAcc, strRecId, strAllocate,strRecordID,""+array.getJSONObject(position).getString("company_name"));
+
+                                    }
+                                }
+                                else
+                                {
                                     Toast.makeText(ctx, "Alloted value cannot be set to Zero", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
                         } catch (JSONException e) {
+
+                            T.e("Exception : "+e);
                             e.printStackTrace();
                         }
                     }
@@ -331,7 +379,9 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    private void requestSend(final OriginalViewHolder viewHolder, final String buttonText, final String strid, final String allotted,final String strRecordID) {
+    private void requestSend(final OriginalViewHolder viewHolder, final String buttonText, final String strid,
+                             final String allotted,final String strRecordID,
+                             final String companyName) {
 
         final ProgressDialog pDialog = new ProgressDialog(ctx);
         pDialog.setMessage("Please wait while data upload on server...");
@@ -395,6 +445,7 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 params.put("allotted", allotted);
                 params.put("userby", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
                 params.put("is_interested", buttonText);
+                params.put("companyName", companyName);
 
                 Log.e("PARAMS", " requestSend " + params.toString());
                 return params;

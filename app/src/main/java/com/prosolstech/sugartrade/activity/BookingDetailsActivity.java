@@ -72,14 +72,16 @@ public class BookingDetailsActivity extends AppCompatActivity {
     ImageView imgCall,SellerListAdapterImgUnFav;
     double totalGst;
 
-    private TextView validity_time_tv, start_time_tv, type_tv, original_qty_tv,aquired_qty;
+    private TextView validity_time_tv, start_time_tv, type_tv, original_qty_tv,aquired_qty,available_qty,due_lifting_tv;
     private EditText validity_time, start_time, end_time, type, original_qty,
             BookingDetailsActivityEdtAquiredQuantity,
-            BookingDetailsActivityEdtAvailableQuantity;
+            BookingDetailsActivityEdtAvailableQuantity,due_lifting_et;
     private LinearLayout
             emdHideLayout;
 
     private String typeStatus;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +100,15 @@ public class BookingDetailsActivity extends AppCompatActivity {
     private void initializeUI() {
         txtTotalAmount = (TextView) findViewById(R.id.BookingDetailsActivityTxtTotalAmount);         // add on 24-08-18
         aquired_qty = (TextView) findViewById(R.id.aquired_qty);
+        available_qty = (TextView) findViewById(R.id.available_qty);
         BookingDetailsActivityEdtAquiredQuantity = (EditText) findViewById(R.id.BookingDetailsActivityEdtAquiredQuantity);
         BookingDetailsActivityEdtAvailableQuantity = (EditText) findViewById(R.id.BookingDetailsActivityEdtAvailableQuantity);
 
         edtCompName = (EditText) findViewById(R.id.BookingDetailsActivityEdtCompanyName);
         emdHideLayout = (LinearLayout) findViewById(R.id.emdHideLayout);
+
+        due_lifting_tv = (TextView) findViewById(R.id.due_lifting_tv);
+        due_lifting_et = (EditText) findViewById(R.id.due_lifting_et);
 
 
         validity_time_tv = findViewById(R.id.validity_time_tv);
@@ -380,13 +386,14 @@ public class BookingDetailsActivity extends AppCompatActivity {
         return true;
     }
 
-    private void setToolBar() {
+    private void setToolBar()
+    {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         try {
-            if (jsonObject.getString("role").equalsIgnoreCase("Buyer")) {
-                toolbar.setTitle("Buy Post Id : " + jsonObject.getString("offer_id"));
+            if (typeStatus.equalsIgnoreCase("sell")) {
+                toolbar.setTitle("Sell Post id : " + jsonObject.getString("offer_id"));
             } else {
-                toolbar.setTitle("Sell Post Id : " + jsonObject.getString("offer_id"));
+                toolbar.setTitle("Buy Post id : " + jsonObject.getString("offer_id"));
 
             }
         } catch (JSONException e) {
@@ -403,6 +410,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
     }
 
+    String typeStatusData,flag_another;
 
     private void getIntentData() {
 
@@ -410,10 +418,13 @@ public class BookingDetailsActivity extends AppCompatActivity {
         if (extras != null) {
             try {
                 strFlag = extras.getString("flag");
+                flag_another = extras.getString("flag_another");
                 typeStatus = extras.getString("type");
+                typeStatusData = extras.getString("typeStatus");
                 jsonObject = new JSONObject(extras.getString("data"));
-                Log.e("jsonObject", " " + jsonObject);
-                Log.e("strFlag", " " + strFlag);
+                T.e("strFlag : " + jsonObject);
+                T.e("typeStatus : " + typeStatus);
+                T.e("typeStatusData : " + typeStatusData);
                 setData(jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -425,117 +436,82 @@ public class BookingDetailsActivity extends AppCompatActivity {
         try
         {
 
-            //set favorite icon
-            if (jsonObject.getString("is_favorite").equalsIgnoreCase("Y"))
-            {
-                SellerListAdapterImgUnFav.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                SellerListAdapterImgUnFav.setVisibility(View.GONE);
 
-            }
 
             if (strFlag.equalsIgnoreCase("Seller"))
             {
 
-
-                long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
-                long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
-                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
-                validity_time.setText(timeLeftFormatted);
-
-                start_time.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
-                end_time.setText(timeLeftFormatted);
-
-                strOfferID = jsonObject.getString("offer_id");                         // this key is in buy_bid  or sell_bid table id column key.
-                strMobileNo = jsonObject.getString("mobile");
-                strUserID = jsonObject.getString("userId");          // in this key other user's id
-                strUserBy = jsonObject.getString("userby");              // in this key user Login id set
-
-
-                edtCompName.setText(jsonObject.getString("company_name"));
-                edtcategory.setText(jsonObject.getString("category"));
-                edtProdYear.setText(jsonObject.getString("production_year"));
-
-                edtContactNo.setText(strMobileNo);                  // add on 24-08-18
-                edtQuantity.setText(jsonObject.getString("allotted"));
-                edtAccountName.setText(jsonObject.getString("account_name"));
-                edtAccountNo.setText(jsonObject.getString("account_no"));
-                edtBankName.setText(jsonObject.getString("bank_name"));
-                edtGSTIN.setText(jsonObject.getString("gstin"));
-                edtIFSC.setText(jsonObject.getString("ifsc_code"));
-
-
-                post_date_time_et.setText(DTU.changeDateTimeFormat(jsonObject.getString("created_date")));
-
-
-                confir_date_time_et.setText(DTU.changeTimeFormat(jsonObject.getString("date"), jsonObject.getString("time")));
-
-                due_tv.setText("Due Date of Lifting");
-                remark_et.setText(jsonObject.getString("remark"));
-                due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_delivery_date")));
-
-
-                /*if (jsonObject.getString("role").equalsIgnoreCase("Buyer")) {
-//                   emd_et.setText(jsonObject.getString("emd"));
-                   // emd_et.setVisibility(View.VISIBLE);
-                    due_date_of_payment_et.setVisibility(View.VISIBLE);
-                    emd_tv.setVisibility(View.GONE);
-                    due_pay_tv.setVisibility(View.GONE);
-                    type.setVisibility(View.GONE);
-                    type_tv.setVisibility(View.GONE);
-                    //original_qty.setVisibility(View.GONE);
-                  //  original_qty_tv.setVisibility(View.GONE);
-                } else {
-                    //emd_et.setVisibility(View.VISIBLE);
-                    due_date_of_payment_et.setVisibility(View.VISIBLE);
-                   // emd_tv.setVisibility(View.VISIBLE);
-                    due_pay_tv.setVisibility(View.VISIBLE);
-                  //  emd_et.setText(jsonObject.getString("emd"));
-                    due_date_of_payment_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("payment_date")));
-                    type.setVisibility(View.VISIBLE);
-                    type_tv.setVisibility(View.VISIBLE);
-                    type.setText(jsonObject.getString("type"));
-                    required_qty.setText("Booked Quantity");
-                   // original_qty.setVisibility(View.VISIBLE);
-                  //  original_qty_tv.setVisibility(View.VISIBLE);
-                    original_qty.setText(jsonObject.getString("available_qty"));
-
-                }*/
-                if(typeStatus.equals("sell"))
+                if(flag_another.equals("bid_display"))
                 {
-                    emdHideLayout.setVisibility(View.VISIBLE);
-                    emd_et.setText(jsonObject.getString("emd"));
+                    /*long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
+                    long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
+                    String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
+                    validity_time.setText(timeLeftFormatted);
 
-                }
-                aquired_qty.setText("Total Claimed Quantity");
+                    String bidEndTime = T.returnEndTime(jsonObject.getString("bid_end_time"));
+                    start_time.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+                    end_time.setText(bidEndTime);
 
-                due_date_of_payment_et.setVisibility(View.VISIBLE);
-                // emd_tv.setVisibility(View.VISIBLE);
-                due_pay_tv.setVisibility(View.VISIBLE);
-                //  emd_et.setText(jsonObject.getString("emd"));
-                due_date_of_payment_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("payment_date")));
-
-                String required_qty = jsonObject.getString("required_qty");
-                String allotted = jsonObject.getString("allotted");
-
-                original_qty.setText(required_qty);
-                BookingDetailsActivityEdtAquiredQuantity.setText(allotted);
-
-                BookingDetailsActivityEdtAvailableQuantity.setText(""+(Integer.valueOf(required_qty) - Integer.valueOf(allotted)));
+                    strOfferID = jsonObject.getString("offer_id");                         // this key is in buy_bid  or sell_bid table id column key.
+                    //strMobileNo = jsonObject.getString("mobile");
+                    strUserID = jsonObject.getString("userId");          // in this key other user's id
+                    strUserBy = jsonObject.getString("userby");              // in this key user Login id set
 
 
-                if (jsonObject.has("type")) {                                              // if type tender or open
-                    if (jsonObject.getString("type").equalsIgnoreCase("Tender")) {            // this is use for tender case for Seller Login
-                        edtPriceQtl.setText(jsonObject.getString("tender_price"));
-                        int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("tender_price"));
-                        Log.e("iTotalAmount", " : " + iTotalAmount);
-                        double res = (iTotalAmount / 100.0f) * 5;
-                        totalGst = iTotalAmount + res;
-                        txtTotalAmount.setText(Double.toString(totalGst));
-                        Log.e("totalGst", " : " + totalGst);
-                    } else {                                                                             // this is use for open case  for Seller Login
+                    edtCompName.setText(jsonObject.getString("company_name"));
+                    edtcategory.setText(jsonObject.getString("catName"));
+                    edtProdYear.setText(jsonObject.getString("production_year"));
+                    remark_et.setText(jsonObject.getString("remark"));
+
+
+                    if(typeStatus.equals("sell"))
+                    {
+                        emdHideLayout.setVisibility(View.VISIBLE);
+                        emd_et.setText(jsonObject.getString("emd"));
+                        aquired_qty.setText("Total claimed Quantity");
+
+                        due_tv.setText("Due Date of Delivery");
+                        due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_lifting_date")));
+
+                    }
+                    else
+                    {
+                        aquired_qty.setText("Total acquired Quantity");
+
+                        due_tv.setText("Due Date of Delivery");
+                        due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_lifting_date")));
+                    }
+
+                    due_pay_tv.setVisibility(View.GONE);
+                    String required_qty = jsonObject.getString("required_qty");
+                    String allotted = jsonObject.getString("allotted");
+
+                    original_qty.setText(required_qty);
+                    BookingDetailsActivityEdtAquiredQuantity.setText(allotted);
+                    edtQuantity.setText(jsonObject.getString("curr_req_qty"));
+
+                    BookingDetailsActivityEdtAvailableQuantity.setText(jsonObject.getString("curr_req_qty"));
+
+
+                    if (jsonObject.has("type")) {                                              // if type tender or open
+                        if (jsonObject.getString("type").equalsIgnoreCase("Tender")) {            // this is use for tender case for Seller Login
+                            edtPriceQtl.setText(jsonObject.getString("tender_price"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("tender_price"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        } else {                                                                             // this is use for open case  for Seller Login
+                            edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        }
+                    } else {                                                                        // this is use for open case for Buyer Login
                         edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
                         int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
                         Log.e("iTotalAmount", " : " + iTotalAmount);
@@ -543,114 +519,298 @@ public class BookingDetailsActivity extends AppCompatActivity {
                         totalGst = iTotalAmount + res;
                         txtTotalAmount.setText(Double.toString(totalGst));
                         Log.e("totalGst", " : " + totalGst);
-                    }
-                } else {                                                                        // this is use for open case for Buyer Login
-                    edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
-                    int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
-                    Log.e("iTotalAmount", " : " + iTotalAmount);
-                    double res = (iTotalAmount / 100.0f) * 5;
-                    totalGst = iTotalAmount + res;
-                    txtTotalAmount.setText(Double.toString(totalGst));
-                    Log.e("totalGst", " : " + totalGst);
+                    }*/
                 }
+                else
+                {
+
+                     //set favorite icon
+                    if (jsonObject.getString("is_favorite").equalsIgnoreCase("Y"))
+                    {
+                        SellerListAdapterImgUnFav.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        SellerListAdapterImgUnFav.setVisibility(View.GONE);
+
+                    }
+                    //check type status = sell
+                    if(typeStatus.equals("sell"))
+                    {
+                        required_qty.setText("Current Available Qty");
+                        available_qty.setText("Booked Qty");
+                        emdHideLayout.setVisibility(View.VISIBLE);
+                        emd_et.setText(jsonObject.getString("emd"));
+                        aquired_qty.setText("Total Acquired Quantity");
+
+                        //due date of payment
+                        due_tv.setText("Due Date of Payment");
+                        due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("payment_date")));
+
+                        //Note :  in query selected date is lifting date but here alis is created i.e due_delivery_date
+                        //due date of lifting
+                        due_lifting_tv.setVisibility(View.VISIBLE);
+                        due_lifting_et.setVisibility(View.VISIBLE);
+                        due_lifting_tv.setText("Due Date of lifting");
+                        due_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_delivery_date")));
+
+                        long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
+                        long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
+                        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
+                        validity_time.setText(timeLeftFormatted);
+
+                        String bidEndTime = T.returnEndTime(jsonObject.getString("bid_end_time"));
+                        start_time.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+                        end_time.setText(bidEndTime);
+
+                        strOfferID = jsonObject.getString("offer_id");                         // this key is in buy_bid  or sell_bid table id column key.
+                        strMobileNo = jsonObject.getString("mobile");
+                        strUserID = jsonObject.getString("userId");          // in this key other user's id
+                        strUserBy = jsonObject.getString("userby");              // in this key user Login id set
+
+
+                        edtCompName.setText(jsonObject.getString("company_name"));
+                        edtcategory.setText(jsonObject.getString("category"));
+                        edtProdYear.setText(jsonObject.getString("production_year"));
+
+                        edtContactNo.setText(strMobileNo);                  // add on 24-08-18
+                        // edtQuantity.setText(jsonObject.getString("allotted"));
+                        edtAccountName.setText(jsonObject.getString("account_name"));
+                        edtAccountNo.setText(jsonObject.getString("account_no"));
+                        edtBankName.setText(jsonObject.getString("bank_name"));
+                        edtGSTIN.setText(jsonObject.getString("gstin"));
+                        edtIFSC.setText(jsonObject.getString("ifsc_code"));
+
+
+                        post_date_time_et.setText(DTU.changeDateTimeFormat(jsonObject.getString("created_date")));
+                        confir_date_time_et.setText(DTU.changeTimeFormat(jsonObject.getString("date"), jsonObject.getString("time")));
+
+
+                        remark_et.setText(jsonObject.getString("remark"));
+                        due_pay_tv.setVisibility(View.GONE);
+
+                        String required_qty = jsonObject.getString("available_qty");
+                        String allotted = jsonObject.getString("allotted");
+                        int curr_req_qty = Integer.valueOf(required_qty) - Integer.valueOf(allotted);
+
+
+                        int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+
+                        //original required qty
+                        original_qty.setText(required_qty);
+                        //total acquired qty
+                        BookingDetailsActivityEdtAquiredQuantity.setText(""+total_acq_qty);
+
+                        //current available qty
+                        edtQuantity.setText(""+curr_req_qty);
+
+                        //booked qty
+                        BookingDetailsActivityEdtAvailableQuantity.setText(""+total_acq_qty);
+
+                        if (jsonObject.has("type"))
+                        {                                              // if type tender or open
+                            if (jsonObject.getString("type").equalsIgnoreCase("Tender"))
+                            {            // this is use for tender case for Seller Login
+                                edtPriceQtl.setText(jsonObject.getString("tender_price"));
+                                int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("tender_price"));
+                                Log.e("iTotalAmount", " : " + iTotalAmount);
+                                double res = (iTotalAmount / 100.0f) * 5;
+                                totalGst = iTotalAmount + res;
+                                txtTotalAmount.setText(Double.toString(totalGst));
+                                Log.e("totalGst", " : " + totalGst);
+                            }
+                            else
+                            {                                                                             // this is use for open case  for Seller Login
+                                edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                                int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                                Log.e("iTotalAmount", " : " + iTotalAmount);
+                                double res = (iTotalAmount / 100.0f) * 5;
+                                totalGst = iTotalAmount + res;
+                                txtTotalAmount.setText(Double.toString(totalGst));
+                                Log.e("totalGst", " : " + totalGst);
+                            }
+                        }
+                        else
+                        {                                                                        // this is use for open case for Buyer Login
+                            edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        }
+                    }
+                    ////check type status = buy
+                    else
+                    {
+                        available_qty.setText("Received Qty : ");
+                        aquired_qty.setText("Total acquired Quantity");
+                        due_tv.setText("Due Date of Delivery");
+                        due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_delivery_date")));
+
+                        long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
+                        long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
+                        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
+                        validity_time.setText(timeLeftFormatted);
+
+                        String bidEndTime = T.returnEndTime(jsonObject.getString("bid_end_time"));
+                        start_time.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+                        end_time.setText(bidEndTime);
+
+                        strOfferID = jsonObject.getString("offer_id");                         // this key is in buy_bid  or sell_bid table id column key.
+                        strMobileNo = jsonObject.getString("mobile");
+                        strUserID = jsonObject.getString("userId");          // in this key other user's id
+                        strUserBy = jsonObject.getString("userby");              // in this key user Login id set
+
+
+                        edtCompName.setText(jsonObject.getString("company_name"));
+                        edtcategory.setText(jsonObject.getString("category"));
+                        edtProdYear.setText(jsonObject.getString("production_year"));
+
+                        edtContactNo.setText(strMobileNo);                  // add on 24-08-18
+                        // edtQuantity.setText(jsonObject.getString("allotted"));
+                        edtAccountName.setText(jsonObject.getString("account_name"));
+                        edtAccountNo.setText(jsonObject.getString("account_no"));
+                        edtBankName.setText(jsonObject.getString("bank_name"));
+                        edtGSTIN.setText(jsonObject.getString("gstin"));
+                        edtIFSC.setText(jsonObject.getString("ifsc_code"));
+
+                        post_date_time_et.setText(DTU.changeDateTimeFormat(jsonObject.getString("created_date")));
+                        confir_date_time_et.setText(DTU.changeTimeFormat(jsonObject.getString("date"), jsonObject.getString("time")));
+                        remark_et.setText(jsonObject.getString("remark"));
+                        due_pay_tv.setVisibility(View.GONE);
+
+                        String required_qty = jsonObject.getString("required_qty");
+                        String curr_req_qty = jsonObject.getString("curr_req_qty");
+                        String allotted = jsonObject.getString("allotted");
+                        int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+                        original_qty.setText(required_qty);
+                        //total acquired qty
+                        BookingDetailsActivityEdtAquiredQuantity.setText(""+total_acq_qty);
+                        edtQuantity.setText(""+curr_req_qty);
+
+                        BookingDetailsActivityEdtAvailableQuantity.setText(jsonObject.getString("allotted"));
+
+                        if (jsonObject.has("type")) {                                              // if type tender or open
+                            if (jsonObject.getString("type").equalsIgnoreCase("Tender")) {            // this is use for tender case for Seller Login
+                                edtPriceQtl.setText(jsonObject.getString("tender_price"));
+                                int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("tender_price"));
+                                Log.e("iTotalAmount", " : " + iTotalAmount);
+                                double res = (iTotalAmount / 100.0f) * 5;
+                                totalGst = iTotalAmount + res;
+                                txtTotalAmount.setText(Double.toString(totalGst));
+                                Log.e("totalGst", " : " + totalGst);
+                            } else {                                                                             // this is use for open case  for Seller Login
+                                edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                                int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                                Log.e("iTotalAmount", " : " + iTotalAmount);
+                                double res = (iTotalAmount / 100.0f) * 5;
+                                totalGst = iTotalAmount + res;
+                                txtTotalAmount.setText(Double.toString(totalGst));
+                                Log.e("totalGst", " : " + totalGst);
+                            }
+                        } else {                                                                        // this is use for open case for Buyer Login
+                            edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        }
+                    }
+
+                }
+
+
             }
             else if (strFlag.equalsIgnoreCase("Buyer"))
             {
 
 
-                long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
-                long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
-                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
-                validity_time.setText(timeLeftFormatted);
+                //set favorite icon
+                if (jsonObject.getString("is_favorite").equalsIgnoreCase("Y"))
+                {
+                    SellerListAdapterImgUnFav.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    SellerListAdapterImgUnFav.setVisibility(View.GONE);
+
+                }
+
+                validity_time.setText(T.returnEndTime(jsonObject.getString("validity_time")));
+
+                if(typeStatusData.equals("buy"))
+                {
+                    String required_qty = jsonObject.getString("required_qty");
+                    String curr_req_qty = jsonObject.getString("curr_req_qty");
+                    String allotted = jsonObject.getString("allotted");
+                    available_qty.setText("Received qty");
+                    due_tv.setText("Due Date of Delivery");
 
 
-//                validity_time.setText(jsonObject.getString("validity_time"));
 
-
-                start_time.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
-                end_time.setText(timeLeftFormatted);
-
-                strOfferID = jsonObject.getString("offer_id");                // this key is in buy_bid  or sell_bid table id column key.
-                strMobileNo = jsonObject.getString("mobile");
-                strUserID = jsonObject.getString("userId");          // in this key other user's id
-                strUserBy = jsonObject.getString("userby");              // in this key user Login id set
-
-                edtCompName.setText(jsonObject.getString("company_name"));
-                edtcategory.setText(jsonObject.getString("category"));
-                edtProdYear.setText(jsonObject.getString("production_year"));
-                edtContactNo.setText(strMobileNo);                  // add on 24-08-18
-                edtQuantity.setText(jsonObject.getString("allotted"));
-                edtAccountName.setText(jsonObject.getString("account_name"));
-                edtAccountNo.setText(jsonObject.getString("account_no"));
-                edtBankName.setText(jsonObject.getString("bank_name"));
-                edtGSTIN.setText(jsonObject.getString("gstin"));
-                edtIFSC.setText(jsonObject.getString("ifsc_code"));
-
-
-//                post_date_time_et.setText(jsonObject.getString("created_date"));
-//                confir_date_time_et.setText(jsonObject.getString("date") + " " + jsonObject.getString("time"));
-
-
-                post_date_time_et.setText(DTU.changeDateTimeFormat(jsonObject.getString("created_date")));
-                confir_date_time_et.setText(DTU.changeTimeFormat(jsonObject.getString("date"), jsonObject.getString("time")));
-
-
-                due_tv.setText("Due Delivery Date");
-                remark_et.setText(jsonObject.getString("remark"));
-                due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_delivery_date")));
-
-
-                /*if (jsonObject.getString("role").equalsIgnoreCase("Buyer")) {
-//                   emd_et.setText(jsonObject.getString("emd"));
-                    emd_et.setVisibility(View.GONE);
+                    start_time.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+                    end_time.setText(T.returnEndTime(jsonObject.getString("bid_end_time")));
+                    strOfferID = jsonObject.getString("offer_id");                // this key is in buy_bid  or sell_bid table id column key.
+                    strMobileNo = jsonObject.getString("mobile");
+                    strUserID = jsonObject.getString("userId");          // in this key other user's id
+                    strUserBy = jsonObject.getString("userby");              // in this key user Login id set
+                    edtCompName.setText(jsonObject.getString("company_name"));
+                    edtcategory.setText(jsonObject.getString("category"));
+                    edtProdYear.setText(jsonObject.getString("production_year"));
+                    edtContactNo.setText(strMobileNo);                  // add on 24-08-18
+                    edtAccountName.setText(jsonObject.getString("account_name"));
+                    edtAccountNo.setText(jsonObject.getString("account_no"));
+                    edtBankName.setText(jsonObject.getString("bank_name"));
+                    edtGSTIN.setText(jsonObject.getString("gstin"));
+                    edtIFSC.setText(jsonObject.getString("ifsc_code"));
+                    post_date_time_et.setText(DTU.changeDateTimeFormat(jsonObject.getString("created_date")));
+                    confir_date_time_et.setText(DTU.changeTimeFormat(jsonObject.getString("date"), jsonObject.getString("time")));
+                    remark_et.setText(jsonObject.getString("remark"));
+                    due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_delivery_date")));
                     due_date_of_payment_et.setVisibility(View.GONE);
-                    emd_tv.setVisibility(View.GONE);
+                    emdHideLayout.setVisibility(View.GONE);
+
+                    //original required qty
+                    original_qty.setText(required_qty);
+
+                     //total acquired qty
+                    int totalAQ = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+                    BookingDetailsActivityEdtAquiredQuantity.setText(""+totalAQ);
+
+                    //current req qty
+                    edtQuantity.setText(curr_req_qty);
+
                     due_pay_tv.setVisibility(View.GONE);
-                    type.setVisibility(View.GONE);
-                    type_tv.setVisibility(View.GONE);
-                    original_qty.setVisibility(View.VISIBLE);
-                    original_qty_tv.setVisibility(View.VISIBLE);
-                } else {
-                    //emd_et.setVisibility(View.VISIBLE);
-                    due_date_of_payment_et.setVisibility(View.VISIBLE);
-                    //emd_tv.setVisibility(View.VISIBLE);
-                    due_pay_tv.setVisibility(View.VISIBLE);
-                   // emd_et.setText(jsonObject.getString("emd"));
-                    due_date_of_payment_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("payment_date")));
-                    type.setVisibility(View.VISIBLE);
-                    type_tv.setVisibility(View.VISIBLE);
-                    type.setText(jsonObject.getString("type"));
-                    required_qty.setText("Booked Quantity");
-                    original_qty.setVisibility(View.VISIBLE);
-                    original_qty_tv.setVisibility(View.VISIBLE);
-                    original_qty.setText(jsonObject.getString("available_qty"));
-                }*/
-
-                due_date_of_payment_et.setVisibility(View.VISIBLE);
-                due_date_of_payment_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("payment_date")));
-
-                emdHideLayout.setVisibility(View.GONE);
-                String required_qty = jsonObject.getString("required_qty");
-                String allotted = jsonObject.getString("allotted");
-
-                int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(allotted);
-                original_qty.setText(required_qty);
-                BookingDetailsActivityEdtAquiredQuantity.setText(allotted);
-
-                BookingDetailsActivityEdtAvailableQuantity.setText(""+available_qty);
-////                due_date_of_payment_et.setText(jsonObject.getString("payment_date"));
-////                emd_et.setText(jsonObject.getString("emd"));
-
-                if (jsonObject.has("type")) {
-                    if (jsonObject.getString("type").equalsIgnoreCase("Tender")) {
-                        edtPriceQtl.setText(jsonObject.getString("tender_price"));
-                        int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("tender_price"));
-                        Log.e("iTotalAmount", " : " + iTotalAmount);
-                        double res = (iTotalAmount / 100.0f) * 5;
-                        totalGst = iTotalAmount + res;
-                        txtTotalAmount.setText(Double.toString(totalGst));
-                        Log.e("totalGst", " : " + totalGst);
-                    } else {
+                    BookingDetailsActivityEdtAvailableQuantity.setText(jsonObject.getString("allotted"));
+                    if (jsonObject.has("type"))
+                    {
+                        if (jsonObject.getString("type").equalsIgnoreCase("Tender"))
+                        {
+                            edtPriceQtl.setText(jsonObject.getString("tender_price"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("tender_price"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        }
+                        else
+                        {
+                            edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        }
+                    }
+                    else
+                    {
                         edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
                         int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
                         Log.e("iTotalAmount", " : " + iTotalAmount);
@@ -659,15 +819,97 @@ public class BookingDetailsActivity extends AppCompatActivity {
                         txtTotalAmount.setText(Double.toString(totalGst));
                         Log.e("totalGst", " : " + totalGst);
                     }
-                } else {
-                    edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
-                    int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
-                    Log.e("iTotalAmount", " : " + iTotalAmount);
-                    double res = (iTotalAmount / 100.0f) * 5;
-                    totalGst = iTotalAmount + res;
-                    txtTotalAmount.setText(Double.toString(totalGst));
-                    Log.e("totalGst", " : " + totalGst);
+
                 }
+                else
+                {
+
+                    due_tv.setText("Due Date of Lifting");
+                    //edtQuantity.setText(jsonObject.getString("available_qty"));
+                    // aquired_qty.setVisibility(View.GONE);
+                    required_qty.setText("Current Available Qty");
+
+                    String required_qty = jsonObject.getString("available_qty");
+                    String curr_req_qty = jsonObject.getString("curr_req_qty");
+                    String allotted = jsonObject.getString("allotted");
+
+
+                    //original required qty
+                     original_qty.setText(required_qty);
+                    //total acquired qty
+                    int totalAQ = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+                    BookingDetailsActivityEdtAquiredQuantity.setText(""+totalAQ);
+                    //current available qty
+                    int current_avail_qty = Integer.valueOf(required_qty) - Integer.valueOf(totalAQ);
+                    edtQuantity.setText(""+current_avail_qty);
+
+                    //booked qty
+                    available_qty.setText("Booked Qty");
+                    BookingDetailsActivityEdtAvailableQuantity.setText(""+allotted);
+
+
+                    start_time.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+                    end_time.setText(T.returnEndTime(jsonObject.getString("bid_end_time")));
+                    strOfferID = jsonObject.getString("offer_id");                // this key is in buy_bid  or sell_bid table id column key.
+                    strMobileNo = jsonObject.getString("mobile");
+                    strUserID = jsonObject.getString("userId");          // in this key other user's id
+                    strUserBy = jsonObject.getString("userby");              // in this key user Login id set
+                    edtCompName.setText(jsonObject.getString("company_name"));
+                    edtcategory.setText(jsonObject.getString("category"));
+                    edtProdYear.setText(jsonObject.getString("production_year"));
+                    edtContactNo.setText(strMobileNo);                  // add on 24-08-18
+                    edtAccountName.setText(jsonObject.getString("account_name"));
+                    edtAccountNo.setText(jsonObject.getString("account_no"));
+                    edtBankName.setText(jsonObject.getString("bank_name"));
+                    edtGSTIN.setText(jsonObject.getString("gstin"));
+                    edtIFSC.setText(jsonObject.getString("ifsc_code"));
+                    post_date_time_et.setText(DTU.changeDateTimeFormat(jsonObject.getString("created_date")));
+                    confir_date_time_et.setText(DTU.changeTimeFormat(jsonObject.getString("date"), jsonObject.getString("time")));
+                    remark_et.setText(jsonObject.getString("remark"));
+                    due_date_of_lifting_et.setText(DTU.changeDateTimeFormatForDue(jsonObject.getString("due_delivery_date")));
+                    due_date_of_payment_et.setVisibility(View.GONE);
+                    emdHideLayout.setVisibility(View.GONE);
+
+
+
+
+                    due_pay_tv.setVisibility(View.GONE);
+
+                    if (jsonObject.has("type"))
+                    {
+                        if (jsonObject.getString("type").equalsIgnoreCase("Tender"))
+                        {
+                            edtPriceQtl.setText(jsonObject.getString("tender_price"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("tender_price"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        }
+                        else
+                        {
+                            edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                            int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                            Log.e("iTotalAmount", " : " + iTotalAmount);
+                            double res = (iTotalAmount / 100.0f) * 5;
+                            totalGst = iTotalAmount + res;
+                            txtTotalAmount.setText(Double.toString(totalGst));
+                            Log.e("totalGst", " : " + totalGst);
+                        }
+                    }
+                    else
+                    {
+                        edtPriceQtl.setText(jsonObject.getString("price_per_qtl"));
+                        int iTotalAmount = Integer.valueOf(jsonObject.getString("allotted")) * Integer.valueOf(jsonObject.getString("price_per_qtl"));
+                        Log.e("iTotalAmount", " : " + iTotalAmount);
+                        double res = (iTotalAmount / 100.0f) * 5;
+                        totalGst = iTotalAmount + res;
+                        txtTotalAmount.setText(Double.toString(totalGst));
+                        Log.e("totalGst", " : " + totalGst);
+                    }
+                }
+
             }
         } catch (JSONException e) {
 

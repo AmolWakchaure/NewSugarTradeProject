@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.R;
 import com.prosolstech.sugartrade.activity.SellDetailsActivity;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.database.DataBaseConstants;
 import com.prosolstech.sugartrade.database.DataBaseHelper;
 import com.prosolstech.sugartrade.model.BuyBidModel;
@@ -32,9 +33,11 @@ import com.prosolstech.sugartrade.util.ItemAnimation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,8 +54,9 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
     private JSONArray array;
-    private List<BuyBidModel> listbuyBidModel;
+    private ArrayList<BuyBidModel> listbuyBidModel;
     private RefreshListner refreshListner;
+
 
     public interface OnItemClickListener {
         void onItemClick(View view, Integer obj, int position);
@@ -64,17 +68,24 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     //    public BuyBidAdapter(Context context, List<People> items, int animation_type) {
-    public BuyBidAdapterTestTimer(Context context, JSONArray array, int animation_type, List<BuyBidModel> listbuyBidModel, RefreshListner refreshListner) {
+    public BuyBidAdapterTestTimer(Context context, JSONArray array, int animation_type, ArrayList<BuyBidModel> listbuyBidModel,
+                                  RefreshListner refreshListner) {
+
         ctx = context;
         this.array = array;
         this.animation_type = animation_type;
         this.listbuyBidModel = listbuyBidModel;
         this.refreshListner = refreshListner;
+
+
+
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtMillName, txtGrade, txtRate, txtTime, txtClaimed, txtAvalQty, txtQty, txtId, id_tv, posted_at, SellBidFragmentTxtQty , start_time, end_time;
-        LinearLayout llclaimed, typeIdLv;
+        public TextView current_required_qty_tv,txtMillName, txtGrade, txtRate, txtTime, txtClaimed, txtAvalQty, txtId, id_tv, posted_at, SellBidFragmentTxtQty , start_time, end_time;
+        LinearLayout llclaimed, typeIdLv,
+                startTime_li,
+                endTime_li;
         ImageView SellerListAdapterImgUnFav;
         CountDownTimer timer;
         TextView current_required_qty_et;
@@ -83,13 +94,16 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
         public OriginalViewHolder(View v) {
             super(v);
             txtMillName = (TextView) v.findViewById(R.id.SellBidFragmentTxtMillName);
+            current_required_qty_tv = (TextView) v.findViewById(R.id.current_required_qty_tv);
             txtTime = (TextView) v.findViewById(R.id.SellBidFragmentTxtTime);
             txtGrade = (TextView) v.findViewById(R.id.SellBidFragmentTxtGrade);
             txtRate = (TextView) v.findViewById(R.id.SellBidFragmentTxtRate);
             txtClaimed = (TextView) v.findViewById(R.id.SellBidFragmentTxtClaimed);
             txtAvalQty = (TextView) v.findViewById(R.id.SellBidFragmentTxtAvailableQty);
-            txtQty = (TextView) v.findViewById(R.id.SellBidFragmentTxtAvailableQty);
+           // txtQty = (TextView) v.findViewById(R.id.SellBidFragmentTxtAvailableQty);
             llclaimed = (LinearLayout) v.findViewById(R.id.SellBidFragmentLinearLayoutClaimed);
+            startTime_li = (LinearLayout) v.findViewById(R.id.startTime_li);
+            endTime_li = (LinearLayout) v.findViewById(R.id.endTime_li);
             typeIdLv = (LinearLayout) v.findViewById(R.id.idLv);
             txtId = v.findViewById(R.id.id);
             id_tv = v.findViewById(R.id.id_tv);
@@ -125,7 +139,7 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
                 final BuyBidModel buyBidModel = listbuyBidModel.get(position);
 
 
-                if (buyBidModel.getIs_favorite().equalsIgnoreCase("y")) {
+                if (buyBidModel.getIs_favorite().equalsIgnoreCase("Y")) {
                     view.SellerListAdapterImgUnFav.setVisibility(View.VISIBLE);
                 } else if (buyBidModel.getIs_favorite().equalsIgnoreCase("N")) {
                     view.SellerListAdapterImgUnFav.setVisibility(View.GONE);
@@ -142,22 +156,37 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
                 String timeLeftFormatted1 = String.format(Locale.getDefault(), "%02d:%02d", hours5, minutes5);
                 view.end_time.setText(timeLeftFormatted1);
 
+
                 view.typeIdLv.setVisibility(View.VISIBLE);
-                if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller")) {
-                    view.SellBidFragmentTxtQty.setText("Current Required Qty:");
-                    view.id_tv.setText("Buy Post Id:");
-                } else {
-                    view.id_tv.setText("Sell Post Id:");
+                view.startTime_li.setVisibility(View.GONE);
+                view.endTime_li.setVisibility(View.GONE);
+                if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller"))
+                {
+                    view.SellBidFragmentTxtQty.setText("Current Required Qty : ");
+                    view.id_tv.setText("Buy Post Id : ");
+
+
+                    view.txtAvalQty.setText(buyBidModel.getCurrent_req_quantity());
+
+
+
+                }
+                else
+                {
+                    view.id_tv.setText("Sell Post Id : ");
+                    view.txtAvalQty.setText(buyBidModel.getAvailable_qty());
+
                 }
                 view.txtId.setText(buyBidModel.getId());
                 view.posted_at.setText(buyBidModel.getDate());
+                view.posted_at.setText(T.formatTimeStamp(buyBidModel.getDate()));
 
                 view.txtMillName.setText(buyBidModel.getCompany_name());
                 view.txtGrade.setText(buyBidModel.getCategory());
                 view.txtRate.setText(buyBidModel.getPrice_per_qtl());
                 view.llclaimed.setVisibility(View.GONE);                                        // For Buyer Claimed not display
-                view.txtQty.setText("Required Qty : ");
-                view.txtAvalQty.setText(buyBidModel.getAvailable_qty());           // remove "bag_qty"  in place of "required_qty"  Add Required qty field for buyer
+
+                         // remove "bag_qty"  in place of "required_qty"  Add Required qty field for buyer
                 view.current_required_qty_et.setText(buyBidModel.getAcquired_quantity());
 
                 final BuyBidModel buyBidModel1 = DataBaseHelper.DBBuyBidData.getBuyModel(buyBidModel.getId());
@@ -165,7 +194,8 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
                 Log.e("BuyBidModel_CURSOR_ID", " : " + buyBidModel1.getId());
 
 
-                if (buyBidModel1 != null) {
+                if (buyBidModel1 != null)
+                {
 
                     long mill = TimeUnit.MINUTES.toMillis(Long.parseLong(buyBidModel.getValidity_time()));
                     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -205,6 +235,9 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
                                 }
 
                                 view.txtTime.setText("Bid Over");
+
+                                refreshListner.refresh(ctx);
+                                T.e("bid over 1");
                             }
 
                         } catch (Exception e) {
@@ -243,6 +276,7 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
 
 
                                 view.txtTime.setText("Bid Over");
+                                T.e("bid over 2");
                             }
 
                         } catch (Exception e) {
@@ -260,6 +294,7 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
                         startTimer(view, mill, buyBidModel2);
                     } else {
                         view.txtTime.setText("Bid Over");
+                        T.e("bid over 3");
                     }
                 }
 
@@ -270,9 +305,11 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view1) {
                     try {
 
+
+                        Log.e("BUY_BID_array", ": " + " Buy_position  " + position + "   " + array.getJSONObject(position).toString());
 
                         String dateTime[] = array.getJSONObject(position).getString("created_date").split(" ");
                         String date = dateTime[0];
@@ -290,12 +327,40 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
                             Log.e("convertedDateCurrent", ": " + convertedDateCurrent.toString());
                             Log.e("convertBidDate", ": " + convertBidDate.toString());
                             Log.e("CAMPARE_DATE_COND_BUY", ": " + convertedDateCurrent.after(convertBidDate));
-
+                            JSONArray jsonArray = null;
+                            String clickedId = null;
                             if (convertedDateCurrent.after(convertBidDate)) {
-                                Intent in = new Intent(ctx, SellDetailsActivity.class);
-                                in.putExtra("flag", ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, ""));
-                                in.putExtra("data", String.valueOf(array.getJSONObject(position)));
-                                ctx.startActivity(in);
+
+                                if (!view.txtTime.getText().toString().equalsIgnoreCase("Bid Over"))
+                                {
+                                    clickedId = ""+listbuyBidModel.get(position).getId();
+                                    //T.t(""+listbuyBidModel.get(position).getId());
+
+                                    jsonArray = new JSONArray();
+                                    for(int i = 0; i < array.length(); i++)
+                                    {
+                                        JSONObject buyerInfoDetails = array.getJSONObject(i);
+
+                                        String matchId = buyerInfoDetails.getString("id");
+
+                                        if(matchId.equals(clickedId))
+                                        {
+                                            jsonArray.put(buyerInfoDetails);
+                                        }
+                                    }
+                                    Intent in = new Intent(ctx, SellDetailsActivity.class);
+                                    in.putExtra("flag", ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, ""));
+                                    in.putExtra("data", ""+jsonArray.getJSONObject(0));
+
+                                    ctx.startActivity(in);
+                                }
+                                else
+                                {
+                                    Toast.makeText(ctx, "Bid is over!", Toast.LENGTH_SHORT).show();
+                                }
+
+
+
                             } else {
                                 Toast.makeText(ctx, "This record not booked before offer start time", Toast.LENGTH_SHORT).show();
                             }
@@ -344,6 +409,7 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
                 String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
                 if ((hours == 0 && minutes == 0)) {
                     holder.txtTime.setText("Bid Over");
+                    T.e("bid over 4");
 
 
                     BuyBidModel test2 = new BuyBidModel();
@@ -452,7 +518,7 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return array.length();
+        return listbuyBidModel.size();
     }
 
     private int lastPosition = -1;
@@ -468,5 +534,11 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
     public interface RefreshListner {
 
         void refresh(Context context);
+    }
+    public void setFilter(ArrayList<BuyBidModel> countryModels)
+    {
+        listbuyBidModel = new ArrayList<>();
+        listbuyBidModel.addAll(countryModels);
+        notifyDataSetChanged();
     }
 }

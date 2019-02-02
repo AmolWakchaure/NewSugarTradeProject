@@ -1,8 +1,20 @@
 package com.prosolstech.sugartrade.model;
 
+import java.util.Comparator;
+
 public class BuyBidModel {
     String id;
     String current_req_quantity;
+
+    public String getProduction_year() {
+        return production_year;
+    }
+
+    public void setProduction_year(String production_year) {
+        this.production_year = production_year;
+    }
+
+    String production_year;
 
     public String getCurrent_req_quantity() {
         return current_req_quantity;
@@ -158,5 +170,40 @@ public class BuyBidModel {
     }
 
     String price_per_qtl;
+
+    //price low to high
+    public static Comparator<BuyBidModel> priceLowTohigh = new Comparator<BuyBidModel>()
+    {
+
+        public int compare(BuyBidModel s1,BuyBidModel s2)
+        {
+            double price1 = Double.valueOf(s1.getPrice_per_qtl());
+            double price2 = Double.valueOf(s2.getPrice_per_qtl());
+
+            if (price1 == price2)
+                return 0;
+            else if (price1 > price2)
+                return 1;
+            else
+                return -1;
+        }
+    };
+    //price high to low
+    public static Comparator<BuyBidModel> priceHighTolow = new Comparator<BuyBidModel>()
+    {
+
+        public int compare(BuyBidModel s1,BuyBidModel s2)
+        {
+            double price1 = Double.valueOf(s1.getPrice_per_qtl());
+            double price2 = Double.valueOf(s2.getPrice_per_qtl());
+
+            if (price1 == price2)
+                return 0;
+            else if (price1 < price2)
+                return 1;
+            else
+                return -1;
+        }
+    };
 
 }

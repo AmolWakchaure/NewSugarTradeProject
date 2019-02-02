@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -61,23 +62,24 @@ import java.util.Map;
 
 public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnClickListener {
     Context context;
-    EditText edtValidityTime, edtStartTime, edtPriQty, edtDeliveryDate, edtRemark;
+    EditText edtPriQty, edtRemark;
     Spinner spnCategory, spnProdYear;
-    Button btnPlaceBid;
+    Button btnPlaceBid,edtDeliveryDate,selectStart_time_btn,select_val_time_btn;
+           EditText edtValidityTime, edtStartTime;
     ArrayList<String> listCategory;
     ArrayList<String> listSeason;
     ArrayList<String> listSeasonId;
     ArrayList<String> listCatId;
     String strFlag = "", strCatID = "", strUserId = "", strSendTo = "";
     DataBaseHelper db;
-    RadioButton rbSendToFav, rbSendToAll;
+    RadioButton rbSendToFav, rbSendToAll,PlaceSellBidActivityRadioButtonTendor,PlaceSellBidActivityRadioButtonOpen;
     JSONObject jsonObject;
     double totalGst;
-    TextView txtGstValue;
+    TextView txtGstValue,seasonYear_tv,grade_tv;
     ImageView imgSeasonRefresh, imgCategoryRefresh;
-    TextView original_required_tv, totoal_required_tv;
+    TextView original_required_tv, totoal_required_tv,currentRequiredQtyTv;
     EditText original_required_et,totalAquiredQtyEt,currentRequiredQtyEt;
-    LinearLayout hideLayout;
+    LinearLayout hideLayout,grade_li,season_year_li,hideTActLi,type_tv,type_li;
 
 
     @Override
@@ -102,19 +104,31 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
         imgSeasonRefresh = (ImageView) findViewById(R.id.PlaceBuyBidActivityImageSeasonRefresh);
         imgCategoryRefresh = (ImageView) findViewById(R.id.PlaceBuyBidActivityImageCategoryRefresh);
         hideLayout = (LinearLayout) findViewById(R.id.hideLayout);
+        grade_li = (LinearLayout) findViewById(R.id.grade_li);
+        season_year_li = (LinearLayout) findViewById(R.id.season_year_li);
+        hideTActLi = (LinearLayout) findViewById(R.id.hideTActLi);
+        type_li = (LinearLayout) findViewById(R.id.type_li);
 
         txtGstValue = (TextView) findViewById(R.id.PlaceBuyBidActivityTxtGstValue);
+        seasonYear_tv= (TextView) findViewById(R.id.seasonYear_tv);
+        grade_tv = (TextView) findViewById(R.id.grade_tv);
+        type_tv = (LinearLayout) findViewById(R.id.type_tv);
+        currentRequiredQtyTv = (TextView) findViewById(R.id.currentRequiredQtyTv);
 
         edtValidityTime = (EditText) findViewById(R.id.PlaceBuyBidActivityValidityTime);
         edtStartTime = (EditText) findViewById(R.id.PlaceBuyBidActivityBidStartTime);
+
         totalAquiredQtyEt = (EditText) findViewById(R.id.totalAquiredQtyEt);
         currentRequiredQtyEt = (EditText) findViewById(R.id.currentRequiredQtyEt);
+
+        selectStart_time_btn= (Button) findViewById(R.id.selectStart_time_btn);
+        select_val_time_btn= (Button) findViewById(R.id.select_val_time_btn);
 
 
         spnProdYear = (Spinner) findViewById(R.id.PlaceBuyBidActivitySpnProductionYear);
         edtPriQty = (EditText) findViewById(R.id.PlaceBuyBidActivityPriceQuantity);
       //  edtRequiredQty = (EditText) findViewById(R.id.PlaceBuyBidActivityRequiredQuantity);
-        edtDeliveryDate = (EditText) findViewById(R.id.PlaceBuyBidActivityDeliveryDate);
+        edtDeliveryDate = (Button) findViewById(R.id.PlaceBuyBidActivityDeliveryDate);
         edtRemark = (EditText) findViewById(R.id.PlaceBuyBidActivityRemark);
 
         spnCategory = (Spinner) findViewById(R.id.PlaceBuyBidActivitySpnCategory);
@@ -122,6 +136,8 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
         rbSendToFav = (RadioButton) findViewById(R.id.PlaceBuyBidActivityRadioButtonSendToFav);
         rbSendToAll = (RadioButton) findViewById(R.id.PlaceBuyBidActivityRadioButtonSendToAll);
 
+        PlaceSellBidActivityRadioButtonTendor = (RadioButton) findViewById(R.id.PlaceSellBidActivityRadioButtonTendor);
+        PlaceSellBidActivityRadioButtonOpen = (RadioButton) findViewById(R.id.PlaceSellBidActivityRadioButtonOpen);
 
         btnPlaceBid = (Button) findViewById(R.id.PlaceBuyBidActivityButtonPlaceBid);
 
@@ -132,6 +148,8 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
         edtDeliveryDate.setOnClickListener(this);
         imgSeasonRefresh.setOnClickListener(this);
         imgCategoryRefresh.setOnClickListener(this);
+        selectStart_time_btn.setOnClickListener(this);
+        select_val_time_btn.setOnClickListener(this);
 
         edtPriQty.addTextChangedListener(new TextWatcher() {
 
@@ -206,11 +224,11 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
 
                 }
                 break;
-            case R.id.PlaceBuyBidActivityValidityTime:
+            case R.id.select_val_time_btn:
                 showTime24HourPickerDialogWithMinute(context, DTU.getCurrentDateTimeStamp(DTU.HM), edtValidityTime);
                 edtValidityTime.setError(null);
                 break;
-            case R.id.PlaceBuyBidActivityBidStartTime:
+            case R.id.selectStart_time_btn:
 //                DTU.showTime24HourPickerDialog(context, DTU.getCurrentDateTimeStamp(DTU.HM), edtStartTime);
                 showTime(context, DTU.getCurrentDateTimeStamp(DTU.HM), edtStartTime);
                 edtStartTime.setError(null);
@@ -610,9 +628,11 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
         queue.add(stringRequest);
     }
 
-    private void getIntentData() {        // this data comes from MyBuyOfferAdapter class
+    private void getIntentData()
+    {        // this data comes from MyBuyOfferAdapter class
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
+        if (extras != null)
+        {
             try {
                 strFlag = extras.getString("flag");
 
@@ -625,12 +645,51 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
                 if(strFlag.equals("insert"))
                 {
                     hideLayout.setVisibility(View.GONE);
+                    type_li.setVisibility(View.GONE);
+                    original_required_tv.setText("Original Required Quantity");
+
+                    //set current year
+                    spnProdYear.setSelection(listSeason.size() - 1);
+                }
+                else if(strFlag.equals("sell_bid_details"))
+                {
+                    setBlr();
+
+                    type_tv.setVisibility(View.GONE);
+                    jsonObject = new JSONObject(extras.getString("data"));
+                    toolbar.setTitle("Buy Post Id:" + jsonObject.getString("id"));
+                    //rbSendToFav.setEnabled(false);
+                    //rbSendToAll.setEnabled(false);
+                    rbSendToFav.setVisibility(View.GONE);
+                    rbSendToAll.setVisibility(View.GONE);
+                    type_li.setVisibility(View.GONE);
+
+                    select_val_time_btn.setVisibility(View.GONE);
+                    selectStart_time_btn.setVisibility(View.GONE);
+                    setData(strFlag);
                 }
                 else
                 {
+
+
+                    type_tv.setVisibility(View.GONE);
+                    setBlr();
+
                     jsonObject = new JSONObject(extras.getString("data"));
                     toolbar.setTitle("Buy Post Id:" + jsonObject.getString("id"));
-                    setData();
+
+                    String post_status = extras.getString("post_status");
+                    if(post_status.equals("single_post"))
+                    {
+                        rbSendToFav.setVisibility(View.GONE);
+                        rbSendToAll.setVisibility(View.GONE);
+                    }
+                    rbSendToFav.setEnabled(false);
+                    rbSendToAll.setEnabled(false);
+                    select_val_time_btn.setVisibility(View.GONE);
+                    selectStart_time_btn.setVisibility(View.GONE);
+
+                    setData(strFlag);
                 }
 
             } catch (Exception e) {
@@ -640,67 +699,305 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    public void setData() {
-        try {
-            btnPlaceBid.setVisibility(View.GONE);
-            btnPlaceBid.setText("Update Place Buy Offer");
+    private void setBlr() {
 
-            strUserId = jsonObject.getString("id");
+
+        original_required_tv.setText("Original Required Quantity");
+        original_required_et.setBackgroundResource(R.drawable.new_style_container);
+        original_required_et.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        original_required_et.setEnabled(false);
+
+
+        totalAquiredQtyEt.setBackgroundResource(R.drawable.new_style_container);
+        totalAquiredQtyEt.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        totalAquiredQtyEt.setEnabled(false);
+
+
+        currentRequiredQtyEt.setBackgroundResource(R.drawable.new_style_container);
+        currentRequiredQtyEt.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        currentRequiredQtyEt.setEnabled(false);
+
+
+        edtPriQty.setBackgroundResource(R.drawable.new_style_container);
+        edtPriQty.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        edtPriQty.setEnabled(false);
+
+
+        edtDeliveryDate.setBackgroundResource(R.drawable.new_style_container);
+        edtDeliveryDate.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        edtDeliveryDate.setEnabled(false);
+
+
+        edtStartTime.setBackgroundResource(R.drawable.new_style_container);
+        edtStartTime.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        edtStartTime.setEnabled(false);
+
+
+        edtValidityTime.setBackgroundResource(R.drawable.new_style_container);
+        edtValidityTime.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        edtValidityTime.setEnabled(false);
+
+        edtRemark.setBackgroundResource(R.drawable.new_style_container);
+        edtRemark.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+                PorterDuff.Mode.SRC_ATOP);
+        edtRemark.setEnabled(false);
+
+        grade_li.setBackgroundResource(R.drawable.new_style_container);
+        grade_li.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
+                PorterDuff.Mode.SRC_ATOP);
+        grade_li.setEnabled(false);
+        grade_li.setClickable(false);
+
+        season_year_li.setBackgroundResource(R.drawable.new_style_container);
+        season_year_li.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
+                PorterDuff.Mode.SRC_ATOP);
+        season_year_li.setEnabled(false);
+        season_year_li.setClickable(false);
+
+
+        /*spnCategory.setBackgroundResource(R.drawable.new_style_container_spinner);
+        spnCategory.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),PorterDuff.Mode.SRC_ATOP);
+        spnCategory.setEnabled(false);
+
+        spnProdYear.setBackgroundResource(R.drawable.new_style_container_spinner);
+        spnProdYear.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),PorterDuff.Mode.SRC_ATOP);
+        spnProdYear.setEnabled(false);*/
+
+        spnCategory.setVisibility(View.GONE);
+        spnProdYear.setVisibility(View.GONE);
+    }
+
+    public void setData(String strFlag) {
+
+        if(strFlag.equals("sell_bid_details"))
+        {
+            try {
+                btnPlaceBid.setVisibility(View.GONE);
+                btnPlaceBid.setText("Update Place Buy Offer");
+
+                strUserId = jsonObject.getString("id");
 
 //            edtValidityTime.setText(jsonObject.getString("validity_time"));
 
 
-            long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
-            long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
+                long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
+                long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
 
-            String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
-            edtValidityTime.setText(timeLeftFormatted);
+                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
+                edtValidityTime.setText(timeLeftFormatted);
 //            edtValidityTime.setText(hours + ":" + minutes);
 
-            edtStartTime.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
-            // edtProdYear.setText(jsonObject.getString("production_year"));
-            edtPriQty.setText(jsonObject.getString("price_per_qtl"));
-            //edtRequiredQty.setText(jsonObject.getString("required_qty"));
-            original_required_et.setText(jsonObject.getString("required_qty"));
-            totalAquiredQtyEt.setText(jsonObject.getString("acquired_qty"));
-            currentRequiredQtyEt.setText(jsonObject.getString("curr_req_qty"));
-            edtDeliveryDate.setText(VU.getddmmyyDate(jsonObject.getString("due_delivery_date")));
-            edtRemark.setText(jsonObject.getString("remark"));
+                edtStartTime.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+                // edtProdYear.setText(jsonObject.getString("production_year"));
 
-            txtGstValue.setVisibility(View.VISIBLE);
-            // txtGstValue.setText("WITH GST (" + jsonObject.getString("price_per_qtl") + ")");
+                PlaceSellBidActivityRadioButtonTendor.setEnabled(false);
+                PlaceSellBidActivityRadioButtonOpen.setEnabled(false);
+                if(jsonObject.getString("type").equals("Tender"))
+                {
+                    PlaceSellBidActivityRadioButtonTendor.setChecked(true);
+                    edtPriQty.setText(jsonObject.getString("tender_price"));
+                }
+                else
+                {
+                    PlaceSellBidActivityRadioButtonOpen.setChecked(true);
+                    edtPriQty.setText(jsonObject.getString("price_per_qtl"));
+                }
 
-            if (!jsonObject.getString("category").equals("")) {
-                int index = listCategory.indexOf("" + jsonObject.getString("category"));
-                spnCategory.setSelection(index);
-                Log.e("spnCategory", " " + index + "  " + jsonObject.getString("category"));
+                //edtRequiredQty.setText(jsonObject.getString("required_qty"));
+
+                if (ACU.MySP.getFromSP(this, ACU.MySP.ROLE, "").equalsIgnoreCase("Buyer"))
+                {
+                    String original_qty = jsonObject.getString("available_qty");
+                    String current_required_qty = jsonObject.getString("current_required_qty");
+
+                    original_required_tv.setText("ORIGINAL SELL QUANTITY (IN QUINTAL)");
+                    original_required_et.setText(""+original_qty);
+
+                    currentRequiredQtyTv.setText("CURRENT AVAILABLE QUANTITY (UNIT IN QTL)");
+                    currentRequiredQtyEt.setText(""+current_required_qty);
+
+                    int tAcqQty = Integer.valueOf(original_qty) - Integer.valueOf(current_required_qty);
+
+                    //total acquired qty
+                    totalAquiredQtyEt.setText(""+tAcqQty);
+
+                    edtDeliveryDate.setText(VU.getddmmyyDate(jsonObject.getString("due_lifting_date")));
+                }
+                else
+                {
+
+                    String original_qty = jsonObject.getString("required_qty");
+                    String current_required_qty = jsonObject.getString("curr_req_qty");
+
+                    original_required_tv.setText("ORIGINAL REQUIRED QUANTITY (IN QUINTAL)");
+                    original_required_et.setText(jsonObject.getString("required_qty"));
+
+                    currentRequiredQtyTv.setText("CURRENT REQUIRED QUANTITY (UNIT IN QTL)");
+                    currentRequiredQtyEt.setText(jsonObject.getString("curr_req_qty"));
+
+                    int tAcqQty = Integer.valueOf(original_qty) - Integer.valueOf(current_required_qty);
+
+                    //total acquired qty
+                    totalAquiredQtyEt.setText(""+tAcqQty);
+
+                    edtDeliveryDate.setText(VU.getddmmyyDate(jsonObject.getString("due_delivery_date")));
+                }
+
+
+               // hideTActLi.setVisibility(View.GONE);
+                //totalAquiredQtyEt.setVisibility(View.GONE);
+               // totalAquiredQtyEt.setText(jsonObject.getString("acquired_qty"));
+
+
+                edtRemark.setText(jsonObject.getString("remark"));
+
+                txtGstValue.setVisibility(View.VISIBLE);
+                // txtGstValue.setText("WITH GST (" + jsonObject.getString("price_per_qtl") + ")");
+
+                if (!jsonObject.getString("catName").equals(""))
+                {
+                    /*int index = listCategory.indexOf("" + jsonObject.getString("catName"));
+                    spnCategory.setSelection(index);
+                    Log.e("spnCategory", " " + index + "  " + jsonObject.getString("catName"));*/
+
+                    grade_tv.setVisibility(View.VISIBLE);
+                    grade_tv.setText("" + jsonObject.getString("catName"));
+                }
+
+                if (!jsonObject.getString("production_year").equals(""))
+                {
+                    String prod_year = jsonObject.getString("production_year");
+                    seasonYear_tv.setVisibility(View.VISIBLE);
+                    seasonYear_tv.setText(prod_year);
+                    /*if(listSeason.contains(prod_year))
+                    {
+                        int index = listSeason.indexOf(prod_year);
+
+                        spnProdYear.setSelection(index);
+                        Log.e("spnProdYear", " " + index + "  " + jsonObject.getString("production_year"));
+
+                    }*/
+                    //int index = listSeason.indexOf("" + jsonObject.getString("production_year"));
+
+
+                }
+
+                if (!jsonObject.getString("send_to").equalsIgnoreCase("send_to_all")) {
+                    rbSendToFav.setChecked(true);
+                    strSendTo = "send_to_favorites";
+                } else {
+                    rbSendToAll.setChecked(true);
+                    strSendTo = "send_to_all";
+                }
+
+
+                original_required_tv.setVisibility(View.VISIBLE);
+                // totoal_required_tv.setVisibility(View.VISIBLE);
+                original_required_et.setVisibility(View.VISIBLE);
+
+
+            } catch (JSONException e) {
+                T.e("setData() EXCEPTION : "+e);
+                e.printStackTrace();
+
             }
-
-            if (!jsonObject.getString("production_year").equals("")) {
-                int index = listSeason.indexOf("" + jsonObject.getString("production_year"));
-                spnProdYear.setSelection(index);
-                Log.e("spnProdYear", " " + index + "  " + jsonObject.getString("production_year"));
-            }
-
-            if (!jsonObject.getString("send_to").equalsIgnoreCase("send_to_all")) {
-                rbSendToFav.setChecked(true);
-                strSendTo = "send_to_favorites";
-            } else {
-                rbSendToAll.setChecked(true);
-                strSendTo = "send_to_all";
-            }
-
-
-            original_required_tv.setVisibility(View.VISIBLE);
-           // totoal_required_tv.setVisibility(View.VISIBLE);
-            original_required_et.setVisibility(View.VISIBLE);
-
-
-        } catch (JSONException e) {
-            T.e("setData() EXCEPTION : "+e);
-            e.printStackTrace();
-
         }
+        else
+        {
+            try {
+                btnPlaceBid.setVisibility(View.GONE);
+                btnPlaceBid.setText("Update Place Buy Offer");
+
+                PlaceSellBidActivityRadioButtonTendor.setVisibility(View.GONE);
+                PlaceSellBidActivityRadioButtonOpen.setVisibility(View.GONE);
+
+                strUserId = jsonObject.getString("id");
+
+//            edtValidityTime.setText(jsonObject.getString("validity_time"));
+
+
+                long hours = Long.parseLong(jsonObject.getString("validity_time")) / 60; //since both are ints, you get an int
+                long minutes = Long.parseLong(jsonObject.getString("validity_time")) % 60;
+
+                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
+                edtValidityTime.setText(timeLeftFormatted);
+//            edtValidityTime.setText(hours + ":" + minutes);
+
+                edtStartTime.setText(DTU.changeTime(jsonObject.getString("bid_start_time")));
+                // edtProdYear.setText(jsonObject.getString("production_year"));
+                edtPriQty.setText(jsonObject.getString("price_per_qtl"));
+                //edtRequiredQty.setText(jsonObject.getString("required_qty"));
+                String required_qty = jsonObject.getString("required_qty");
+                String curr_req_qty = jsonObject.getString("curr_req_qty");
+                original_required_et.setText(required_qty);
+               // hideTActLi.setVisibility(View.GONE);
+               // totalAquiredQtyEt.setVisibility(View.GONE);
+
+                int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
+
+                totalAquiredQtyEt.setText(""+total_acq_qty);
+                currentRequiredQtyEt.setText(curr_req_qty);
+                edtDeliveryDate.setText(VU.getddmmyyDate(jsonObject.getString("due_delivery_date")));
+                edtRemark.setText(jsonObject.getString("remark"));
+
+                txtGstValue.setVisibility(View.VISIBLE);
+                // txtGstValue.setText("WITH GST (" + jsonObject.getString("price_per_qtl") + ")");
+
+                if (!jsonObject.getString("category").equals("")) {
+                    int index = listCategory.indexOf("" + jsonObject.getString("category"));
+                    spnCategory.setSelection(index);
+                    Log.e("spnCategory", " " + index + "  " + jsonObject.getString("category"));
+
+                    grade_tv.setVisibility(View.VISIBLE);
+                    grade_tv.setText("" + jsonObject.getString("category"));
+                }
+
+                if (!jsonObject.getString("production_year").equals(""))
+                {
+                    String prod_year = jsonObject.getString("production_year");
+                    seasonYear_tv.setVisibility(View.VISIBLE);
+                    seasonYear_tv.setText(prod_year);
+                    if(listSeason.contains(prod_year))
+                    {
+                        int index = listSeason.indexOf(prod_year);
+
+                        spnProdYear.setSelection(index);
+                        Log.e("spnProdYear", " " + index + "  " + jsonObject.getString("production_year"));
+
+                    }
+                    //int index = listSeason.indexOf("" + jsonObject.getString("production_year"));
+
+
+                }
+
+                if (!jsonObject.getString("send_to").equalsIgnoreCase("send_to_all")) {
+                    rbSendToFav.setChecked(true);
+                    strSendTo = "send_to_favorites";
+                } else {
+                    rbSendToAll.setChecked(true);
+                    strSendTo = "send_to_all";
+                }
+
+
+                original_required_tv.setVisibility(View.VISIBLE);
+                // totoal_required_tv.setVisibility(View.VISIBLE);
+                original_required_et.setVisibility(View.VISIBLE);
+
+
+            } catch (JSONException e) {
+                T.e("setData() EXCEPTION : "+e);
+                e.printStackTrace();
+
+            }
+        }
+
     }
 
     public void fetchSeasonYear() {
@@ -810,6 +1107,13 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
                 listSeason.add(curSeason.getString(curSeason.getColumnIndex(DataBaseConstants.SeasonName.SEASON_YEAR)));
                 listSeasonId.add(curSeason.getString(curSeason.getColumnIndex(DataBaseConstants.SeasonName.SEASON_ID)));
             }
+
+            for(int i =0; i < listSeason.size(); i++)
+            {
+
+                Log.e("listSeason_data","listSeason ["+i+"] = "+listSeason.get(i));
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -818,11 +1122,11 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
         ArrayAdapter<String> adpSeason;
 
 
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        Log.e("seasonData: ", year + "");
+        //int year = Calendar.getInstance().get(Calendar.YEAR);
+        //Log.e("seasonData: ", year + "");
 
 
-        ArrayList<String> arrayList = new ArrayList<>();
+        /*ArrayList<String> arrayList = new ArrayList<>();
 
         for (int i = 0; i < listSeason.size(); i++) {
 
@@ -833,9 +1137,9 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
             }
 
         }
+*/
 
-
-        adpSeason = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_item, arrayList);
+        adpSeason = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_item, listSeason);
         spnProdYear.setAdapter(adpSeason);
     }
 

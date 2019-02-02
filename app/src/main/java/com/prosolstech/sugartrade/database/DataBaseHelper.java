@@ -37,6 +37,7 @@ public class DataBaseHelper {
         db = sqliteopenhelper.getReadableDatabase();
     }
 
+
     public static class DistrictDB {
 
         public static boolean districtNameInsert(DistrictModelClass object) {
@@ -152,13 +153,23 @@ public class DataBaseHelper {
             }
 
         }
+        public static void deleteAllNotes()
+        {
+            db.execSQL("DELETE FROM "+DataBaseConstants.TableNames.TBL_NOTIFICATION);
+        }
+        public static void deleteParticularNoti(String id)
+        {
+            db.execSQL("DELETE FROM "+DataBaseConstants.TableNames.TBL_NOTIFICATION+" WHERE "+DataBaseConstants.NotificationData.ID+" = '"+id+"'");
+        }
     }
 
-    public static class DBBuyBidData {
+    public static class DBBuyBidData
+    {
         static String TAG = "DBBuyBidData";
 
         //TODO Primary methods
-        public static boolean BuyBidDatainsert(BuyBidModel buyBidModel) {
+        public static boolean BuyBidDatainsert(BuyBidModel buyBidModel)
+        {
             ContentValues cv = new ContentValues();
             cv.put(DataBaseConstants.BuyBidDataConstants.BID_ID, buyBidModel.getId());
             cv.put(DataBaseConstants.BuyBidDataConstants.VALIDITY_TIME, buyBidModel.getValidity_time());
@@ -166,18 +177,27 @@ public class DataBaseHelper {
             cv.put(DataBaseConstants.BuyBidDataConstants.IS_TIMER_RUNNING, buyBidModel.getIsTimerTuuning());
             cv.put(DataBaseConstants.BuyBidDataConstants.BID_END_TIME, buyBidModel.getBidEndTime());
             cv.put(DataBaseConstants.BuyBidDataConstants.IS_DELETED, buyBidModel.getIs_delelted());
-            Log.e(TAG, "BuyBidDatainsert:" + cv.toString());
-            try {
-                if (!checkBidId(buyBidModel.getId())) {
+
+            try
+            {
+                if (!checkBidId(buyBidModel.getId()))
+                {
                     long id = db.insert(DataBaseConstants.TableNames.TBL_BUY_BID_DATA, null, cv);
-                    if (id == -1) {
+
+                    if (id == -1)
+                    {
                         return false;
-                    } else {
+                    }
+                    else
+                    {
                         return false;
                     }
                 }
 
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
+
             }
             return true;
         }

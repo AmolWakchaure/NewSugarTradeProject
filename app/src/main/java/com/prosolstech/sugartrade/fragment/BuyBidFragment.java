@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -49,12 +50,16 @@ import com.prosolstech.sugartrade.activity.BuyerListActivity;
 import com.prosolstech.sugartrade.activity.PlaceBuyBidActivity;
 import com.prosolstech.sugartrade.activity.PlaceSellBidActivity;
 import com.prosolstech.sugartrade.adapter.BuyBidAdapter;
+import com.prosolstech.sugartrade.adapter.BuyBidAdapterTestTimer;
 import com.prosolstech.sugartrade.adapter.SellBidAdapter;
 import com.prosolstech.sugartrade.adapter.SellBidAdapterTest;
 import com.prosolstech.sugartrade.adapter.SellBidAdapterTestTimer;
+import com.prosolstech.sugartrade.classes.Constants;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.database.DataBaseConstants;
 import com.prosolstech.sugartrade.database.DataBaseHelper;
 import com.prosolstech.sugartrade.model.BuyBidModel;
+import com.prosolstech.sugartrade.model.BuyerInfoDetails;
 import com.prosolstech.sugartrade.model.SellBidModel;
 import com.prosolstech.sugartrade.util.ACU;
 import com.prosolstech.sugartrade.util.ItemAnimation;
@@ -65,6 +70,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +84,7 @@ public class BuyBidFragment extends Fragment {
     private RecyclerView recyclerView;
     private int animation_type = ItemAnimation.BOTTOM_UP;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private AutoCompleteTextView autoTxtSearch;
+    private EditText autoTxtSearch;
     private ImageButton imgSearch, imgFilter;
     private ArrayList<String> listSellerName;
     private ArrayList<String> listCategory;
@@ -87,14 +93,15 @@ public class BuyBidFragment extends Fragment {
     private ArrayList<String> listSeasonId;
     private ArrayList<String> listDistrictName;
     private ArrayList<String> listDistrictID;
-    private String strCatID = "", strSeason = "", strRadioButton = "", strDistrictName = "", strDistrictId = "";
+    private String gradeCategory,strCatID = "", strSeason = "", strRadioButton = "", strDistrictName = "", strDistrictId = "";
     private RadioButton rbOne, rbTwo, rbThree, rbFour, rbFive;
     private Spinner spnGrade, spnSeason, spnState, spnDistrict;
     private Button btnSave, btnCancel;
     private Dialog dialog;
-    private LinearLayout llState;
+    private LinearLayout llState,hideLayout;
     private boolean _hasLoadedOnce = false; // your boolean field
-    private List<SellBidModel> listSellModel;
+    private ArrayList<SellBidModel> listSellModel = new ArrayList<>();
+    private ArrayList<SellBidModel> listSellModelFilter = new ArrayList<>();
     private int counter = 1;
     private Timer timer;
 
@@ -109,52 +116,100 @@ public class BuyBidFragment extends Fragment {
         context = getActivity();
         rootView = inflater.inflate(R.layout.fragment_all_buy_sell_bid, container, false);
         initializeUI(rootView);
-//        Log.e("BuyBidFragment", tabLayout.getSelectedTabPosition()+"");
 
-        if (!ACU.MySP.getSPBoolean(context, ACU.MySP.FLAG_ACCEPT, false)) {
-//            showCustomDialog();
+
+        getSellOffersData();
+
+        autoTxtSearch.addTextChangedListener(new TextWatcher()
+        {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence newText, int start, int before, int count) {
+                //M.t(""+s);
+
+                if(!listSellModel.isEmpty())
+                {
+                    final ArrayList<SellBidModel> filteredModelList = filter(listSellModel, "" + newText);
+                    sellBidAdapter.setFilter(filteredModelList);
+                }
+
+
+            }
+        });
+
+        return rootView;
+    }
+
+
+    private ArrayList<SellBidModel> filter(ArrayList<SellBidModel> models, String query) {
+
+        final ArrayList<SellBidModel> filteredModelList = new ArrayList<>();
+        filteredModelList.clear();
+
+        if (query.length() == 0)
+        {
+            filteredModelList.addAll(models);
+        }
+        else
+        {
+            for (SellBidModel model : models)
+            {
+
+
+                final String id = model.getId();
+                final String category = model.getCategory().toLowerCase().replace(" ","");
+                final String company_name = model.getCompany_name().toLowerCase();
+                final String type = model.getType().toLowerCase().replace(" ","");
+
+                //type
+                if (type.contains(query.toLowerCase().replace(" ","")))
+                {
+                    filteredModelList.add(model);
+                }
+                //id
+                else if (id.contains(query)) {
+                    filteredModelList.add(model);
+                }
+                //category
+                else if (category.contains(query.toLowerCase().replace(" ","")))
+                {
+                    filteredModelList.add(model);
+                }
+                //company_name
+                else if (company_name.contains(query.toLowerCase().replace(" ","")))
+                {
+                    filteredModelList.add(model);
+                }
+            }
+        }
+
+
+        return filteredModelList;
+    }
+
+    private void getSellOffersData() {
+
+        if (!ACU.MySP.getSPBoolean(context, ACU.MySP.FLAG_ACCEPT, false))
+        {
+
             ConfirmationDialog confirmationDialog = new ConfirmationDialog(getContext(), dialogListner);
             confirmationDialog.show();
-        } else {
-            if (VU.isConnectingToInternet(context)) {
+        }
+        else
+        {
+            if (VU.isConnectingToInternet(context))
+            {
                 Log.e("Buy_BID_FRAGMENT", " : ");
                 buyBidData(context);
             }
 
         }
-
-
-//        final FloatingActionButton fab_add = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
-//
-//        fab_add.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//
-//                if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller")) {
-//
-//                    if (ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false)) {
-//                        Toast.makeText(context, "Create Sell offer", Toast.LENGTH_SHORT).show();
-//                        startActivity(new Intent(context, PlaceSellBidActivity.class));
-//                        ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
-//                    } else {
-//                        startActivity(new Intent(context, PlaceSellBidActivity.class));
-//                    }
-//                } else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
-//                    if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false)) {
-//                        Toast.makeText(context, "Create Buyer offer", Toast.LENGTH_SHORT).show();
-//                        startActivity(new Intent(context, PlaceBuyBidActivity.class));
-//                        ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
-//                    } else {
-//                        startActivity(new Intent(context, PlaceBuyBidActivity.class));
-//                    }
-//
-//
-//                }
-//            }
-//        });
-
-        return rootView;
     }
 
     DialogListner dialogListner = new DialogListner() {
@@ -164,7 +219,7 @@ public class BuyBidFragment extends Fragment {
 
             if (VU.isConnectingToInternet(context)) {
                 buyBidData(context);
-                SellerNames();
+                //SellerNames();
             }
         }
     };
@@ -174,8 +229,9 @@ public class BuyBidFragment extends Fragment {
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeToRefresh);
         imgFilter = (ImageButton) rootView.findViewById(R.id.AllBidFragmentImgFilter);
         imgSearch = (ImageButton) rootView.findViewById(R.id.AllBidFragmentImgSearch);
-        autoTxtSearch = (AutoCompleteTextView) rootView.findViewById(R.id.AllBidFragmentAutoTexViewSearch);
+        autoTxtSearch = (EditText) rootView.findViewById(R.id.AllBidFragmentAutoTexViewSearch);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.AllBidFragmentRecyclerview);
+        hideLayout = (LinearLayout) rootView.findViewById(R.id.hideLayout);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
         recyclerView.setHasFixedSize(true);
         animation_type = ItemAnimation.FADE_IN;
@@ -243,8 +299,10 @@ public class BuyBidFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Log.e("No Response", "FOUND");
                 pDialog.dismiss();
-                recyclerView.setVisibility(View.GONE);
-                Toast.makeText(context, "Please Try Again!", Toast.LENGTH_SHORT).show();
+
+                refreshList();
+                //recyclerView.setVisibility(View.GONE);
+
             }
         }) {
             @Override
@@ -260,53 +318,193 @@ public class BuyBidFragment extends Fragment {
         };
         queue.add(stringRequest);
     }
-
+    JSONArray array;
     private void setListAdapter(String result) {
+
+        String id = Constants.NA;
+        String bid_start_time = Constants.NA;
+        String CategoryName = Constants.NA;
+        String company_name = Constants.NA;
+        String price_per_qtl = Constants.NA;
+        String is_favorite = Constants.NA;
+        String created_date = Constants.NA;
+        String validity_time = Constants.NA;
+        String time = Constants.NA;
+        String type = Constants.NA;
+        String production_year = Constants.NA;
+        String available_qty = Constants.NA;
+        String claimed = Constants.NA;
+        String is_interested = Constants.NA;
+        String original_qty = Constants.NA;
+        String bid_end_time = Constants.NA;
+
         try {
-            JSONArray array;
-            Log.e("setListAdapter", " RESULT " + result.trim());
-            array = new JSONArray(result);
-            Log.e("setListAdapter", " RESULT " + array.length() + "");
 
-            listSellModel = new ArrayList<>();
+            if(result.length() > 0 && result != null)
+            {
+                //JSONArray array;
+                Log.e("setListAdapter", " RESULT " + result.trim());
+                array = new JSONArray(result);
+                Log.e("setListAdapter", " RESULT " + array.length() + "");
 
-            if (array != null && array.length() > 0) {
 
-                for (int i = 0; i < array.length(); i++) {
-                    SellBidModel sellBidModel = new SellBidModel();
-                    sellBidModel.setId(array.getJSONObject(i).getString("id"));
-                    sellBidModel.setBid_start_time(array.getJSONObject(i).getString("bid_start_time"));
-                    sellBidModel.setValidity_time(array.getJSONObject(i).getString("validity_time"));
-                    sellBidModel.setEndtime("0");
-                    sellBidModel.setIsTimerRunning("1");
-                    sellBidModel.setCategory(array.getJSONObject(i).getString("CategoryName"));
-                    sellBidModel.setCompany_name(array.getJSONObject(i).getString("company_name"));
-                    sellBidModel.setAvailable_qty(array.getJSONObject(i).getString("available_qty"));
-                    sellBidModel.setClaimed(array.getJSONObject(i).getString("claimed"));
-                    sellBidModel.setPrice_per_qtl(array.getJSONObject(i).getString("price_per_qtl"));
-                    sellBidModel.setType(array.getJSONObject(i).getString("type"));
-                    sellBidModel.setIsIntrested(array.getJSONObject(i).getString("is_interested"));
-                    sellBidModel.setOriginal_qty(array.getJSONObject(i).getString("original_qty"));
-                    sellBidModel.setIs_favorite(array.getJSONObject(i).getString("is_favorite"));
-                    sellBidModel.setDate(array.getJSONObject(i).getString("created_date"));
-                    sellBidModel.setTime(array.getJSONObject(i).getString("time"));
-                    sellBidModel.setEnd_bid_time(array.getJSONObject(i).getString("bid_end_time"));
-                    sellBidModel.setIs_deleted("0");/*not delted*/
-                    listSellModel.add(sellBidModel);
-                    boolean is = DataBaseHelper.DBSellBidData.SellBidDatainsert(sellBidModel);
+
+                if (array != null && array.length() > 0)
+                {
+
+                    hideLayout.setVisibility(View.VISIBLE);
+
+                    if(!listSellModel.isEmpty())
+                    {
+                        listSellModel.clear();
+                    }
+                    for (int i = 0; i < array.length(); i++)
+                    {
+
+                        JSONObject jsonObject = array.getJSONObject(i);
+
+                        if(jsonObject.has("id") && !jsonObject.isNull("id"))
+                        {
+                            id = jsonObject.getString("id");
+                        }
+                        if(jsonObject.has("bid_start_time") && !jsonObject.isNull("bid_start_time"))
+                        {
+                            bid_start_time = jsonObject.getString("bid_start_time");
+                        }
+                        if(jsonObject.has("validity_time") && !jsonObject.isNull("validity_time"))
+                        {
+                            validity_time = jsonObject.getString("validity_time");
+                        }
+                        if(jsonObject.has("CategoryName") && !jsonObject.isNull("CategoryName"))
+                        {
+                            CategoryName = jsonObject.getString("CategoryName");
+                        }
+                        if(jsonObject.has("company_name") && !jsonObject.isNull("company_name"))
+                        {
+                            company_name = jsonObject.getString("company_name");
+                        }
+                        if(jsonObject.has("available_qty") && !jsonObject.isNull("available_qty"))
+                        {
+                            available_qty = jsonObject.getString("available_qty");
+                        }
+                        if(jsonObject.has("claimed") && !jsonObject.isNull("claimed"))
+                        {
+                            claimed = jsonObject.getString("claimed");
+                        }
+                        if(jsonObject.has("price_per_qtl") && !jsonObject.isNull("price_per_qtl"))
+                        {
+                            price_per_qtl = jsonObject.getString("price_per_qtl");
+                        }
+                        if(jsonObject.has("type") && !jsonObject.isNull("type"))
+                        {
+                            type = jsonObject.getString("type");
+                        }
+                        if(jsonObject.has("is_interested") && !jsonObject.isNull("is_interested"))
+                        {
+                            is_interested = jsonObject.getString("is_interested");
+                        }
+                        if(jsonObject.has("original_qty") && !jsonObject.isNull("original_qty"))
+                        {
+                            original_qty = jsonObject.getString("original_qty");
+                        }
+                        if(jsonObject.has("is_favorite") && !jsonObject.isNull("is_favorite"))
+                        {
+                            is_favorite = jsonObject.getString("is_favorite");
+                        }
+                        if(jsonObject.has("created_date") && !jsonObject.isNull("created_date"))
+                        {
+                            created_date = jsonObject.getString("created_date");
+                        }
+                        if(jsonObject.has("time") && !jsonObject.isNull("time"))
+                        {
+                            time = jsonObject.getString("time");
+                        }
+                        if(jsonObject.has("bid_end_time") && !jsonObject.isNull("bid_end_time"))
+                        {
+                            bid_end_time = jsonObject.getString("bid_end_time");
+                        }
+                        if(jsonObject.has("production_year") && !jsonObject.isNull("production_year"))
+                        {
+                            production_year = jsonObject.getString("production_year");
+                        }
+
+                        SellBidModel sellBidModel = new SellBidModel();
+                        sellBidModel.setId(id);
+                        sellBidModel.setBid_start_time(bid_start_time);
+                        sellBidModel.setValidity_time(validity_time);
+                        sellBidModel.setEndtime("0");
+                        sellBidModel.setIsTimerRunning("1");
+                        sellBidModel.setCategory(CategoryName);
+                        sellBidModel.setCompany_name(company_name);
+                        sellBidModel.setAvailable_qty(available_qty);
+                        sellBidModel.setClaimed(claimed);
+                        sellBidModel.setPrice_per_qtl(price_per_qtl);
+                        sellBidModel.setType(type);
+                        sellBidModel.setIsIntrested(is_interested);
+                        sellBidModel.setOriginal_qty(original_qty);
+                        sellBidModel.setIs_favorite(is_favorite);
+                        sellBidModel.setDate(created_date);
+                        sellBidModel.setTime(time);
+                        sellBidModel.setEnd_bid_time(bid_end_time);
+                        sellBidModel.setIs_deleted("0");
+                        sellBidModel.setProduction_year(production_year);
+                        listSellModel.add(sellBidModel);
+
+                        boolean is = DataBaseHelper.DBSellBidData.SellBidDatainsert(sellBidModel);
+                        /*String status = T.returnSeconds(bid_end_time);
+
+                        if(status.equals("start"))
+                        {
+
+                        }*/
+
+
+
+
+
+                    }
+                    //refresh sell offers list
+                    refreshList();
                 }
-                Log.e("COUNT_VALUE: ", DataBaseHelper.DBSellBidData.getCountOfSellData() + "");
-
-                recyclerView.setVisibility(View.VISIBLE);
-                SellBidAdapterTestTimer sellBidAdapter = new SellBidAdapterTestTimer(getActivity(), array, animation_type, listSellModel, listner);         // if user login as a "Buyer" than show Seller offer ist
-                recyclerView.setAdapter(sellBidAdapter);
-            } else {
-                recyclerView.setVisibility(View.GONE);
-                Toast.makeText(context, "No Data Found", Toast.LENGTH_SHORT).show();
+                else
+                {
+                    //recyclerView.setVisibility(View.GONE);
+                    Toast.makeText(context, "No Data Found", Toast.LENGTH_SHORT).show();
+                }
             }
+            else
+            {
+                T.t("Oops ! Sell Offers not found");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    SellBidAdapterTestTimer sellBidAdapter;
+
+    private void refreshList()
+    {
+
+        if(listSellModel.isEmpty())
+        {
+            Toast.makeText(context, "Oops ! Sell Offers not found", Toast.LENGTH_SHORT).show();
+            Log.e("COUNT_VALUE: ", DataBaseHelper.DBSellBidData.getCountOfSellData() + "");
+            recyclerView.setVisibility(View.VISIBLE);
+            sellBidAdapter = new SellBidAdapterTestTimer(getActivity(), array, animation_type, listSellModel, listner);         // if user login as a "Buyer" than show Seller offer ist
+            recyclerView.setAdapter(sellBidAdapter);
+            sellBidAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            Log.e("COUNT_VALUE: ", DataBaseHelper.DBSellBidData.getCountOfSellData() + "");
+            recyclerView.setVisibility(View.VISIBLE);
+            sellBidAdapter = new SellBidAdapterTestTimer(getActivity(), array, animation_type, listSellModel, listner);         // if user login as a "Buyer" than show Seller offer ist
+            recyclerView.setAdapter(sellBidAdapter);
+            sellBidAdapter.notifyDataSetChanged();
+        }
+
+
     }
 
     SellBidAdapterTestTimer.RefreshListner listner = new SellBidAdapterTestTimer.RefreshListner() {
@@ -319,8 +517,30 @@ public class BuyBidFragment extends Fragment {
             }
 
         }
-    };
 
+        @Override
+        public void refreshLoadedData(String bidId) {
+
+            //when bid over remove specifi item from list
+            T.e("Refresh static... position : "+bidId);
+
+            if(!listSellModel.isEmpty())
+            {
+                for(int i = 0; i < listSellModel.size(); i++)
+                {
+                    SellBidModel sellBidModel = listSellModel.get(i);
+                    String bidIdSearch = sellBidModel.getId();
+
+                    if(bidIdSearch.equals(bidId))
+                    {
+                        listSellModel.remove(bidId);
+                        refreshList();
+                        break;
+                    }
+                }
+            }
+        }
+    };
 
     private long convert(String val) {
         String arr[] = val.split(":");
@@ -360,7 +580,7 @@ public class BuyBidFragment extends Fragment {
                         // Display the response string.
                         Log.e("SellerNames", " RESPONSE " + response);
                         pDialog.dismiss();
-                        setSellerNames(response);
+                        //setSellerNames(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -380,7 +600,7 @@ public class BuyBidFragment extends Fragment {
         queue.add(stringRequest);
     }
 
-    private void setSellerNames(String result) {
+    /*private void setSellerNames(String result) {
         try {
             JSONArray array;
             ;
@@ -410,7 +630,7 @@ public class BuyBidFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void searchData() {                  // if login as buyer than all seller offer show
         String url = "";
@@ -442,7 +662,7 @@ public class BuyBidFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Log.e("No Response", "FOUND");
                 pDialog.dismiss();
-                recyclerView.setVisibility(View.GONE);
+                //recyclerView.setVisibility(View.GONE);
                 Toast.makeText(context, "No Data Found", Toast.LENGTH_SHORT).show();
             }
         }) {
@@ -557,15 +777,13 @@ public class BuyBidFragment extends Fragment {
         });
         spnGrade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
                 strCatID = listCatId.get(position);
                 Log.e("strCatID", " " + strCatID);
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
         spnSeason.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -575,30 +793,55 @@ public class BuyBidFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (VU.isConnectingToInternet(context)) {
-                    if (!strRadioButton.equalsIgnoreCase("")) {
-                        if (strRadioButton.equalsIgnoreCase("Grade")) {
-                            FilterData("grade", strCatID);
-                        } else if (strRadioButton.equalsIgnoreCase("Season")) {
-                            FilterData("season", strSeason);
-                        } else if (strRadioButton.equalsIgnoreCase("State And District")) {
-                            if (FilterValidate()) {
+                if (VU.isConnectingToInternet(context))
+                {
+                    if (!strRadioButton.equalsIgnoreCase(""))
+                    {
+                        if (strRadioButton.equalsIgnoreCase("Grade"))
+                        {
+
+                            //FilterData("grade", strCatID);
+                            gradeCategory = spnGrade.getSelectedItem().toString();
+                            filterData("Grade");
+                        }
+                        else if (strRadioButton.equalsIgnoreCase("Season"))
+                        {
+                            gradeCategory = spnSeason.getSelectedItem().toString();
+                            filterData("Season");
+                            //FilterData("season", strSeason);
+                        }
+                        else if (strRadioButton.equalsIgnoreCase("State And District"))
+                        {
+                            if (FilterValidate())
+                            {
                                 FilterData("state_and_district", strDistrictId);
                             }
-                        } else if (strRadioButton.equalsIgnoreCase("Price Low to high")) {
-                            FilterData("low_to_high", "");
-                        } else if (strRadioButton.equalsIgnoreCase("Price High to Low")) {
-                            FilterData("high_to_low", "");
                         }
-                    } else {
+                        else if (strRadioButton.equalsIgnoreCase("Price Low to high"))
+                        {
+                            Collections.sort(listSellModel, SellBidModel.priceLowTohigh);
+                            recyclerView.setAdapter(sellBidAdapter);
+                            sellBidAdapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                            //FilterData("low_to_high", "");
+                        }
+                        else if (strRadioButton.equalsIgnoreCase("Price High to Low"))
+                        {
+                            Collections.sort(listSellModel, SellBidModel.priceHighTolow);
+                            recyclerView.setAdapter(sellBidAdapter);
+                            sellBidAdapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                            //FilterData("high_to_low", "");
+                        }
+                    }
+                    else
+                    {
                         Toast.makeText(context, "Please select any filter", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -679,6 +922,66 @@ public class BuyBidFragment extends Fragment {
         dialog.show();
     }
 
+    private void filterData(String searchStatus) {
+
+        try
+        {
+            JSONArray jsonArray = null;
+            //Grade
+            if(searchStatus.equals("Grade"))
+            {
+                listSellModelFilter.clear();
+                jsonArray = new JSONArray();
+                for(int i = 0; i < listSellModel.size(); i++)
+                {
+                    SellBidModel buyerInfoDetails = listSellModel.get(i);
+                    String gradeCat = buyerInfoDetails.getCategory().replace(" ","").replace("-","");
+                    if(gradeCat.equals(gradeCategory.replace(" ","").replace("-","")))
+                    {
+
+                        listSellModelFilter.add(buyerInfoDetails);
+                        jsonArray.put(array.getJSONObject(i));
+                    }
+                }
+               // T.t(""+listSellModelFilter.size());
+                sellBidAdapter.setData(getActivity(),jsonArray, animation_type,listSellModelFilter,listner);
+                recyclerView.setAdapter(sellBidAdapter);
+                dialog.dismiss();
+            }
+            //Season
+            else if(searchStatus.equals("Season"))
+            {
+                listSellModelFilter.clear();
+                jsonArray = new JSONArray();
+                for(int i = 0; i < listSellModel.size(); i++)
+                {
+                    SellBidModel buyerInfoDetails = listSellModel.get(i);
+
+                    String production_year = buyerInfoDetails.getProduction_year();
+
+                    if(production_year.equals(gradeCategory))
+                    {
+                        listSellModelFilter.add(buyerInfoDetails);
+                        jsonArray.put(array.getJSONObject(i));
+                    }
+                }
+
+                sellBidAdapter.setData(getActivity(),jsonArray, animation_type,listSellModelFilter,listner);
+                recyclerView.setAdapter(sellBidAdapter);
+                dialog.dismiss();
+            }
+            else
+            {
+                sellBidAdapter = new SellBidAdapterTestTimer(getActivity(),array, animation_type,listSellModel,listner);
+                recyclerView.setAdapter(sellBidAdapter);
+                dialog.dismiss();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     private void FilterData(final String strType, final String strFilter) {                  // in this "strType" and "strFilter" variable user select filter type that value set in this variable
         String url = "";
         final ProgressDialog pDialog = new ProgressDialog(context);
@@ -709,7 +1012,7 @@ public class BuyBidFragment extends Fragment {
                 pDialog.dismiss();
                 dialog.dismiss();
                 Toast.makeText(context, "No Data Found", Toast.LENGTH_SHORT).show();
-                recyclerView.setVisibility(View.GONE);
+               // recyclerView.setVisibility(View.GONE);
             }
         })
 

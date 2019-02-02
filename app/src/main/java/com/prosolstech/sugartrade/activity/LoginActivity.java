@@ -81,7 +81,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.LoginActivityTxtForgotPassword:
-                Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(context, ForgotPasswodActivity.class));
                 break;
             case R.id.LoginActivityTxtNewUser:
                 startActivity(new Intent(context, RegistrationActivity.class));

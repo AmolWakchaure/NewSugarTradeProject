@@ -226,6 +226,7 @@ public class BuySellDashBoardActivity extends AppCompatActivity
     }
 
 
+
     private void checkStudentActiveOrNot() {
 
 
@@ -346,6 +347,7 @@ public class BuySellDashBoardActivity extends AppCompatActivity
 //        });
     }
 
+    //amol wakchaure
     public class ReceivablesAdapter extends FragmentPagerAdapter {
 
         public ReceivablesAdapter(FragmentManager fm) {
@@ -509,11 +511,11 @@ public class BuySellDashBoardActivity extends AppCompatActivity
 
 
                             ACU.MySP.setSPBoolean(context, ACU.MySP.LOGIN_STATUS, false);
-
                             Intent intent = new Intent(BuySellDashBoardActivity.this, LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
+
 
                         }
                     });

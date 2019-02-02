@@ -30,13 +30,21 @@
                 android:orientation="vertical">
 
 
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+
                 <ImageView
                     android:id="@+id/SellerListAdapterImgUnFav"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:layout_marginLeft="@dimen/_220sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
                     android:src="@drawable/yellow"
-                    android:visibility="gone" />
+                      />
+                </RelativeLayout>
 
 
                 <TextView
@@ -139,9 +147,10 @@
 
                 <TextView
 
+                    android:id="@+id/original_quantity_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="original required quantity (in quintal)"
+                    android:text="Tot/org required quantity (in quintal)"
                     android:textAllCaps="true"
                     android:layout_marginTop="3pt"
                     android:textColor="@color/grey_40"
@@ -158,27 +167,39 @@
                     android:paddingLeft="@dimen/_10sdp"
                     android:paddingRight="@dimen/_10sdp"
                     android:textColor="@color/color_black" />
-                <TextView
 
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/aquiredQtyLi"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="total acquired quantity"
-                    android:textAllCaps="true"
                     android:layout_marginTop="3pt"
-                    android:textColor="@color/grey_40"
-                    android:textSize="@dimen/_12sdp" />
+                    android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/SellDetailsActivityTotalAquiredQuantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:background="@drawable/new_style_container"
-                    android:backgroundTint="@color/grey_10"
-                    android:editable="false"
-                    android:paddingLeft="@dimen/_10sdp"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:textColor="@color/color_black" />
+                    <TextView
+
+                        android:id="@+id/aquired_qtyTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="total acquired quantity"
+                        android:textAllCaps="true"
+                        android:layout_marginTop="3pt"
+                        android:textColor="@color/grey_40"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <EditText
+                        android:id="@+id/SellDetailsActivityTotalAquiredQuantity"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/new_style_container"
+                        android:backgroundTint="@color/grey_10"
+                        android:editable="false"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/color_black" />
+
+                </LinearLayout>
+
 
 
 
@@ -259,7 +280,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
-                        android:text="Price Per Qtl.(Excl. GST 5%)"
+                        android:text="Price /Qtl(Excl. GST 5%)"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_40"
                         android:textSize="@dimen/_12sdp" />

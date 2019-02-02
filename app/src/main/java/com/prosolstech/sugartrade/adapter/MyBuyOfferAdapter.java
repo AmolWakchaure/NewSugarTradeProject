@@ -49,7 +49,7 @@ public class MyBuyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public MyBuyOfferAdapter(Activity context, JSONArray array, int animation_type, TabLayout tabLayout) {
+    public  MyBuyOfferAdapter(Activity context, JSONArray array, int animation_type, TabLayout tabLayout) {
         ctx = context;
         this.array = array;
         this.animation_type = animation_type;
@@ -58,7 +58,11 @@ public class MyBuyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public TextView txtRate, txtGrade, txtDate, txtQuantity, idTv, id_tv, qty_val, start_time_tv, end_time_tv, org_sell_tv, claimed_tv, org, cliamed;
-        LinearLayout llRevert;
+
+        LinearLayout
+                llRevert,
+                startTime_li,
+                endTime_li;
 
         TextView orginal_required_tv,original_required_et,aqquired_required_tv,aqquired_required_et;
 
@@ -71,6 +75,8 @@ public class MyBuyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtQuantity = (TextView) v.findViewById(R.id.MyOfferActivityTxtQuantity);
             idTv = (TextView) v.findViewById(R.id.id);
             llRevert = (LinearLayout) v.findViewById(R.id.MyOfferActivityLinearLayoutRevert);
+            startTime_li = (LinearLayout) v.findViewById(R.id.startTime_li);
+            endTime_li = (LinearLayout) v.findViewById(R.id.endTime_li);
             id_tv = v.findViewById(R.id.id_tv);
             qty_val = v.findViewById(R.id.qty_val);
             start_time_tv = v.findViewById(R.id.start_time_tv);
@@ -114,6 +120,10 @@ public class MyBuyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 String timeLeftFormatted1 = String.format(Locale.getDefault(), "%02d:%02d", hours5, minutes5);
                 view.end_time_tv.setText(timeLeftFormatted1);
 
+
+                view.startTime_li.setVisibility(View.GONE);
+                view.endTime_li.setVisibility(View.GONE);
+
                 if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller")) {
                     view.qty_val.setText("Current Available Qty: ");
                     view.id_tv.setText("Sell Post Id: ");
@@ -126,7 +136,7 @@ public class MyBuyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     view.cliamed.setVisibility(View.GONE);
                     view.claimed_tv.setVisibility(View.GONE);
                     view.org_sell_tv.setVisibility(View.GONE);
-                    view.qty_val.setText("Current Required Qty: ");
+                    view.qty_val.setText("Current Required Qty (In Qtl): ");
                     view.id_tv.setText("Buy Post Id: ");
                     view.original_required_et.setVisibility(View.VISIBLE);
                     view.orginal_required_tv.setVisibility(View.VISIBLE);
@@ -183,6 +193,8 @@ public class MyBuyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     try {
                         Intent in = new Intent(ctx, PlaceBuyBidActivity.class);
                         in.putExtra("flag", "update");
+                        in.putExtra("post_status", "single_postzz");
+
                         in.putExtra("data", String.valueOf(array.getJSONObject(position)));
                         ctx.startActivity(in);
                     } catch (Exception e) {

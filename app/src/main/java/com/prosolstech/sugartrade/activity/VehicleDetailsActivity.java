@@ -59,6 +59,14 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (VU.isConnectingToInternet(context)) {
+            FetchVehicleDetail();
+        }
+    }
+
     private void intitializeUI() {
         recyclerView = (RecyclerView) findViewById(R.id.VehicleDetailsActivtyRecyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 1));

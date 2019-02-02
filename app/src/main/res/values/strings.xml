@@ -73,7 +73,7 @@
     <string name="accepting_link">By accepting Terms &amp; Conditions you agreed to conditions mentioned in below link.</string>
     <string name="link"><a href="http://www.sugarcatalog.com/anakantuser/sugar_trade/tandc/">Sugar Trade Terms &amp; Condition</a></string>
     <string name="title_activity_vehicles_list_acitivity">VehiclesListAcitivity</string>
-    <string name="price_per_qtl_excl_gst_5">Price Per Qtl.(Excl. gst 5%)</string>
+    <string name="price_per_qtl_excl_gst_5">Price /Qtl.(Excl. gst 5%)</string>
     <string name="title_activity_my_bid">MyBidActivity</string>
     <string name="title_activity_my_bid_requested_list">MyBidRequestedListActivity</string>
 </resources>

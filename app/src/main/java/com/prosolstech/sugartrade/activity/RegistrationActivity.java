@@ -2,10 +2,14 @@ package com.prosolstech.sugartrade.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -61,6 +65,27 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_registration);
         context = RegistrationActivity.this;
         intitializeUI();
+
+
+        //for set default company name
+        edtFullName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+
+                edtCompanyName.setText(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     public void intitializeUI() {
@@ -143,12 +168,17 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.RegistrationActivityBtnRegister:
-                if (VU.isConnectingToInternet(context)) {
-                    if (!strRole.equalsIgnoreCase("")) {
-                        if (Validate()) {
+                if (VU.isConnectingToInternet(context))
+                {
+                    if (!strRole.equalsIgnoreCase(""))
+                    {
+                        if (Validate())
+                        {
                             registration();
                         }
-                    } else {
+                    }
+                    else
+                    {
                         Toast.makeText(context, "Please select type", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -277,16 +307,38 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
 
                             JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("message").equalsIgnoreCase("success")) {
-                                Toast.makeText(context, "Registration successfully", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(context, LoginActivity.class));
-                                finish();
-                            } else if (jsonObject.getString("message").equalsIgnoreCase("Mobile exists")) {
+                            if (jsonObject.getString("message").equalsIgnoreCase("success"))
+                            {
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                                builder1.setMessage("Success ! registration successfully done.");
+                                builder1.setCancelable(false);
+
+                                builder1.setPositiveButton(
+                                        "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                                startActivity(new Intent(context, LoginActivity.class));
+                                                finish();
+                                            }
+                                        });
+
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+
+                            }
+                            else if (jsonObject.getString("message").equalsIgnoreCase("Mobile exists"))
+                            {
                                 Toast.makeText(context, "Mobile Number Already Exists!", Toast.LENGTH_SHORT).show();
-                            } else if (jsonObject.getString("message").equalsIgnoreCase("Email exists")) {
+                            }
+                            else if (jsonObject.getString("message").equalsIgnoreCase("Email exists"))
+                            {
                                 Toast.makeText(context, "Email Id Already Exists!", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (JSONException e) {
+                        }
+                        catch (JSONException e)
+                        {
                             e.printStackTrace();
                         }
                     }

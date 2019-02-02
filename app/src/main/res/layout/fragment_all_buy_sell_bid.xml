@@ -11,12 +11,14 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/hideLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
             android:background="@drawable/search"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/_8sdp"
+            android:visibility="gone"
             android:paddingRight="@dimen/_8sdp">
 
             <View
@@ -24,10 +26,10 @@
                 android:layout_height="0dp" />
 
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/AllBidFragmentAutoTexViewSearch"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
@@ -38,7 +40,7 @@
                 android:paddingLeft="@dimen/_5sdp"
                 android:singleLine="true">
                 <requestFocus />
-            </AutoCompleteTextView>
+            </EditText>
 
             <ImageButton
                 android:id="@+id/AllBidFragmentImgSearch"
@@ -46,6 +48,7 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
+                android:visibility="gone"
                 android:clickable="true"
                 android:tint="@color/grey_60" />
 

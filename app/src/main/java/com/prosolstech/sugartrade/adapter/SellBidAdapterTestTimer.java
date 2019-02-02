@@ -24,8 +24,10 @@ import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.CountCutsom;
 import com.prosolstech.sugartrade.R;
 import com.prosolstech.sugartrade.activity.SellDetailsActivity;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.database.DataBaseConstants;
 import com.prosolstech.sugartrade.database.DataBaseHelper;
+import com.prosolstech.sugartrade.model.BuyerInfoDetails;
 import com.prosolstech.sugartrade.model.SellBidModel;
 import com.prosolstech.sugartrade.util.ACU;
 import com.prosolstech.sugartrade.util.DTU;
@@ -37,6 +39,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,7 +58,7 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
     JSONArray array;
-    List<SellBidModel> listSellBidModel;
+    ArrayList<SellBidModel> listSellBidModel;
     long mEndTime;
 
     private RefreshListner listner;
@@ -69,7 +72,15 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public SellBidAdapterTestTimer(Activity context, JSONArray array, int animation_type, List<SellBidModel> listSellBidModel, RefreshListner listner) {
+    public SellBidAdapterTestTimer(Activity context, JSONArray array, int animation_type, ArrayList<SellBidModel> listSellBidModel, RefreshListner listner) {
+        ctx = context;
+        this.array = array;
+        this.animation_type = animation_type;
+        this.listSellBidModel = listSellBidModel;
+        this.listner = listner;
+    }
+
+    public void setData(Activity context, JSONArray array, int animation_type, ArrayList<SellBidModel> listSellBidModel, RefreshListner listner) {
         ctx = context;
         this.array = array;
         this.animation_type = animation_type;
@@ -80,7 +91,7 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public TextView txtType, txtMillName, txtGrade, txtRate, txtTime, txtClaimed, txtAvalQty, idTv, id_tv, posted_at, start_time, end_time;
         ;
-        LinearLayout llclaimed, llRate, typeIdLv, idLv;
+        LinearLayout llclaimed, llRate, typeIdLv, idLv,startTime_li,endTime_li;
         private ImageView SellerListAdapterImgUnFav;
         public CountDownTimer timer;
         private Timer timerOne;
@@ -98,6 +109,8 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
             txtAvalQty = (TextView) v.findViewById(R.id.SellBidFragmentTxtAvailableQty);
             llclaimed = (LinearLayout) v.findViewById(R.id.SellBidFragmentLinearLayoutClaimed);
             llRate = (LinearLayout) v.findViewById(R.id.SellBidFragmentLinearLayoutRate);
+            endTime_li = (LinearLayout) v.findViewById(R.id.endTime_li);
+            startTime_li = (LinearLayout) v.findViewById(R.id.startTime_li);
             typeIdLv = (LinearLayout) v.findViewById(R.id.typeIdLv);
             idLv = (LinearLayout) v.findViewById(R.id.idLv);
             id_tv = v.findViewById(R.id.id_tv);
@@ -144,6 +157,8 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
                 }
 
 
+                view.startTime_li.setVisibility(View.GONE);
+                view.endTime_li.setVisibility(View.GONE);
                 view.start_time.setText(DTU.changeTime(sellBidModel.getBid_start_time()));
 
 
@@ -156,9 +171,9 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
 
 
                 if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller")) {
-                    view.id_tv.setText("Buy Post Id:");
+                    view.id_tv.setText("Buy Post Id : ");
                 } else {
-                    view.id_tv.setText("Sell Post Id:");
+                    view.id_tv.setText("Sell Post Id : ");
                 }
 
                 view.idTv.setText(sellBidModel.getId());
@@ -256,14 +271,17 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
                                 }
 
 //                                view.txtTime.setText("Bid Over");
+                                T.e("bid over 4");
 
-                                updateValue(sellBidModel1);
+                                updateValue(sellBidModel1,position);
                             }
 
                         } catch (Exception e) {
 
                         }
-                    } else if (sellBidModel1.getIsTimerRunning().equalsIgnoreCase("1")) {
+                    }
+                    else if (sellBidModel1.getIsTimerRunning().equalsIgnoreCase("1"))
+                    {
 
                         Calendar calendar = Calendar.getInstance();
                         int hours1 = calendar.get(Calendar.HOUR_OF_DAY);
@@ -273,94 +291,93 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
                         long hours = Long.parseLong(sellBidModel1.getEnd_bid_time()) / 60; //since both are ints, you get an int
                         long minutes = Long.parseLong(sellBidModel.getEnd_bid_time()) % 60;
 
-                        try {
+                        try
+                        {
                             Date date5 = timeFormat.parse(hours + ":" + minutes);
                             Date date6 = timeFormat.parse(hours1 + ":" + minutes1);
                             long sum2 = date5.getTime() - date6.getTime();
 
 
-                            if (sum2 > 0) {
+                            if (sum2 > 0)
+                            {
                                 String date10 = timeFormat.format(new Date(sum2));
                                 mill = TimeUnit.MINUTES.toMillis(toMins(date10));
-                            } else {
-
-
+                            }
+                            else
+                            {
                                 SellBidModel test2 = new SellBidModel();
                                 test2.setId(sellBidModel1.getId());
                                 test2.setIsTimerRunning("3");//0 means true 1 means false
 
-                                try {
+                                try
+                                {
                                     DataBaseHelper.DBSellBidData.SellBidDataUpdateTest(DataBaseConstants.TableNames.TBL_SELL_BID_DATA, test2);
-                                } catch (Exception e) {
                                 }
+                                catch (Exception e)
+                                {
 
+                                }
                                 view.txtTime.setText("Bid Over");
-
-                                updateValue(sellBidModel1);
-
+                                T.e("bid over 3");
+                                updateValue(sellBidModel1,position);
                             }
-
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e)
+                        {
 
                         }
-
-
                     }
-
-
-                    if (view.timer != null) {
+                    if (view.timer != null)
+                    {
                         view.timer.cancel();
                     }
-
-
                     final SellBidModel sellBidModel2 = DataBaseHelper.DBSellBidData.getSellModel(sellBidModel.getId());
-
-                    if (sellBidModel2.getIsTimerRunning().equalsIgnoreCase("0") || sellBidModel2.getIsTimerRunning().equalsIgnoreCase("1")) {
-
-
+                    if (sellBidModel2.getIsTimerRunning().equalsIgnoreCase("0") || sellBidModel2.getIsTimerRunning().equalsIgnoreCase("1"))
+                    {
                         Log.e("checkTimeOne: ", "isItComing");
-                        if (checkTimeOne(array.getJSONObject(position).getString("bid_start_time"))) {
-                            if (view.timer != null) {
+                        if (checkTimeOne(array.getJSONObject(position).getString("bid_start_time")))
+                        {
+                            if (view.timer != null)
+                            {
                                 view.timer.cancel();
                                 view.timer = null;
                             }
-                            startTimer(view, mill, sellBidModel2);
-
-
-//                            final CountCutsom countCutsom = new CountCutsom(mill, 10000, view, sellBidModel1, ctx);
-//                            countCutsom.start();
-                        } else {
-
-
-                            long hours = Long.parseLong(sellBidModel1.getValidity_time()) / 60; //since both are ints, you get an int
+                            startTimer(view, mill, sellBidModel2,position);
+                        }
+                        else
+                        {
+                            long hours = Long.parseLong(sellBidModel1.getValidity_time()) / 60;//since both are ints, you get an int
                             long minutes = Long.parseLong(sellBidModel.getValidity_time()) % 60;
                             String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
-
                             view.txtTime.setText(timeLeftFormatted);
-
-
                         }
-                    } else {
+                    }
+                    else
+                    {
                         view.txtTime.setText("Bid Over");
-                        updateValue(sellBidModel1);
+                        T.e("bid over 2");
+                        updateValue(sellBidModel1,position);
 
                     }
-
-
                 }
-            } catch (JSONException e) {
+            }
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
 
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view1) {
-                    try {
+                public void onClick(View view1)
+                {
+                    try
+                    {
 
                         String dateTime[] = array.getJSONObject(position).getString("created_date").split(" ");
                         String date = dateTime[0];
-                        try {
+                        try
+                        {
                             SimpleDateFormat dateFormatOne = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                             Date convertedDateCurrent = new Date();
                             convertedDateCurrent = dateFormatOne.parse(DTU.getCurrentDateTimeStamp(DTU.YMD_HMS));
@@ -373,35 +390,53 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
                             Log.e("convertBidDate", ": " + convertBidDate.toString());
                             Log.e("CAMPARE_DATE_COND_SELL", ": " + convertedDateCurrent.after(convertBidDate));
 
-//                            if (convertedDateCurrent.after(convertBidDate)) {
+                            JSONArray jsonArray = null;
+                            String clickedId = null;
+                                if (checkTime(array.getJSONObject(position).getString("bid_start_time")))
+                                {
+                                    if (!view.txtTime.getText().toString().equalsIgnoreCase("Bid Over"))
+                                    {
+                                        clickedId = ""+listSellBidModel.get(position).getId();
+                                        jsonArray = new JSONArray();
 
+                                        for(int i = 0; i < array.length(); i++)
+                                        {
+                                            JSONObject buyerInfoDetails = array.getJSONObject(i);
+                                            String matchId = buyerInfoDetails.getString("id");
 
-//                            if (!view.txtAvalQty.getText().toString().equalsIgnoreCase("0")) {
-                                if (checkTime(array.getJSONObject(position).getString("bid_start_time"))) {
-
-                                    if (!view.txtTime.getText().toString().equalsIgnoreCase("Bid Over")) {
-
+                                            if(matchId.equals(clickedId))
+                                            {
+                                                jsonArray.put(buyerInfoDetails);
+                                            }
+                                        }
+                                        /*Intent in = new Intent(ctx, SellDetailsActivity.class);
+                                        in.putExtra("flag", ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, ""));
+                                        in.putExtra("data", ""+jsonArray.getJSONObject(0));
+                                        ctx.startActivity(in);*/
 
                                         Intent in = new Intent(ctx, SellDetailsActivity.class);
                                         in.putExtra("flag", ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, ""));
-                                        in.putExtra("data", String.valueOf(array.getJSONObject(position)));
+                                        in.putExtra("data", ""+jsonArray.getJSONObject(0));
                                         ctx.startActivity(in);
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         Toast.makeText(ctx, "Bid is over!", Toast.LENGTH_SHORT).show();
                                     }
-                                } else {
+                                }
+                                else
+                                {
                                     Toast.makeText(ctx, "This record not booked before offer start time", Toast.LENGTH_SHORT).show();
                                 }
 
-//                            else {
-//                                Toast.makeText(ctx, "This request is fulfill", Toast.LENGTH_SHORT).show();
-//
-//                            }
-
-                        } catch (ParseException e) {
+                        }
+                        catch (ParseException e)
+                        {
                             e.printStackTrace();
                         }
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         e.printStackTrace();
                     }
                 }
@@ -560,7 +595,7 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-    private void startTimer(final OriginalViewHolder holder, final long mill, final SellBidModel sellBidModel) {
+    private void startTimer(final OriginalViewHolder holder, final long mill, final SellBidModel sellBidModel, final int position) {
 
         long end = System.currentTimeMillis() + mill;
 
@@ -591,17 +626,24 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
 //                holder.txtTime.setText(timeLeftFormatted);
 
 
-                if ((hours == 0 && minutes == 0)) {
+                if ((hours == 0 && minutes == 0))
+                {
+                    try
+                    {
                     holder.txtTime.setText("Bid Over");
 
-                    updateValue(sellBidModel);
+                    T.e("bid over 1");
+                    listner.refreshLoadedData(array.getJSONObject(position).getString("id"));
+
+                    updateValue(sellBidModel,position);
+
 
 
                     SellBidModel test2 = new SellBidModel();
                     test2.setId(sellBidModel.getId());
                     test2.setIsTimerRunning("3");//0 means true 1 means false
 
-                    try {
+
                         DataBaseHelper.DBSellBidData.SellBidDataUpdateTest(DataBaseConstants.TableNames.TBL_SELL_BID_DATA, test2);
                     } catch (Exception e) {
                     }
@@ -636,7 +678,7 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-    private void updateValue(final SellBidModel sellBidModel) {
+    private void updateValue(final SellBidModel sellBidModel, final int position) {
         RequestQueue queue = Volley.newRequestQueue(ctx);
 
         String url = "http://www.sugarcatalog.com/anakantuser/sugar_trade/index.php/API/removeOffer";      //for server
@@ -660,6 +702,10 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
                             DataBaseHelper.DBSellBidData.SellBidDataUpdateValueIsDeleted(DataBaseConstants.TableNames.TBL_SELL_BID_DATA, sellBidModel1);
                         } catch (Exception e) {
                         }
+
+
+
+
 
 
                     }
@@ -709,7 +755,7 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return array.length();
+        return listSellBidModel.size();
     }
 
     private int lastPosition = -1;
@@ -725,6 +771,14 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
     public interface RefreshListner {
 
         void refresh(Context context);
+        void refreshLoadedData(String bidId);
+    }
+
+    public void setFilter(ArrayList<SellBidModel> countryModels)
+    {
+        listSellBidModel = new ArrayList<>();
+        listSellBidModel.addAll(countryModels);
+        notifyDataSetChanged();
     }
 
 }

@@ -45,7 +45,7 @@
                 android:layout_gravity="right"
                 android:layout_marginLeft="@dimen/_150sdp"
                 android:src="@drawable/yellow"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
 
         </LinearLayout>
@@ -150,7 +150,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible">
+
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -179,7 +180,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -234,7 +235,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/crc55"
-                android:text="Curent Required Qty : "
+                android:text="Current Required Qty : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -267,7 +268,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/crc55"
-                android:text="Available Qty : "
+                android:text="Available Quantity : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -284,6 +285,33 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/booked_qty_li"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/bookedQty_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/crc55"
+                android:text="Booked Quantity : "
+                android:textColor="@color/color_label"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/bookedQty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:fontFamily="@font/crc55"
+                android:text="dfdsf"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
 
 
 

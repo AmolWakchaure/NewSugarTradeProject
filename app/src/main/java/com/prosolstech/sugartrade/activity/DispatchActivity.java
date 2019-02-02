@@ -42,9 +42,9 @@ import java.util.Map;
 public class DispatchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Context context;
-    private EditText edtVehicleNo, edtDriverNo, edtLicenseNo, edtQuantity, edtArrivalDate,
+    private EditText edtVehicleNo, edtDriverNo, edtLicenseNo, edtQuantity,
             edtBillName, edtBillAddress, edtBillGST, edtShipName, edtShipAddress, edtShipGST;     // add on 28-28-18
-    private Button btnSubmit, btnSaveMore;
+    private Button btnSubmit, btnSaveMore,edtArrivalDate;
     private String strOfferID = "";
     private JSONArray array;
     private JSONObject object;
@@ -97,7 +97,7 @@ public class DispatchActivity extends AppCompatActivity implements View.OnClickL
 
         edtVehicleNo = (EditText) findViewById(R.id.DispatchActivityEdtVehicleNo);
         edtDriverNo = (EditText) findViewById(R.id.DispatchActivityEdtDriverNo);
-        edtArrivalDate = (EditText) findViewById(R.id.DispatchActivityEdtDateArrival);
+        edtArrivalDate = (Button) findViewById(R.id.DispatchActivityEdtDateArrival);
         edtQuantity = (EditText) findViewById(R.id.DispatchActivityEdtQuantity);              // add on 28-08-18
         edtBillName = (EditText) findViewById(R.id.DispatchActivityEdtBillName);              // add on 28-08-18
         edtBillAddress = (EditText) findViewById(R.id.DispatchActivityEdtBillAddress);              // add on 28-08-18

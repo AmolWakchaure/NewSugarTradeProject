@@ -5,10 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 
 import com.prosolstech.sugartrade.R;
+import com.prosolstech.sugartrade.activity.NotificationActivity;
 import com.prosolstech.sugartrade.util.DTU;
 import com.prosolstech.sugartrade.util.ItemAnimation;
 import com.prosolstech.sugartrade.util.VU;
@@ -22,6 +24,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context ctx;
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
+    private NotificationActivity notificationActivity;
     JSONArray array;
 
     public interface OnItemClickListener {
@@ -33,20 +36,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    public NotificationAdapter(Context context, JSONArray array, int animation_type) {
+    public NotificationAdapter(Context context, JSONArray array, int animation_type,NotificationActivity notificationActivity) {
         ctx = context;
         this.array = array;
         this.animation_type = animation_type;
+        this.notificationActivity = notificationActivity;
     }
+
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public TextView name, description;
+        private Button deleteNotification;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
             super(v);
             name = (TextView) v.findViewById(R.id.name);
             description = (TextView) v.findViewById(R.id.description);
+            deleteNotification = (Button) v.findViewById(R.id.deleteNotification);
         }
     }
 
@@ -67,6 +74,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 view.name.setText(array.getJSONObject(position).getString("title"));
 
                 view.description.setText(DTU.changeDateTimeFormat(array.getJSONObject(position).getString("body")));
+
+                final String notiId = array.getJSONObject(position).getString("id");
+                view.deleteNotification.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        notificationActivity.deleteNotification("single",notiId);
+                    }
+                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }

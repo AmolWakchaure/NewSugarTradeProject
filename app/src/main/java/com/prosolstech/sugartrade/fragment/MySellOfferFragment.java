@@ -29,6 +29,7 @@ import com.prosolstech.sugartrade.activity.PlaceBuyBidActivity;
 import com.prosolstech.sugartrade.activity.PlaceSellBidActivity;
 import com.prosolstech.sugartrade.adapter.BuyBidAdapter;
 import com.prosolstech.sugartrade.adapter.MySellOfferAdapter;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.util.ACU;
 import com.prosolstech.sugartrade.util.ItemAnimation;
 import com.prosolstech.sugartrade.util.VU;
@@ -67,31 +68,44 @@ public class MySellOfferFragment extends Fragment {
         fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller")) {
+                if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller"))
+                {
 
-                    if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller")) {
+                    if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller"))
+                    {
 
-                        if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false)){
+                        if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false))
+                        {
                             Toast.makeText(context, "Create Sell offer", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(context, PlaceSellBidActivity.class));
+                            Intent i = new Intent(context, PlaceSellBidActivity.class);
+                            i.putExtra("flag","insert");
+                            i.putExtra("post_status", "dfsdf");
+                            i.putExtra("data","");
+                            startActivity(i);
                             ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
-                        }else{
-                            startActivity(new Intent(context, PlaceSellBidActivity.class));
                         }
-
-
-                        } else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
-
-                        if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false)){
-                            Toast.makeText(context, "Create Buyer offer", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(context, PlaceBuyBidActivity.class));
-                            ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
-                        }else{
-                            startActivity(new Intent(context, PlaceBuyBidActivity.class));
+                        else
+                        {
+                            Intent i = new Intent(context, PlaceSellBidActivity.class);
+                            i.putExtra("flag","insert");
+                            i.putExtra("post_status", "dfsdf");
+                            i.putExtra("data","");
+                            startActivity(i);
                         }
+                    }
+                    else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer"))
+                    {
 
-
-
+                        if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false))
+                        {
+                                Toast.makeText(context, "Create Buyer offer", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(context, PlaceBuyBidActivity.class));
+                                ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
+                        }
+                        else
+                        {
+                                startActivity(new Intent(context, PlaceBuyBidActivity.class));
+                        }
                     }
                 }
             }
@@ -134,7 +148,8 @@ public class MySellOfferFragment extends Fragment {
         pDialog.show();
 
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/sellBidsById";      //for server
+        //String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/sellBidsById";      //for server
+        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/sellBidsById_v1_0";      //for server
 
         Log.e("URL_MySellOffer", " : " + url);
 
@@ -162,6 +177,7 @@ public class MySellOfferFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("id", ACU.MySP.getFromSP(context, ACU.MySP.ID, ""));
+                T.e("id : "+ACU.MySP.getFromSP(context, ACU.MySP.ID, ""));
                 return params;
             }
         };

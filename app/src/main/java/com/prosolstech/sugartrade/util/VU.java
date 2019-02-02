@@ -9,11 +9,13 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.prosolstech.sugartrade.R;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -40,6 +42,15 @@ public class VU {
         }
         return false;
     }
+    public static boolean isEmpty(Button editText) {
+        // TODO method to check edit text is fill or no
+        // return true when edit text is empty
+        if (editText.getText().toString().trim().equals("")) {
+            return true;
+        }
+        return false;
+    }
+
 
     public static boolean isEmailId(EditText editText) {
         // method to check edit text is fill or no
@@ -107,6 +118,50 @@ public class VU {
             e.printStackTrace();
             return "";
         }
+    }
+    public static String getddmmyyDatezz(String dt) {
+        String dd = "", mm = "", yy = "";
+        int i = 0;
+        try {
+            for (String retval : dt.split("-")) {
+                if (i == 0)
+                    yy = retval;
+                else if (i == 1)
+                    mm = retval;
+                else
+                    dd = retval;
+                i++;
+            }
+            return (yy + "-" + mm + "-" + dd).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+    public static String formatDate(String dateInput)
+    {
+
+        String dateData = null;
+
+
+            String [] data = dateInput.split("-");
+
+            if(data[0].length() == 4)
+            {
+                dateData = getddmmyyDatezz(dateInput);
+            }
+            else
+            {
+                dateData = getddmmyyDate(dateInput);
+            }
+
+
+
+
+        // String sddf =  String.format("%1$tY %1$tb %1$td", date);
+        //String sddf =  String.format("%1$td %1$tb %1$tY", date);
+
+        return dateData;
     }
 
     public static String getCurrentDateTimeStamp(String format) {

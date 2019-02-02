@@ -78,11 +78,18 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
         animation_type = ItemAnimation.FADE_IN;
 
 
-        bidAdapter = new MyBidListRequestedAdapter(this, stringList, animation_type);
+        try
+        {
+            bidAdapter = new MyBidListRequestedAdapter(this, stringList, animation_type,new JSONArray(""));
 
-        recyclerView.setAdapter(bidAdapter);
-        bidAdapter.notifyDataSetChanged();
+            recyclerView.setAdapter(bidAdapter);
+            bidAdapter.notifyDataSetChanged();
 
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         if (VU.isConnectingToInternet(this)) {
             buyBidData(this);
         } else {
@@ -126,7 +133,8 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
 
 
         RequestQueue queue = Volley.newRequestQueue(context);
-        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getOfferDetailsById";      //for server
+        //url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getOfferDetailsById";      //for server
+        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getOfferDetailsByIdv1_0";      //for server
         Log.e("BUYER_BothURL", " ....." + url);
 
 
@@ -156,7 +164,9 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
                 params.put("role", ACU.MySP.getFromSP(context, ACU.MySP.ROLE, ""));
                 params.put("offer_id", myBid.getId() + "");
                 params.put("id", ACU.MySP.getFromSP(context, ACU.MySP.ID, ""));
+
                 Log.e("BUYER_PARMAS", " ..... " + params.toString());
+                //{offer_id=146, role=Buyer}
 
                 return params;
             }
@@ -187,10 +197,11 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
 
                     String loginStatus = ACU.MySP.getFromSP(MyBidRequestedListActivity.this, ACU.MySP.ROLE,"");
 
+                    myBid.setId(array.getJSONObject(i).getString("id"));//amol
                     if(loginStatus.equals("Seller"))
                     {
-                        myBid.setAvailQty(array.getJSONObject(i).getString("required_qty"));
-                        myBid.setReqty(array.getJSONObject(i).getString("allotted"));
+                        myBid.setAvailQty(array.getJSONObject(i).getString("current_required_qty"));//amol
+                        myBid.setReqty(array.getJSONObject(i).getString("alloted_quantity"));
 
 
                         if(array.getJSONObject(i).has("type"))
@@ -208,14 +219,7 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
 
 
 
-                        if(array.getJSONObject(i).isNull("allotted"))
-                        {
-                            allotedQty = "0";
-                        }
-                        else
-                        {
-                            allotedQty = array.getJSONObject(i).getString("allotted");
-                        }
+
 
                         if(array.getJSONObject(i).isNull("required_qty"))
                         {
@@ -236,8 +240,8 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
                             myBid.setType("NA");
                         }
 
-                        int availQty = Integer.valueOf(reqQty) - Integer.valueOf(allotedQty);
-                        myBid.setAvailQty(""+availQty);
+                        //int availQty = Integer.valueOf(reqQty) - Integer.valueOf(allotedQty);
+                        myBid.setAvailQty(array.getJSONObject(i).getString("curr_req_qty"));
                         myBid.setReqty(reqQty);
                     }
                     else
@@ -249,7 +253,9 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
                     //myBid.setType(array.getJSONObject(i).getString("type"));
 
                     myBid.setGrade(array.getJSONObject(i).getString("catName"));
-                    myBid.setPriceQty(array.getJSONObject(i).getString("price_per_qtl"));
+                    String price_per_qtl = array.getJSONObject(i).getString("price_per_qtl");
+                    T.e("price_per_qtl : "+price_per_qtl);
+                    myBid.setPriceQty(price_per_qtl);
 
                     myBid.setRequestedTime(array.getJSONObject(i).getString("requestedAT"));
                     myBid.setSeason(array.getJSONObject(i).getString("production_year"));
@@ -264,7 +270,7 @@ public class MyBidRequestedListActivity extends AppCompatActivity {
                 }
 
                 recyclerView.setVisibility(View.VISIBLE);
-                bidAdapter = new MyBidListRequestedAdapter(this, stringList, animation_type);
+                bidAdapter = new MyBidListRequestedAdapter(this, stringList, animation_type,array);
 
                 recyclerView.setAdapter(bidAdapter);
                 bidAdapter.notifyDataSetChanged();

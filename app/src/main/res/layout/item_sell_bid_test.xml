@@ -83,22 +83,24 @@
                 android:id="@+id/typeTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:text="Type: "
+                 android:visibility="gone"
+                android:text="Type : "
                 android:textSize="@dimen/_12sdp"
+                android:fontFamily="@font/crc55"
                 android:textColor="@color/color_label"
-                android:visibility="gone" />
+                 />
 
 
             <TextView
                 android:id="@+id/MyOfferAdapterTxtType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_30sdp"
+                android:visibility="gone"
                 android:text="Type"
+                android:fontFamily="@font/crc55"
                 android:textColor="@color/color_black"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                 />
 
 
         </LinearLayout>
@@ -111,6 +113,7 @@
 
 
         <LinearLayout
+            android:id="@+id/startTime_li"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -120,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/crc55"
-                android:text="Start Time: "
+                android:text="Start Time : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -140,6 +143,7 @@
 
 
         <LinearLayout
+            android:id="@+id/endTime_li"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -149,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/crc55"
-                android:text="End Time: "
+                android:text="End Time : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -180,7 +184,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/crc55"
                 android:visibility="gone"
-                android:text="Original Required Qty: "
+                android:text="Original Required Qty : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -210,7 +214,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/crc55"
-                android:text="Original Sell Qty: "
+                android:text="Original Sell Qty : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -257,6 +261,7 @@
 
 
         <LinearLayout
+            android:id="@+id/aquired_qty_li"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -267,7 +272,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/crc55"
-                android:text="Acquired Qty: "
+                android:text="Acquired Qty : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -298,7 +303,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/crc55"
-                android:text="Claimed Qty: "
+                android:text="Claimed Qty : "
                 android:textColor="@color/color_label"
                 android:textSize="@dimen/_12sdp" />
 
@@ -392,10 +397,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/crc55"
-                    android:text="Price/Qtl : "
+                    android:text="Price /Qtl : "
                     android:textColor="@color/color_label"
-                    android:textSize="@dimen/_12sdp"
-                     />
+                    android:textSize="@dimen/_12sdp"/>
 
                 <TextView
                     android:id="@+id/MyOfferActivityTxtRate"

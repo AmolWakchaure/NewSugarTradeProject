@@ -33,7 +33,12 @@ import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.R;
 import com.prosolstech.sugartrade.activity.SellerListActivity;
 import com.prosolstech.sugartrade.activity.WebViewActivity;
+import com.prosolstech.sugartrade.classes.Constants;
+import com.prosolstech.sugartrade.classes.T;
+import com.prosolstech.sugartrade.model.BuyerInfoDetails;
+import com.prosolstech.sugartrade.model.SellerInfoDetails;
 import com.prosolstech.sugartrade.util.ACU;
+import com.prosolstech.sugartrade.util.Constant;
 import com.prosolstech.sugartrade.util.ItemAnimation;
 import com.prosolstech.sugartrade.util.VU;
 
@@ -41,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,10 +56,13 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context ctx;
     private SellerListAdapter.OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
-    JSONArray array;
+   // JSONArray array;
     Dialog dialog;
     RecyclerView recyclerView;
     ImageView imgClose;
+    SellerListActivity sellerListActivity;
+
+    private ArrayList<SellerInfoDetails> sellerDetails = new ArrayList<>();
 
     public interface OnItemClickListener {
         void onItemClick(View view, Integer obj, int position);
@@ -64,10 +73,13 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public SellerListAdapter(Context context, JSONArray array, int animation_type) {
+    public SellerListAdapter(Context context, int animation_type,ArrayList<SellerInfoDetails> sellerDetails,
+                             SellerListActivity sellerListActivity) {
         ctx = context;
-        this.array = array;
+       // this.array = array;
         this.animation_type = animation_type;
+        this.sellerListActivity = sellerListActivity;
+        this.sellerDetails.addAll(sellerDetails);
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
@@ -102,45 +114,53 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Log.e("SellerListAdapter", "onBindViewHolder : " + position);
         if (holder instanceof SellerListAdapter.OriginalViewHolder) {
             final SellerListAdapter.OriginalViewHolder view = (SellerListAdapter.OriginalViewHolder) holder;
-            Log.e("SellerListAdapter", ": " + array.toString());
+            //Log.e("SellerListAdapter", ": " + array.toString());
+
+            final SellerInfoDetails buyerInfoDetails = sellerDetails.get(position);
+
             try {
-                if (!array.getJSONObject(position).getString("web_link").equalsIgnoreCase("")) {
-                    SpannableString content = new SpannableString(array.getJSONObject(position).getString("name"));
-                    content.setSpan(new UnderlineSpan(), 0, array.getJSONObject(position).getString("name").length(), 0);
+                if (!buyerInfoDetails.getSellerWEbLing().equalsIgnoreCase(Constants.NA)) {
+                    SpannableString content = new SpannableString(buyerInfoDetails.getSellerName());
+                    content.setSpan(new UnderlineSpan(), 0, buyerInfoDetails.getSellerName().length(), 0);
                     view.txtName.setTextColor(ctx.getResources().getColor(R.color.light_blue_A700));
                     view.txtName.setText(content);
 
                     view.txtName.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            try {
-                                if (array.getJSONObject(position).getString("web_link").contains("http")) {
-                                    links(array.getJSONObject(position).getString("web_link"));
+
+                                if (buyerInfoDetails.getSellerWEbLing().contains("http")) {
+                                    links(buyerInfoDetails.getSellerWEbLing());
                                 } else {
-                                    links("http://" + array.getJSONObject(position).getString("web_link"));
+                                    links("http://" + buyerInfoDetails.getSellerWEbLing());
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+
                         }
                     });
                 } else {
-                    view.txtName.setText(array.getJSONObject(position).getString("name"));
+                    view.txtName.setText(buyerInfoDetails.getSellerName());
                 }
 //                view.txtName.setText(array.getJSONObject(position).getString("name"));
 
-                view.ratingBar.setRating(Float.parseFloat(array.getJSONObject(position).getString("average_rating")));
+                view.ratingBar.setRating(Float.parseFloat(buyerInfoDetails.getSellerRating()));
 
-                if (array.getJSONObject(position).getString("FavStatus").equalsIgnoreCase("null") ||
-                        array.getJSONObject(position).getString("FavStatus").equalsIgnoreCase("N")) {
-                    view.imgUnFav.setVisibility(View.VISIBLE);
-                    view.imgFav.setVisibility(View.GONE);
-                } else {
-                    view.imgUnFav.setVisibility(View.GONE);
-                    view.imgFav.setVisibility(View.VISIBLE);
+
+                //fav and unfav
+                if (buyerInfoDetails.getSellerFavStatus().equalsIgnoreCase("N"))
+                {
+                    view.imgUnFav.setImageResource(R.drawable.unfavorite);
+                    //view.imgUnFav.setVisibility(View.VISIBLE);
+                    //view.imgFav.setVisibility(View.GONE);
                 }
-                if (array.getJSONObject(position).getString("blkStatus").equalsIgnoreCase("null") ||
-                        array.getJSONObject(position).getString("blkStatus").equalsIgnoreCase("N")) {
+                else
+                {
+                    view.imgUnFav.setImageResource(R.drawable.favorite);
+                    //view.imgUnFav.setVisibility(View.GONE);
+                   // view.imgFav.setVisibility(View.VISIBLE);
+                }
+
+
+                if (buyerInfoDetails.getSellerblockStatus().equalsIgnoreCase("N")) {
                     view.imgUnlock.setVisibility(View.VISIBLE);
                     view.imglock.setVisibility(View.GONE);
                 } else {
@@ -148,42 +168,93 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     view.imglock.setVisibility(View.VISIBLE);
                 }
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            view.imgFav.setOnClickListener(new View.OnClickListener() {
+            view.imgUnFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        likeDataForUnfavo(array.getJSONObject(position).getString("id"));
+
+                    T.e("getSellerFavStatus() : "+buyerInfoDetails.getSellerFavStatus());
+
+                    if (buyerInfoDetails.getSellerFavStatus().equalsIgnoreCase("N"))
+                    {
+
+                        T.e("getSellerrId() : "+buyerInfoDetails.getSellerrId());
+                        likeData(buyerInfoDetails.getSellerrId(),"like");
+                        view.imgUnFav.setImageResource(R.drawable.favorite);
+                        sellerListActivity.refreshList(sellerDetails,position,"Y");
+                        //sellerListActivity.refreshList(position);
+                        //view.imgUnFav.setVisibility(View.GONE);
+                        //.imgFav.setVisibility(View.VISIBLE);
+
+                    }
+                    else
+                    {
+                        T.e("getSellerrId() : "+buyerInfoDetails.getSellerrId());
+                        likeData(buyerInfoDetails.getSellerrId(),"unlike");
+                        view.imgUnFav.setImageResource(R.drawable.unfavorite);
+                        sellerListActivity.refreshList(sellerDetails,position,"N");
+                        //view.imgUnFav.setVisibility(View.VISIBLE);
+                        //view.imgFav.setVisibility(View.GONE);
+                    }
+
+
+
+                }
+            });
+
+            /*view.imgFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                        likeDataForUnfavo(buyerInfoDetails.getSellerrId());
                         view.imgUnFav.setVisibility(View.VISIBLE);
                         view.imgFav.setVisibility(View.GONE);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             });
             view.imgUnFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        likeData(array.getJSONObject(position).getString("id"));
+
+                        likeData(buyerInfoDetails.getSellerrId());
                         view.imgUnFav.setVisibility(View.GONE);
                         view.imgFav.setVisibility(View.VISIBLE);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
                 }
-            });
+            });*/
             view.imglock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        blockDataForunBlock(array.getJSONObject(position).getString("id"));
-                        view.imgUnlock.setVisibility(View.VISIBLE);
-                        view.imglock.setVisibility(View.GONE);
-                    } catch (JSONException e) {
+                    try
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                        builder.setCancelable(false);
+                        builder.setMessage("Do you want to Unblock this person?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+                                    blockDataForunBlock(buyerInfoDetails.getSellerrId());
+                                    view.imgUnlock.setVisibility(View.VISIBLE);
+                                    view.imglock.setVisibility(View.GONE);
+
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    }
+                    catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -197,14 +268,12 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                blockData(array.getJSONObject(position).getString("id"));
+
+                                blockData(buyerInfoDetails.getSellerrId());
                                 view.imgUnlock.setVisibility(View.GONE);
                                 view.imglock.setVisibility(View.VISIBLE);
                                 dialog.dismiss();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -215,13 +284,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     });
                     AlertDialog alert = builder.create();
                     alert.show();
-                    /*try {
-                        blockData(array.getJSONObject(position).getString("id"));
-                        view.imgUnlock.setVisibility(View.GONE);
-                        view.imglock.setVisibility(View.VISIBLE);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }*/
+
                 }
             });
 
@@ -229,11 +292,9 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View v) {
                     if (VU.isConnectingToInternet(ctx)) {
-                        try {
-                            allReview(array.getJSONObject(position).getString("id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+
+                            allReview(buyerInfoDetails.getSellerrId());
+
                     }
                 }
             });
@@ -367,7 +428,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return array.length();
+        return sellerDetails.size();
     }
 
     private int lastPosition = -1;
@@ -380,7 +441,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void likeData(final String strUserId) {
+    private void likeData(final String strUserId,final String likeUnlikeStatus) {
         String url = "";
         final ProgressDialog pDialog = new ProgressDialog(ctx);
         pDialog.setMessage("Please wait while data fetch from server...");
@@ -424,8 +485,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id", strUserId);
-                params.put("userby", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
-
+                params.put("likeUnlikeStatus", likeUnlikeStatus);
                 Log.e("SellerlikeData_PARAMS", " : " + params.toString());
 
                 return params;
@@ -582,5 +642,11 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    public void setFilter(ArrayList<SellerInfoDetails> countryModels)
+    {
+        sellerDetails = new ArrayList<>();
+        sellerDetails.addAll(countryModels);
+        notifyDataSetChanged();
     }
 }

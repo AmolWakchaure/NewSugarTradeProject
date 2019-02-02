@@ -79,7 +79,9 @@ public class MySellBookingFragment extends Fragment {
             }
             rbBuy.setChecked(true);
             rbSell.setChecked(false);
-        } else {
+        }
+        else
+            {
             rbBuy.setChecked(false);
             rbSell.setChecked(true);
 
@@ -132,9 +134,6 @@ public class MySellBookingFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                if (VU.isConnectingToInternet(context)) {
-//                    MySellBooking();
-//                }
 
 
                 if (typeOne.equalsIgnoreCase("buy")) {
@@ -203,7 +202,8 @@ public class MySellBookingFragment extends Fragment {
     }
 
     private void setListAdapter(String result,final String type) {
-        try {
+        try
+        {
             // JSONArray array;
             Log.e("My_Sel_Booking_ListAda", " RESULT " + result.trim());
 
@@ -217,7 +217,9 @@ public class MySellBookingFragment extends Fragment {
                 recyclerView.setVisibility(View.GONE);
                 Toast.makeText(context, "No Data Found", Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+        }
+        catch (JSONException e)
+        {
             e.printStackTrace();
         }
     }

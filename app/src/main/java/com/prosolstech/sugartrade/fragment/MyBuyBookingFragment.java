@@ -25,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.R;
 import com.prosolstech.sugartrade.adapter.MyAllBookingBuyAdapter;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.util.ACU;
 import com.prosolstech.sugartrade.util.ItemAnimation;
 import com.prosolstech.sugartrade.util.VU;
@@ -66,6 +67,7 @@ public class MyBuyBookingFragment extends Fragment {
         {
             if (VU.isConnectingToInternet(context))
             {
+                typeOne = "buy";
                 MyBuyBooking(BUYER);
             }
             rbBuy.setChecked(true);
@@ -78,6 +80,7 @@ public class MyBuyBookingFragment extends Fragment {
 
             if (VU.isConnectingToInternet(context))
             {
+                typeOne = "sell";
                 MyBuyBooking(SELLER);
             }
 
@@ -203,13 +206,15 @@ public class MyBuyBookingFragment extends Fragment {
 
 
                 recyclerView.setVisibility(View.VISIBLE);
-                allBookingBuyAdapter = new MyAllBookingBuyAdapter(getActivity(), array, animation_type);
+                allBookingBuyAdapter = new MyAllBookingBuyAdapter(getActivity(), array, animation_type,typeOne);
                 recyclerView.setAdapter(allBookingBuyAdapter);
             } else {
                 recyclerView.setVisibility(View.GONE);
                 Toast.makeText(context, "No Data Found", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
+
+            T.e("setListAdapter : "+e);
             e.printStackTrace();
         }
     }
