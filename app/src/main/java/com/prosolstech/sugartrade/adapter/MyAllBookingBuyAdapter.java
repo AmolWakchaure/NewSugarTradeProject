@@ -170,16 +170,18 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                         view.availableQty_tv.setText("Available Qty : ");
 
-                        String required_qty = array.getJSONObject(position).getString("required_qty");
+                       /* String required_qty = array.getJSONObject(position).getString("required_qty");
 
                         String curr_req_qty = array.getJSONObject(position).getString("curr_req_qty");
 
                         int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
 
-                        int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(total_acq_qty);
+                        int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(total_acq_qty);*/
+
+                        String allotted = array.getJSONObject(position).getString("allotted");
 
                         //available qty
-                        view.availableQty.setText(""+available_qty);
+                        view.availableQty.setText(""+allotted);
                     }
                     else
                     {
@@ -189,16 +191,18 @@ public class MyAllBookingBuyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         {
                             view.availableQty_tv.setText("Available Qty : ");
 
-                            String required_qty = array.getJSONObject(position).getString("required_qty");
+                            /*String required_qty = array.getJSONObject(position).getString("required_qty");
 
                             String curr_req_qty = array.getJSONObject(position).getString("curr_req_qty");
 
                             int total_acq_qty = Integer.valueOf(required_qty) - Integer.valueOf(curr_req_qty);
 
-                            int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(total_acq_qty);
+                            int available_qty = Integer.valueOf(required_qty) - Integer.valueOf(total_acq_qty);*/
+
+                            String allotted = array.getJSONObject(position).getString("allotted");
 
                             //available qty
-                            view.availableQty.setText(""+available_qty);
+                            view.availableQty.setText(""+allotted);
                         }
                         else
                         {

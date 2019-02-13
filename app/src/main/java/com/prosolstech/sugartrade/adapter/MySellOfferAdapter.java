@@ -133,8 +133,13 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller"))
                 {
+                    String available_qty = array.getJSONObject(position).getString("available_qty");
+                    String original_qty = array.getJSONObject(position).getString("original_qty");
+
+
+
                     view.aquired_qty_li.setVisibility(View.GONE);
-                    view.org_sell_tv.setText(array.getJSONObject(position).getString("available_qty"));
+                    view.org_sell_tv.setText(""+available_qty);
 
                     if (array.getJSONObject(position).getString("claimed").equalsIgnoreCase("null"))
                     {
@@ -142,7 +147,9 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                     else
                     {
-                        view.claimed_tv.setText(array.getJSONObject(position).getString("claimed"));
+                        int claimed = Integer.valueOf(available_qty) - Integer.valueOf(original_qty);
+
+                        view.claimed_tv.setText(""+claimed);
                     }
 
                     view.qty_val.setText("Current Available Qty : ");

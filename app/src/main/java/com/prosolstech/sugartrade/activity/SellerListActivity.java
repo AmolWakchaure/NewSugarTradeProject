@@ -238,8 +238,9 @@ public class SellerListActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
-//        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellers";
-        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getBuyers";
+        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellers";
+        //String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getBuyers";
+       // String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getBuyersNew";
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -291,7 +292,7 @@ public class SellerListActivity extends AppCompatActivity {
         String web_link = Constants.NA;
         String name = Constants.NA;
         String average_rating = Constants.NA;
-        String FavStatus = Constants.NA;
+        String FavStatus = Constants.N;
         String blkStatus = Constants.NA;
 
         try {
@@ -325,9 +326,17 @@ public class SellerListActivity extends AppCompatActivity {
                     {
                         FavStatus = buyerJsonObject.getString("is_favorite");
                     }
+                    else
+                    {
+                        FavStatus = Constants.N;
+                    }
                     if(buyerJsonObject.has("blkStatus") && !buyerJsonObject.isNull("blkStatus"))
                     {
                         blkStatus = buyerJsonObject.getString("blkStatus");
+                    }
+                    else
+                    {
+                        blkStatus = Constants.N;
                     }
 
                     SellerInfoDetails buyerInfoDetails = new SellerInfoDetails();

@@ -302,7 +302,6 @@ public class BuySellDashBoardActivity extends AppCompatActivity
         @Override
         public void onClkic() {
 
-
             finish();
         }
     };
@@ -488,10 +487,19 @@ public class BuySellDashBoardActivity extends AppCompatActivity
 
                 if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false)) {
                     Toast.makeText(context, "Create Buyer offer", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(context, PlaceBuyBidActivity.class));
+                   // startActivity(new Intent(context, PlaceBuyBidActivity.class));
+                    Intent in = new Intent(context, PlaceBuyBidActivity.class);
+                    in.putExtra("flag", "insert");
+                    in.putExtra("post_status", "single_postxd");
+                    in.putExtra("data", "");
+                    startActivity(in);
                     ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
                 } else {
-                    startActivity(new Intent(context, PlaceBuyBidActivity.class));
+                    Intent in = new Intent(context, PlaceBuyBidActivity.class);
+                    in.putExtra("flag", "insert");
+                    in.putExtra("post_status", "single_postxd");
+                    in.putExtra("data", "");
+                    startActivity(in);
                 }
 
             }

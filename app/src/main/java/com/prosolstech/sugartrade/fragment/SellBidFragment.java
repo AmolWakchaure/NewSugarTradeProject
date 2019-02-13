@@ -89,6 +89,7 @@ public class SellBidFragment extends Fragment {
     String gradeCategory;
     private boolean _hasLoadedOnce = false; // your boolean field
 
+    ArrayList<BuyBidModel> listBuyModelFav = new ArrayList<>();
     ArrayList<BuyBidModel> listBuyModel = new ArrayList<>();
     ArrayList<BuyBidModel> listBuyModelFilter = new ArrayList<>();
     private long counter = 1;
@@ -277,7 +278,8 @@ public class SellBidFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(context);
 
 
-        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellBidsByRole";      //for server
+        //url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellBidsByRole";      //for server
+        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellBidsByRole_v1_0";      //for server
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -344,6 +346,7 @@ public class SellBidFragment extends Fragment {
 
                 if (listBuyModel.size() > 0) {
                     listBuyModel.clear();
+                    listBuyModelFav.clear();
                 }
 
                 for (int i = 0; i < array.length(); i++)
@@ -407,41 +410,62 @@ public class SellBidFragment extends Fragment {
                         production_year = jsonObject.getString("production_year");
                     }
 
-                    BuyBidModel buyBidModel = new BuyBidModel();
-
-                    buyBidModel.setId(id);
-                    buyBidModel.setBid_start_time(bid_start_time);
-                    buyBidModel.setCategory(CategoryName);
-                    buyBidModel.setCompany_name(company_name);
-                    buyBidModel.setAvailable_qty(required_qty);
-                    buyBidModel.setPrice_per_qtl(price_per_qtl);
-                    buyBidModel.setIs_favorite(is_favorite);
-                    buyBidModel.setDate(created_date);
-                    buyBidModel.setValidity_time(validity_time);
-                    buyBidModel.setEndTime("0");
-                    buyBidModel.setIsTimerTuuning("1");
-                    buyBidModel.setBidEndTime(bid_end_time);
-                    buyBidModel.setCurrent_req_quantity(curr_req_qty);
-                    buyBidModel.setAcquired_quantity(acquired_qty);
-                    buyBidModel.setIs_delelted("0");
-                    buyBidModel.setType(type);
-                    buyBidModel.setProduction_year(production_year);
-
-                    listBuyModel.add(buyBidModel);
-                    boolean is = DataBaseHelper.DBBuyBidData.BuyBidDatainsert(buyBidModel);
-
-                    /*String status = T.returnSeconds(bid_end_time);
-
-                    if(status.equals("start"))
+                    if(is_favorite.equalsIgnoreCase("Y"))
                     {
+                        BuyBidModel buyBidModel = new BuyBidModel();
 
-                    }*/
+                        buyBidModel.setId(id);
+                        buyBidModel.setBid_start_time(bid_start_time);
+                        buyBidModel.setCategory(CategoryName);
+                        buyBidModel.setCompany_name(company_name);
+                        buyBidModel.setAvailable_qty(required_qty);
+                        buyBidModel.setPrice_per_qtl(price_per_qtl);
+                        buyBidModel.setIs_favorite(is_favorite);
+                        buyBidModel.setDate(created_date);
+                        buyBidModel.setValidity_time(validity_time);
+                        buyBidModel.setEndTime("0");
+                        buyBidModel.setIsTimerTuuning("1");
+                        buyBidModel.setBidEndTime(bid_end_time);
+                        buyBidModel.setCurrent_req_quantity(curr_req_qty);
+                        buyBidModel.setAcquired_quantity(acquired_qty);
+                        buyBidModel.setIs_delelted("0");
+                        buyBidModel.setType(type);
+                        buyBidModel.setProduction_year(production_year);
+
+                        listBuyModel.add(buyBidModel);
+                        boolean is = DataBaseHelper.DBBuyBidData.BuyBidDatainsert(buyBidModel);
+                    }
+                    else
+                    {
+                        BuyBidModel buyBidModel = new BuyBidModel();
+
+                        buyBidModel.setId(id);
+                        buyBidModel.setBid_start_time(bid_start_time);
+                        buyBidModel.setCategory(CategoryName);
+                        buyBidModel.setCompany_name(company_name);
+                        buyBidModel.setAvailable_qty(required_qty);
+                        buyBidModel.setPrice_per_qtl(price_per_qtl);
+                        buyBidModel.setIs_favorite(is_favorite);
+                        buyBidModel.setDate(created_date);
+                        buyBidModel.setValidity_time(validity_time);
+                        buyBidModel.setEndTime("0");
+                        buyBidModel.setIsTimerTuuning("1");
+                        buyBidModel.setBidEndTime(bid_end_time);
+                        buyBidModel.setCurrent_req_quantity(curr_req_qty);
+                        buyBidModel.setAcquired_quantity(acquired_qty);
+                        buyBidModel.setIs_delelted("0");
+                        buyBidModel.setType(type);
+                        buyBidModel.setProduction_year(production_year);
+
+                        listBuyModelFav.add(buyBidModel);
+                        boolean is = DataBaseHelper.DBBuyBidData.BuyBidDatainsert(buyBidModel);
+                    }
 
 
-
-
-
-
+                }
+                for (int i = 0; i < listBuyModelFav.size(); i++)
+                {
+                    listBuyModel.add(listBuyModelFav.get(i));
                 }
                 if(listBuyModel.isEmpty())
                 {
@@ -457,6 +481,7 @@ public class SellBidFragment extends Fragment {
                 else
                 {
 
+                    Collections.sort(listBuyModel, BuyBidModel.recordInDesc);
                     hideLayout.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
                     buyBidAdapter = new BuyBidAdapterTestTimer(context, array, animation_type, listBuyModel, refreshListner);    // if user login as a "Seller" than show Buyer offer list.

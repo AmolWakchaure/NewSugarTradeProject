@@ -149,7 +149,7 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
                 view.idTv.setVisibility(View.VISIBLE);
                 view.posted_at.setText(DTU.changeDateTimeFormat(sellBidModel.getDate()));
 
-                if (sellBidModel.getIs_favorite().equalsIgnoreCase("y")) {
+                if (sellBidModel.getIs_favorite().equalsIgnoreCase("Y")) {
                     view.SellerListAdapterImgUnFav.setVisibility(View.VISIBLE);
                 } else if (sellBidModel.getIs_favorite().equalsIgnoreCase("N")) {
                     view.SellerListAdapterImgUnFav.setVisibility(View.GONE);
@@ -192,16 +192,7 @@ public class SellBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.V
 
                 if (!sellBidModel.getClaimed().equalsIgnoreCase("null")) {
 
-
-//                    if (sellBidModel.getIsIntrested().equalsIgnoreCase("Accept")) {
                     view.txtClaimed.setText("(" + sellBidModel.getClaimed() + ")");
-//                        view.txtAvalQty.setText(sellBidModel.getAvailable_qty()-);
-//                    } else if (sellBidModel.getIsIntrested().equalsIgnoreCase("pending")) {
-//                        view.txtClaimed.setText("(0)");
-//                    }
-
-
-                    // emd field to claimed 08-10-18
                 } else {
                     view.txtClaimed.setText("(0)");
                 }

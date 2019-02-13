@@ -485,6 +485,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id", strUserId);
+                params.put("user_by", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
                 params.put("likeUnlikeStatus", likeUnlikeStatus);
                 Log.e("SellerlikeData_PARAMS", " : " + params.toString());
 

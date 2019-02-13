@@ -236,7 +236,7 @@ public class BuyBidAdapterTestTimer extends RecyclerView.Adapter<RecyclerView.Vi
 
                                 view.txtTime.setText("Bid Over");
 
-                                refreshListner.refresh(ctx);
+                                //refreshListner.refresh(ctx);
                                 T.e("bid over 1");
                             }
 

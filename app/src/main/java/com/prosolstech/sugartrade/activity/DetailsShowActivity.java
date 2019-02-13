@@ -43,6 +43,7 @@ public class DetailsShowActivity extends AppCompatActivity {
             edtBillName, edtBillAddress, edtBillGST, edtShipName, edtShipAddress, edtShipGST;
 
     private Button updateDetails_btn,edtArrivalDate;
+    String viewFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,7 +257,13 @@ public class DetailsShowActivity extends AppCompatActivity {
         if (extras != null) {
             try {
                 jsonObject = new JSONObject(extras.getString("data"));
+                viewFlag = extras.getString("viewFlag");
                 Log.e("Sell_jsonObject", " " + jsonObject);
+
+                if(viewFlag.equalsIgnoreCase("true"))
+                {
+                    updateDetails_btn.setVisibility(View.GONE);
+                }
                 setData(jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -132,14 +132,20 @@ public class MyBidListRequestedAdapter extends RecyclerView.Adapter<RecyclerView
             if (myBid.getIsinteredstre().equalsIgnoreCase("Accept"))
             {
                 view.MyRequestAdapterBtnAccept.setText("Accepted");
+                view.MyRequestAdapterBtnAccept.setTextColor(ctx.getResources().getColor(R.color.color_white));
+                view.MyRequestAdapterBtnAccept.setBackgroundColor(ctx.getResources().getColor(R.color.green_600));
             }
             else if (myBid.getIsinteredstre().equalsIgnoreCase("Reject"))
             {
                 view.MyRequestAdapterBtnAccept.setText("Rejected");
+                view.MyRequestAdapterBtnAccept.setTextColor(ctx.getResources().getColor(R.color.color_white));
+                view.MyRequestAdapterBtnAccept.setBackgroundColor(ctx.getResources().getColor(R.color.red_600));
             }
             else
             {
-                view.MyRequestAdapterBtnAccept.setText("Pending");
+                view.MyRequestAdapterBtnAccept.setText("Awaiting");
+                view.MyRequestAdapterBtnAccept.setTextColor(ctx.getResources().getColor(R.color.color_white));
+                view.MyRequestAdapterBtnAccept.setBackgroundColor(ctx.getResources().getColor(R.color.blue_600));
             }
 
             String loginStatus = ACU.MySP.getFromSP(MyApplication.context, ACU.MySP.ROLE,"");
@@ -148,7 +154,7 @@ public class MyBidListRequestedAdapter extends RecyclerView.Adapter<RecyclerView
             {
                 view.hideLayout.setVisibility(View.GONE);
                 view.required_quantity_tvlbl.setText("Current Required Quantity : ");
-                view.offered_quantity_tvlbl.setText("Offered Quantity : ");
+                view.offered_quantity_tvlbl.setText("Bid Quantity form seller : ");
                 view.required_quantity_tv.setText(myBid.getAvailQty());
                 view.offered_quantity_tv.setText(myBid.getReqty());
             }
@@ -156,7 +162,7 @@ public class MyBidListRequestedAdapter extends RecyclerView.Adapter<RecyclerView
             {
                 view.hideLayout.setVisibility(View.GONE);
                 view.required_quantity_tvlbl.setText("Available Quantity : ");
-                view.offered_quantity_tvlbl.setText("Required Quantity : ");
+                view.offered_quantity_tvlbl.setText("Bid Quantity from Buyer : ");
                 view.required_quantity_tv.setText(myBid.getAvailQty());
                 view.offered_quantity_tv.setText(myBid.getReqty());
             }
@@ -236,6 +242,7 @@ public class MyBidListRequestedAdapter extends RecyclerView.Adapter<RecyclerView
                             in.putExtra("typeStatus", type);
                             in.putExtra("flag_another", "dkjfgk");
                             in.putExtra("type", type);
+                            in.putExtra("navigate_status", "from_my_bids");
                             ctx.startActivity(in);
                         }
                         catch (Exception e)

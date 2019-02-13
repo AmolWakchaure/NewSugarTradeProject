@@ -26,6 +26,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
     JSONArray array;
+    String viewFlag;
 
     public interface OnItemClickListener {
         void onItemClick(View view, Integer obj, int position);
@@ -36,10 +37,11 @@ public class VehicleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public VehicleListAdapter(Context context, JSONArray array, int animation_type) {
+    public VehicleListAdapter(Context context, JSONArray array, int animation_type,String viewFlag) {
         ctx = context;
         this.array = array;
         this.animation_type = animation_type;
+        this.viewFlag = viewFlag;
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
@@ -94,6 +96,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     try {
                         Intent in = new Intent(ctx, DetailsShowActivity.class);
                         in.putExtra("data", String.valueOf(array.getJSONObject(position)));
+                        in.putExtra("viewFlag", viewFlag);
                         ctx.startActivity(in);
                     } catch (Exception e) {
                         e.printStackTrace();

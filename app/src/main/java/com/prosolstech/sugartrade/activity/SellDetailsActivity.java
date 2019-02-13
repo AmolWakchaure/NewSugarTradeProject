@@ -140,13 +140,16 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.SellDetailsActivityButtonContinue:
 
-
+                try {
                 if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equalsIgnoreCase("Buyer")) {
 
-                    try {
-                        if (jsonObject.getString("original_qty").equalsIgnoreCase("0") || jsonObject.getString("original_qty").contains("-")) {
+
+                        if (jsonObject.getString("original_qty").equalsIgnoreCase("0") || jsonObject.getString("original_qty").contains("-"))
+                        {
                             Toast.makeText(context, "This Request is Fulfill", Toast.LENGTH_SHORT).show();
-                        } else {
+                        }
+                        else
+                        {
 
 
                             if (VU.isConnectingToInternet(context)) {
@@ -163,29 +166,42 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
                                 }
                             }
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+
+
+
+                }
+                else
+                {
+
+                    if (jsonObject.getString("curr_req_qty").equalsIgnoreCase("0") || jsonObject.getString("curr_req_qty").contains("-"))
+                    {
+                        Toast.makeText(context, "This Request is Fulfill", Toast.LENGTH_SHORT).show();
                     }
-
-
-                } else {
-
-                    if (VU.isConnectingToInternet(context)) {
-                        if (!strUserBy.equalsIgnoreCase(ACU.MySP.getFromSP(context, ACU.MySP.ID, ""))) {
-                            Intent in = new Intent(context, BidBookingActivity.class);                  // add on 28-07-18
-                            in.putExtra("flag", strFlag);
-                            in.putExtra("data", jsonObject.toString());
-                            startActivity(in);
-                            finish();
-                            //bookOffer();
-                            Log.e("INSIDE_IF", " : ");
-                        } else {
-                            Toast.makeText(context, "This is your offer so you can not revert this", Toast.LENGTH_SHORT).show();
+                    else
+                    {
+                        if (VU.isConnectingToInternet(context))
+                        {
+                            if (!strUserBy.equalsIgnoreCase(ACU.MySP.getFromSP(context, ACU.MySP.ID, ""))) {
+                                Intent in = new Intent(context, BidBookingActivity.class);                  // add on 28-07-18
+                                in.putExtra("flag", strFlag);
+                                in.putExtra("data", jsonObject.toString());
+                                startActivity(in);
+                                finish();
+                                //bookOffer();
+                                Log.e("INSIDE_IF", " : ");
+                            } else {
+                                Toast.makeText(context, "This is your offer so you can not revert this", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
+
+
                 }
                 break;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
@@ -349,8 +365,16 @@ public class SellDetailsActivity extends AppCompatActivity implements View.OnCli
                 original_quantity_text.setText("Original Sell Qty (In Quintal)");
                 SellDetailsActivityOriginalRequiredQuantity.setText(jsonObject.getString("available_qty"));
 
-                aquired_qtyTxt.setText("Total Claimed Quantity");
-                SellDetailsActivityTotalAquiredQuantity.setText(jsonObject.getString("claimed"));
+                if (!jsonObject.getString("claimed").equalsIgnoreCase("null")) {
+
+                    aquired_qtyTxt.setText("Total Claimed Quantity");
+                    SellDetailsActivityTotalAquiredQuantity.setText(jsonObject.getString("claimed"));
+                } else {
+                    aquired_qtyTxt.setText("Total Claimed Quantity");
+                    SellDetailsActivityTotalAquiredQuantity.setText("0");
+                }
+
+
 
                 txtQty.setText("Current Available Quantity  (in Quintal)");
                 SellDetailsActivityRequiredQuantity.setText(jsonObject.getString("original_qty"));

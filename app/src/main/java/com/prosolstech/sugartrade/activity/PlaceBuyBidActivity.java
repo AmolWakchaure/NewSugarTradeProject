@@ -704,48 +704,48 @@ public class PlaceBuyBidActivity extends AppCompatActivity implements View.OnCli
 
         original_required_tv.setText("Original Required Quantity");
         original_required_et.setBackgroundResource(R.drawable.new_style_container);
-        original_required_et.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        original_required_et.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         original_required_et.setEnabled(false);
 
 
         totalAquiredQtyEt.setBackgroundResource(R.drawable.new_style_container);
-        totalAquiredQtyEt.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        totalAquiredQtyEt.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         totalAquiredQtyEt.setEnabled(false);
 
 
         currentRequiredQtyEt.setBackgroundResource(R.drawable.new_style_container);
-        currentRequiredQtyEt.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        currentRequiredQtyEt.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         currentRequiredQtyEt.setEnabled(false);
 
 
         edtPriQty.setBackgroundResource(R.drawable.new_style_container);
-        edtPriQty.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        edtPriQty.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         edtPriQty.setEnabled(false);
 
 
         edtDeliveryDate.setBackgroundResource(R.drawable.new_style_container);
-        edtDeliveryDate.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        edtDeliveryDate.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         edtDeliveryDate.setEnabled(false);
 
 
         edtStartTime.setBackgroundResource(R.drawable.new_style_container);
-        edtStartTime.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        edtStartTime.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         edtStartTime.setEnabled(false);
 
 
         edtValidityTime.setBackgroundResource(R.drawable.new_style_container);
-        edtValidityTime.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        edtValidityTime.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         edtValidityTime.setEnabled(false);
 
         edtRemark.setBackgroundResource(R.drawable.new_style_container);
-        edtRemark.getBackground().setColorFilter(getResources().getColor(R.color.grey_500),
+        edtRemark.getBackground().setColorFilter(getResources().getColor(R.color.grey_10),
                 PorterDuff.Mode.SRC_ATOP);
         edtRemark.setEnabled(false);
 

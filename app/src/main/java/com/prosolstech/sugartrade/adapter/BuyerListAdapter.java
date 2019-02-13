@@ -33,6 +33,7 @@ import com.prosolstech.sugartrade.R;
 import com.prosolstech.sugartrade.activity.BuyerListActivity;
 import com.prosolstech.sugartrade.activity.WebViewActivity;
 import com.prosolstech.sugartrade.classes.Constants;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.model.BuyerInfoDetails;
 import com.prosolstech.sugartrade.util.ACU;
 import com.prosolstech.sugartrade.util.Constant;
@@ -177,6 +178,7 @@ public class BuyerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v)
                     {
+                       // T.t(""+buyerInfoDetails.getBuyerFavStatus());
                         if (buyerInfoDetails.getBuyerFavStatus().equalsIgnoreCase("N"))
                         {
                             likeData(buyerInfoDetails.getBuyerId(),"like");
@@ -340,8 +342,8 @@ public class BuyerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id", strUserId);
+                params.put("user_by", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
                 params.put("likeUnlikeStatus", likeUnlikeStatus);
-
                 Log.e("BUYERlikeData_PARAMS", " : " + params.toString());
 
                 return params;

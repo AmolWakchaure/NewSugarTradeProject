@@ -24,6 +24,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.R;
+import com.prosolstech.sugartrade.activity.BookingDetailsActivity;
+import com.prosolstech.sugartrade.activity.MyRequestedActivity;
 import com.prosolstech.sugartrade.activity.VehicleDetailsActivity;
 import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.util.ACU;
@@ -140,10 +142,11 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller"))
                 {
                     //Current Available Qty
-                    view.currentReqQty_tv.setText("Current Available Qty : ");
+                    //view.currentReqQty_tv.setText("Current Available Qty : ");
+                    view.currentReqQty_tv.setText("Available Quantity while bid placed : ");
                     view.MyRequestAdapterCurrentReqQuantity.setText(array.getJSONObject(position).getString("curr_req_qty"));
                     //Required Qty
-                    view.txt.setText("Required Qty : ");
+                    view.txt.setText("Bid Quantity from buyer : ");
                     view.txtQty.setText(array.getJSONObject(position).getString("offer_required_qty"));
                     view.allot_tv.setVisibility(View.VISIBLE);
                     view.allot_tv.setText("Alloted Qty: ");
@@ -172,7 +175,7 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     view.MyRequestAdapterCurrentReqQuantity.setVisibility(View.GONE);
 
                     //Available Qty
-                    view.txt.setText("Available Qty : ");
+                    view.txt.setText("Bid Quantity from seller : ");
                     view.txtQty.setText(array.getJSONObject(position).getString("ordered_qty"));
                     view.allot_tv.setVisibility(View.GONE);
                     view.edtAllocate.setVisibility(View.GONE);
@@ -198,15 +201,18 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     view.llSingleBtn.setVisibility(View.VISIBLE);
                     view.view_id.setVisibility(View.VISIBLE);
                     view.btnAccRej.setText("Accepted");
-                    view.btnAccRej.setTextColor(ctx.getResources().getColor(R.color.green_500));
+                    view.btnAccRej.setTextColor(ctx.getResources().getColor(R.color.color_white));
+                    view.llSingleBtn.setBackgroundColor(ctx.getResources().getColor(R.color.green_600));
+
                 }
-                else if (array.getJSONObject(position).getString("is_interested").equalsIgnoreCase("Reject"))
+                else if (array.getJSONObject(position).getString("is_interested").equalsIgnoreCase("Reject") || array.getJSONObject(position).getString("is_interested").equalsIgnoreCase("Rejected"))
                 {
                     view.llBothBtn.setVisibility(View.GONE);
                     view.llSingleBtn.setVisibility(View.VISIBLE);
                     view.btnAccRej.setText("Rejected");
                     view.view_id.setVisibility(View.VISIBLE);
-                    view.btnAccRej.setTextColor(ctx.getResources().getColor(android.R.color.darker_gray));
+                    view.btnAccRej.setTextColor(ctx.getResources().getColor(android.R.color.white));
+                    view.llSingleBtn.setBackgroundColor(ctx.getResources().getColor(R.color.red_600));
                 }
 
                 view.btnAccept.setOnClickListener(new View.OnClickListener() {
@@ -229,6 +235,7 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             if (VU.isConnectingToInternet(ctx)) {
 
                                 String ordered_qty = null,current_required_qty = null;
+                                String toastMessage = null;
                                 if (checkValueFor(view.edtAllocate))
                                 {
                                     //add validation for ordered quantity not greater than available qty
@@ -236,11 +243,13 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                     {
                                         ordered_qty = array.getJSONObject(position).getString("offer_required_qty");
                                         current_required_qty = array.getJSONObject(position).getString("curr_req_qty");
+                                        toastMessage = "Bid Quanity can not be greater than current available Quantity";
                                     }
                                     else
                                     {
                                         ordered_qty = array.getJSONObject(position).getString("ordered_qty");
                                         current_required_qty = array.getJSONObject(position).getString("current_required_qty");
+                                        toastMessage = "Bid Quantity can not greater than current Required Quantity";
                                     }
 
 
@@ -250,7 +259,8 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                                     if (Integer.valueOf(ordered_qty) > Integer.valueOf(current_required_qty))
                                     {
-                                        Toast.makeText(ctx, "Available quantity can not be greater then Current Available Qty", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ctx, ""+toastMessage, Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(ctx, "Available quantity can not be greater then Current Available Qty", Toast.LENGTH_SHORT).show();
                                     }
                                     else
                                     {
@@ -276,20 +286,73 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         try {
-                            if (!userType.equalsIgnoreCase("Seller")) {
+
+                            String ordered_qty = null;
+                            if (ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equals("Seller"))
+                            {
+                                ordered_qty = array.getJSONObject(position).getString("offer_required_qty");
+
+                            }
+                            else
+                            {
+                                ordered_qty = array.getJSONObject(position).getString("ordered_qty");
+
+                            }
+
+                            if (!userType.equalsIgnoreCase("Seller"))
+                            {
                                 strRecId = array.getJSONObject(position).getString("buy_offer_id");
-                            } else {
+                            }
+                            else
+                            {
                                 strRecId = array.getJSONObject(position).getString("sell_offer_id");
                             }
                             String btnRej = view.btnReject.getText().toString();
                             Log.e("btnRej", " : " + btnRej);
                             Log.e("strRecId", " : " + strRecId);
                             if (VU.isConnectingToInternet(ctx)) {
-                                requestSend1(view, btnRej, strRecId, strAllocate);
+                                requestSend1(view, btnRej, strRecId, ordered_qty);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
+                    }
+                });
+
+                view.btnAccRej.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                       try
+                       {
+                           if (array.getJSONObject(position).getString("is_interested").equalsIgnoreCase("Accept"))
+                           {
+                               String ordered_qty = null;
+
+                               if (VU.isConnectingToInternet(ctx))
+                               {
+
+
+
+
+                                   if(ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, "").equalsIgnoreCase("Seller"))
+                                   {
+                                       getSingleBookingData("Buyer","sell",""+array.getJSONObject(position).getString("sell_offer_id"));
+                                   }
+                                   else
+                                   {
+                                       getSingleBookingData("Seller","buy",""+array.getJSONObject(position).getString("buy_offer_id"));
+                                   }
+
+                               }
+                           }
+                       }
+                       catch (Exception e)
+                       {
+                           T.e("Exception : "+e);
+                       }
 
                     }
                 });
@@ -313,6 +376,65 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             setAnimation(view.itemView, position);
         }
+    }
+
+    private void getSingleBookingData(final String role,final String type,final String sell_offer_id) {
+
+        final ProgressDialog pDialog = new ProgressDialog(ctx);
+        pDialog.setMessage("Please wait while data fetch from server...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getMySellBookingSingle";      //for server
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the response string.
+                        Log.e("MyRequested", " RESPONSE " + response);
+                        pDialog.dismiss();
+                        try
+                        {
+                            JSONArray jsonArray = new JSONArray(response);
+
+                            Intent in = new Intent(ctx, BookingDetailsActivity.class);
+                            in.putExtra("flag", ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, ""));
+                            //in.putExtra("data", String.valueOf(array.getJSONObject(position)));
+                            in.putExtra("data", ""+jsonArray.getJSONObject(0));
+                            in.putExtra("typeStatus", type);
+                            in.putExtra("flag_another", "dkjfgk");
+                            in.putExtra("type", type);
+                            in.putExtra("navigate_status", "from_my_bids");
+                            ctx.startActivity(in);
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("No_Response", "FOUND");
+                pDialog.dismiss();
+                Toast.makeText(ctx, "No Data Found", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("role", role);
+                params.put("type", type);
+                params.put("offer_book_id", sell_offer_id);
+
+                Log.e("PARAMS", " MYREQ " + params.toString());
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
 
@@ -456,6 +578,18 @@ public class MyRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     private void requestSend1(final OriginalViewHolder viewHolder, final String buttonText, final String strid, final String allotted) {
+
+
+       /* Map<String, String> params = new HashMap<>();
+        params.put("id", strid);
+        params.put("role", userType);
+        params.put("allotted", allotted);
+        params.put("userby", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
+        params.put("is_interested", buttonText);
+
+        Log.e("PARAMS", " requestSend " + params.toString());*/
+
+
 
         final ProgressDialog pDialog = new ProgressDialog(ctx);
         pDialog.setMessage("Please wait while data upload on server...");

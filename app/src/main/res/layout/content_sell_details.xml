@@ -180,7 +180,7 @@
                         android:id="@+id/aquired_qtyTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="total acquired quantity"
+                        android:text="acquired quantity"
                         android:textAllCaps="true"
                         android:layout_marginTop="3pt"
                         android:textColor="@color/grey_40"

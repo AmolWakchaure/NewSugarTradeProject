@@ -64,7 +64,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
             edtReview, edtAccountName, edtAccountNo, edtBankName, edtGSTIN, edtIFSC, post_date_time_et, confir_date_time_et,
             remark_et, due_date_of_payment_et, due_date_of_lifting_et, emd_et;
     TextView due_tv, emd_tv, due_pay_tv;
-    String strFlag = "", strOfferID = "", strMobileNo = "", strUserID = "", strUserBy = "";
+    String strFlag = "", strOfferID = "", strMobileNo = "", strUserID = "", strUserBy = "",navigate_status = "";
     JSONObject jsonObject;
     TextView txtCompName, txtRole, txtTotalAmount, required_qty;
     RatingBar ratingBar;
@@ -81,7 +81,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
     private String typeStatus;
 
-
+    String viewFlag = "false";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +95,9 @@ public class BookingDetailsActivity extends AppCompatActivity {
         getIntentData();
         FetchVehicleDetail();
         setToolBar();
+
+
+
     }
 
     private void initializeUI() {
@@ -174,6 +177,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent in = new Intent(context, VehiclesListAcitivity.class);
                 in.putExtra("offer_id", strOfferID);
+                in.putExtra("viewFlag", viewFlag);
                 startActivity(in);
                 finish();
             }
@@ -181,8 +185,11 @@ public class BookingDetailsActivity extends AppCompatActivity {
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 Intent in = new Intent(context, VehicleDetailsActivity.class);
                 in.putExtra("offer_id", strOfferID);
+                in.putExtra("viewFlag", viewFlag);
                 startActivity(in);
             }
         });
@@ -247,11 +254,22 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, BuySellDashBoardActivity.class);
-        intent.putExtra("BookingDetails", "val");
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+
+        if(navigate_status != null)
+        {
+            if(navigate_status.equals("from_my_bids"))
+            {
+                finish();
+            }
+        }
+        else
+        {
+            Intent intent = new Intent(this, BuySellDashBoardActivity.class);
+            intent.putExtra("BookingDetails", "val");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void FetchVehicleDetail() {
@@ -340,36 +358,42 @@ public class BookingDetailsActivity extends AppCompatActivity {
             array = new JSONArray(result);
             if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equalsIgnoreCase("Seller")) {
 
+                if (array != null && array.length() > 0)
+                {
+
+                    btnSend.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(android.R.color.darker_gray));
+                    btnSend.setEnabled(false);
+                    btnView.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(R.color.colorAccent));
+                    btnView.setEnabled(true);
+                    viewFlag = "true";
+
+                }
+                else
+                {
+                    btnSend.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(R.color.colorAccent));
+                    btnSend.setEnabled(true);
+                    btnView.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(android.R.color.darker_gray));
+                    btnView.setEnabled(false);
+                    viewFlag = "false";
+                }
+
+            }
+            else
+            {
                 if (array != null && array.length() > 0) {
                     btnSend.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(android.R.color.darker_gray));
                     btnSend.setEnabled(false);
                     btnView.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(R.color.colorAccent));
                     btnView.setEnabled(true);
+                    viewFlag = "true";
 
                 } else {
                     btnSend.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(R.color.colorAccent));
                     btnSend.setEnabled(true);
                     btnView.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(android.R.color.darker_gray));
                     btnView.setEnabled(false);
+                    viewFlag = "false";
                 }
-
-
-            } else {
-
-
-                if (array != null && array.length() > 0) {
-                    btnSend.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(android.R.color.darker_gray));
-                    btnSend.setEnabled(false);
-                    btnView.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(R.color.colorAccent));
-                    btnView.setEnabled(true);
-
-                } else {
-                    btnSend.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(R.color.colorAccent));
-                    btnSend.setEnabled(true);
-                    btnView.setBackgroundColor(BookingDetailsActivity.this.getResources().getColor(android.R.color.darker_gray));
-                    btnView.setEnabled(false);
-                }
-
 
             }
         } catch (JSONException e) {
@@ -422,6 +446,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
                 typeStatus = extras.getString("type");
                 typeStatusData = extras.getString("typeStatus");
                 jsonObject = new JSONObject(extras.getString("data"));
+                navigate_status = extras.getString("navigate_status");
                 T.e("strFlag : " + jsonObject);
                 T.e("typeStatus : " + typeStatus);
                 T.e("typeStatusData : " + typeStatusData);

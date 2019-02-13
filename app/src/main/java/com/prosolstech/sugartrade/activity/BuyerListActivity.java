@@ -254,7 +254,8 @@ public class BuyerListActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
-        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getBuyers";
+       // String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getBuyers";
+        String url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getBuyersNew";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -293,7 +294,7 @@ public class BuyerListActivity extends AppCompatActivity {
         String web_link = Constants.NA;
         String name = Constants.NA;
         String average_rating = Constants.NA;
-        String FavStatus = Constants.NA;
+        String FavStatus = Constants.N;
         String blkStatus = Constants.NA;
 
         try
@@ -329,9 +330,17 @@ public class BuyerListActivity extends AppCompatActivity {
                     {
                         FavStatus = buyerJsonObject.getString("is_favorite");
                     }
+                    else
+                    {
+                        FavStatus = Constants.N;
+                    }
                     if(buyerJsonObject.has("blkStatus") && !buyerJsonObject.isNull("blkStatus"))
                     {
                         blkStatus = buyerJsonObject.getString("blkStatus");
+                    }
+                    else
+                    {
+                        blkStatus = Constants.N;
                     }
 
                     BuyerInfoDetails buyerInfoDetails = new BuyerInfoDetails();

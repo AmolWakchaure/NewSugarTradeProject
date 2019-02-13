@@ -101,6 +101,7 @@ public class BuyBidFragment extends Fragment {
     private LinearLayout llState,hideLayout;
     private boolean _hasLoadedOnce = false; // your boolean field
     private ArrayList<SellBidModel> listSellModel = new ArrayList<>();
+    private ArrayList<SellBidModel> listSellModelFav = new ArrayList<>();
     private ArrayList<SellBidModel> listSellModelFilter = new ArrayList<>();
     private int counter = 1;
     private Timer timer;
@@ -280,7 +281,8 @@ public class BuyBidFragment extends Fragment {
         pDialog.show();
 
         RequestQueue queue = Volley.newRequestQueue(context);
-        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellBidsByRole";      //for server
+        //url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellBidsByRole";      //for server
+        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/getSellBidsByRole_v1_0";      //for server
         Log.e("BUYER_BothURL", " ....." + url);
 
 
@@ -333,7 +335,7 @@ public class BuyBidFragment extends Fragment {
         String type = Constants.NA;
         String production_year = Constants.NA;
         String available_qty = Constants.NA;
-        String claimed = Constants.NA;
+        String claimed = Constants.ZERO;
         String is_interested = Constants.NA;
         String original_qty = Constants.NA;
         String bid_end_time = Constants.NA;
@@ -357,6 +359,7 @@ public class BuyBidFragment extends Fragment {
                     if(!listSellModel.isEmpty())
                     {
                         listSellModel.clear();
+                        listSellModelFav.clear();
                     }
                     for (int i = 0; i < array.length(); i++)
                     {
@@ -407,9 +410,9 @@ public class BuyBidFragment extends Fragment {
                         {
                             original_qty = jsonObject.getString("original_qty");
                         }
-                        if(jsonObject.has("is_favorite") && !jsonObject.isNull("is_favorite"))
+                        if(jsonObject.has("is_favorite1") && !jsonObject.isNull("is_favorite1"))
                         {
-                            is_favorite = jsonObject.getString("is_favorite");
+                            is_favorite = jsonObject.getString("is_favorite1");
                         }
                         if(jsonObject.has("created_date") && !jsonObject.isNull("created_date"))
                         {
@@ -428,40 +431,65 @@ public class BuyBidFragment extends Fragment {
                             production_year = jsonObject.getString("production_year");
                         }
 
-                        SellBidModel sellBidModel = new SellBidModel();
-                        sellBidModel.setId(id);
-                        sellBidModel.setBid_start_time(bid_start_time);
-                        sellBidModel.setValidity_time(validity_time);
-                        sellBidModel.setEndtime("0");
-                        sellBidModel.setIsTimerRunning("1");
-                        sellBidModel.setCategory(CategoryName);
-                        sellBidModel.setCompany_name(company_name);
-                        sellBidModel.setAvailable_qty(available_qty);
-                        sellBidModel.setClaimed(claimed);
-                        sellBidModel.setPrice_per_qtl(price_per_qtl);
-                        sellBidModel.setType(type);
-                        sellBidModel.setIsIntrested(is_interested);
-                        sellBidModel.setOriginal_qty(original_qty);
-                        sellBidModel.setIs_favorite(is_favorite);
-                        sellBidModel.setDate(created_date);
-                        sellBidModel.setTime(time);
-                        sellBidModel.setEnd_bid_time(bid_end_time);
-                        sellBidModel.setIs_deleted("0");
-                        sellBidModel.setProduction_year(production_year);
-                        listSellModel.add(sellBidModel);
-
-                        boolean is = DataBaseHelper.DBSellBidData.SellBidDatainsert(sellBidModel);
-                        /*String status = T.returnSeconds(bid_end_time);
-
-                        if(status.equals("start"))
+                        if(is_favorite.equalsIgnoreCase("Y"))
                         {
+                            SellBidModel sellBidModel = new SellBidModel();
+                            sellBidModel.setId(id);
+                            sellBidModel.setBid_start_time(bid_start_time);
+                            sellBidModel.setValidity_time(validity_time);
+                            sellBidModel.setEndtime("0");
+                            sellBidModel.setIsTimerRunning("1");
+                            sellBidModel.setCategory(CategoryName);
+                            sellBidModel.setCompany_name(company_name);
+                            sellBidModel.setAvailable_qty(available_qty);
+                            sellBidModel.setClaimed(claimed);
+                            sellBidModel.setPrice_per_qtl(price_per_qtl);
+                            sellBidModel.setType(type);
+                            sellBidModel.setIsIntrested(is_interested);
+                            sellBidModel.setOriginal_qty(original_qty);
+                            sellBidModel.setIs_favorite(is_favorite);
+                            sellBidModel.setDate(created_date);
+                            sellBidModel.setTime(time);
+                            sellBidModel.setEnd_bid_time(bid_end_time);
+                            sellBidModel.setIs_deleted("0");
+                            sellBidModel.setProduction_year(production_year);
+                            listSellModel.add(sellBidModel);
 
-                        }*/
+                            boolean is = DataBaseHelper.DBSellBidData.SellBidDatainsert(sellBidModel);
+                        }
+                        else
+                        {
+                            SellBidModel sellBidModel = new SellBidModel();
+                            sellBidModel.setId(id);
+                            sellBidModel.setBid_start_time(bid_start_time);
+                            sellBidModel.setValidity_time(validity_time);
+                            sellBidModel.setEndtime("0");
+                            sellBidModel.setIsTimerRunning("1");
+                            sellBidModel.setCategory(CategoryName);
+                            sellBidModel.setCompany_name(company_name);
+                            sellBidModel.setAvailable_qty(available_qty);
+                            sellBidModel.setClaimed(claimed);
+                            sellBidModel.setPrice_per_qtl(price_per_qtl);
+                            sellBidModel.setType(type);
+                            sellBidModel.setIsIntrested(is_interested);
+                            sellBidModel.setOriginal_qty(original_qty);
+                            sellBidModel.setIs_favorite(is_favorite);
+                            sellBidModel.setDate(created_date);
+                            sellBidModel.setTime(time);
+                            sellBidModel.setEnd_bid_time(bid_end_time);
+                            sellBidModel.setIs_deleted("0");
+                            sellBidModel.setProduction_year(production_year);
+                            listSellModelFav.add(sellBidModel);
+
+                            boolean is = DataBaseHelper.DBSellBidData.SellBidDatainsert(sellBidModel);
+                        }
 
 
 
-
-
+                    }
+                    for (int i = 0; i < listSellModelFav.size(); i++)
+                    {
+                        listSellModel.add(listSellModelFav.get(i));
                     }
                     //refresh sell offers list
                     refreshList();
@@ -497,6 +525,7 @@ public class BuyBidFragment extends Fragment {
         }
         else
         {
+            Collections.sort(listSellModel, SellBidModel.recordInDesc);
             Log.e("COUNT_VALUE: ", DataBaseHelper.DBSellBidData.getCountOfSellData() + "");
             recyclerView.setVisibility(View.VISIBLE);
             sellBidAdapter = new SellBidAdapterTestTimer(getActivity(), array, animation_type, listSellModel, listner);         // if user login as a "Buyer" than show Seller offer ist

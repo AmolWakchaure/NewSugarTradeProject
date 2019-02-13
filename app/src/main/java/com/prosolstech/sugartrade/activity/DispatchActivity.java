@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.prosolstech.sugartrade.R;
+import com.prosolstech.sugartrade.classes.T;
 import com.prosolstech.sugartrade.database.DataBaseHelper;
 import com.prosolstech.sugartrade.model.VehicleClassModel;
 import com.prosolstech.sugartrade.util.ACU;
@@ -43,8 +44,8 @@ public class DispatchActivity extends AppCompatActivity implements View.OnClickL
 
     private Context context;
     private EditText edtVehicleNo, edtDriverNo, edtLicenseNo, edtQuantity,
-            edtBillName, edtBillAddress, edtBillGST, edtShipName, edtShipAddress, edtShipGST;     // add on 28-28-18
-    private Button btnSubmit, btnSaveMore,edtArrivalDate;
+            edtBillName, edtBillAddress, edtBillGST, edtShipName, edtShipAddress, edtShipGST,edtArrivalDate;     // add on 28-28-18
+    private Button btnSubmit, btnSaveMore,select_date;
     private String strOfferID = "";
     private JSONArray array;
     private JSONObject object;
@@ -97,7 +98,7 @@ public class DispatchActivity extends AppCompatActivity implements View.OnClickL
 
         edtVehicleNo = (EditText) findViewById(R.id.DispatchActivityEdtVehicleNo);
         edtDriverNo = (EditText) findViewById(R.id.DispatchActivityEdtDriverNo);
-        edtArrivalDate = (Button) findViewById(R.id.DispatchActivityEdtDateArrival);
+        edtArrivalDate = (EditText) findViewById(R.id.DispatchActivityEdtDateArrival);
         edtQuantity = (EditText) findViewById(R.id.DispatchActivityEdtQuantity);              // add on 28-08-18
         edtBillName = (EditText) findViewById(R.id.DispatchActivityEdtBillName);              // add on 28-08-18
         edtBillAddress = (EditText) findViewById(R.id.DispatchActivityEdtBillAddress);              // add on 28-08-18
@@ -108,12 +109,14 @@ public class DispatchActivity extends AppCompatActivity implements View.OnClickL
 
 
         btnSubmit = (Button) findViewById(R.id.DispatchActivityBtnSubmit);
+        select_date = (Button) findViewById(R.id.select_date);
         btnSaveMore = (Button) findViewById(R.id.BookingDetailsActivityBtnSaveMore);
 
 
         edtArrivalDate.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
         btnSaveMore.setOnClickListener(this);
+        select_date.setOnClickListener(this);
     }
 
     private void setToolBar() {
@@ -143,12 +146,60 @@ public class DispatchActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /*
+
+
+        edtShipName = (EditText) findViewById(R.id.DispatchActivityEdtShipName);              // add on 28-08-18
+        edtShipAddress = (EditText) findViewById(R.id.DispatchActivityEdtShipAddress);              // add on 28-08-18
+        edtShipGST = (EditText) findViewById(R.id.DispatchActivityEdtShipGST);              // add on 28-08-18
+
+     */
     public boolean Validate() {
-        if (VU.isEmpty(edtVehicleNo)) {
+        if (VU.isEmpty(edtVehicleNo))
+        {
             edtVehicleNo.setError("Please Enter Vehicle No");
             edtVehicleNo.requestFocus();
             return false;
-        } else if (!edtDriverNo.getText().toString().matches("[0-9]{10}")) {
+        }
+        else if (VU.isEmpty(edtBillName))
+        {
+            edtBillName.setError("Please Enter Bill Name");
+            edtBillName.requestFocus();
+            return false;
+        }
+        else if (VU.isEmpty(edtBillAddress))
+        {
+            edtBillAddress.setError("Please Enter Bill Address");
+            edtBillAddress.requestFocus();
+            return false;
+        }
+        else if (VU.isEmpty(edtBillGST))
+        {
+            edtBillGST.setError("Please Enter Bill GST");
+            edtBillGST.requestFocus();
+            return false;
+        }
+        //ship to
+        else if (VU.isEmpty(edtShipName))
+        {
+            edtShipName.setError("Please Enter Ship Name");
+            edtShipName.requestFocus();
+            return false;
+        }
+        else if (VU.isEmpty(edtShipAddress))
+        {
+            edtShipAddress.setError("Please Enter Ship Address");
+            edtShipAddress.requestFocus();
+            return false;
+        }
+        else if (VU.isEmpty(edtShipGST))
+        {
+            edtShipGST.setError("Please Enter Ship GST");
+            edtShipGST.requestFocus();
+            return false;
+        }
+        else if (!edtDriverNo.getText().toString().matches("[0-9]{10}"))
+        {
             Toast.makeText(context, "Please Enter 10 digits mobile number", Toast.LENGTH_SHORT).show();
             return false;
         } else if (VU.isEmpty(edtArrivalDate)) {
@@ -177,7 +228,9 @@ public class DispatchActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.DispatchActivityBtnSubmit:
                 if (VU.isConnectingToInternet(context)) {
-                    if (Validate()) {
+                    if (Validate())
+                    {
+                        //T.t("Success");
                         dispatchData();
                     }
                 }
@@ -191,11 +244,12 @@ public class DispatchActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
 
-            case R.id.DispatchActivityEdtDateArrival:
-                DTU.showDatePickerDialog(context, DTU.FLAG_ONLY_NEW, edtArrivalDate);
+            case R.id.select_date:
+                DTU.showDatePickerDialogdd(context, DTU.FLAG_ONLY_NEW, edtArrivalDate);
                 break;
         }
     }
+
 
     private void dispatchData() {
 

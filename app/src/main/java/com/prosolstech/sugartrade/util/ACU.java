@@ -10,7 +10,8 @@ public class ACU {
 
     public static class MySP {
 
-        public static String MAIN_URL = new String("http://www.sugarcatalog.com/anakantuser/");   // this url on sugartrade server add on 30-10-18
+        public static String MAIN_URL = new String("http://www.sugarcatalog.com/anakantuser/sugar_trade/");   // this url on sugartrade server add on 30-10-18
+        //public static String MAIN_URL = new String("http://192.168.0.100:8080/");   //
 //        public static String MAIN_URL = new String("http://prosolstechin.ipage.com/");       // this url on ipage server commnet on 30-10-18
 
         public static String FCM_TOKEN = "fcm_token";

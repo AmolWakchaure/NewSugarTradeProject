@@ -40,7 +40,7 @@ import java.util.Map;
 public class VehiclesListAcitivity extends AppCompatActivity {
 
     Context context;
-    String strValue = "", strOfferID = "";
+    String strValue = "", strOfferID = "",viewFlag = "";
     private RecyclerView recyclerView;
     private int animation_type = ItemAnimation.BOTTOM_UP;
     VehicleListAdapter vehicleListAdapter;
@@ -97,6 +97,7 @@ public class VehiclesListAcitivity extends AppCompatActivity {
         if (extras != null) {
             try {
                 strOfferID = extras.getString("offer_id");
+                viewFlag = extras.getString("viewFlag");
                 Log.e("strOfferID", " : " + strOfferID);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -205,7 +206,7 @@ public class VehiclesListAcitivity extends AppCompatActivity {
             Log.e("FetchVeDetail_ADAPTER", " RESULT " + result.trim());
             array = new JSONArray(result);
             if (array != null && array.length() > 0) {
-                vehicleListAdapter = new VehicleListAdapter(context, array, animation_type);
+                vehicleListAdapter = new VehicleListAdapter(context, array, animation_type,viewFlag);
                 recyclerView.setAdapter(vehicleListAdapter);
             } else {
 

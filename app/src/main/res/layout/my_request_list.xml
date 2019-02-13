@@ -224,6 +224,7 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:gravity="center"
             android:orientation="horizontal"
+            android:clickable="true"
             android:visibility="gone">
 
 
@@ -236,6 +237,7 @@
                 android:background="@android:color/transparent"
                 android:text="View Vehicle Info"
                 android:textColor="@color/color_black"
+                android:textAllCaps="false"
                 android:textStyle="bold" />
         </LinearLayout>
 

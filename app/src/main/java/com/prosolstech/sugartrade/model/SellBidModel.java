@@ -227,4 +227,21 @@ public class SellBidModel {
                 return -1;
         }
     };
+    //record decendind order
+    public static Comparator<SellBidModel> recordInDesc = new Comparator<SellBidModel>()
+    {
+
+        public int compare(SellBidModel s1,SellBidModel s2)
+        {
+            double price1 = Double.valueOf(s1.getId());
+            double price2 = Double.valueOf(s2.getId());
+
+            if (price1 == price2)
+                return 0;
+            else if (price1 < price2)
+                return 1;
+            else
+                return -1;
+        }
+    };
 }

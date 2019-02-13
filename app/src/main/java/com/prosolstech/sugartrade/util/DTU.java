@@ -204,6 +204,8 @@ public class DTU {
 
     public static void showDatePickerDialog(Context context, final int dateFlg,
                                             final Button dateEditText) {
+
+
         // Displays Date picker
         final Calendar c = Calendar.getInstance();
         currentYear = c.get(Calendar.YEAR);
@@ -303,7 +305,123 @@ public class DTU {
                                 date_selected = String.valueOf(dayOfMonth)
                                         + "-" + String.valueOf(monthOfYear + 1)
                                         + "-" + String.valueOf(selectedYear);
+
                             dateEditText.setText(date_selected);
+
+                        }
+                    }
+                }, currentYear, currentMonth, currentDay);
+        if (dateFlg == FLAG_OLD_ONLY) {
+            datepicker.getDatePicker().setMaxDate(new Date().getTime());
+        }
+        datepicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datepicker.show();
+    }
+    public static void showDatePickerDialogdd(Context context, final int dateFlg,
+                                            final EditText dateEditText) {
+
+
+        // Displays Date picker
+        final Calendar c = Calendar.getInstance();
+        currentYear = c.get(Calendar.YEAR);
+        currentMonth = c.get(Calendar.MONTH);
+        currentDay = c.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datepicker = new DatePickerDialog(context,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear,
+                                          int monthOfYear, int dayOfMonth) {
+                        int year = selectedYear;
+                        int month = monthOfYear;
+                        int day = dayOfMonth;
+                        if (dateFlg == FLAG_ONLY_NEW) {
+                            if ((year != currentYear)
+                                    || (month < currentMonth && year == currentYear)
+                                    || (day < currentDay && year == currentYear && month <= currentMonth)) {
+                                // showToastShort(appContext, "ECS",
+                                // "Please select proper date.");
+                                dateEditText
+                                        .setText(getCurrentDateTimeStamp(""));
+                                dateEditText.setError("Please Enter Date");
+                                dateEditText.requestFocus();
+
+
+                            } else {
+                                String date_selected;
+                                if ((monthOfYear >= 0 && monthOfYear < 9)
+                                        && (dayOfMonth > 0 && dayOfMonth < 10))
+                                    date_selected = "0"
+                                            + String.valueOf(dayOfMonth) + "-0"
+                                            + String.valueOf(monthOfYear + 1)
+                                            + "-"
+                                            + String.valueOf(selectedYear);
+
+                                else if (monthOfYear >= 0 && monthOfYear < 9)
+                                    date_selected = String.valueOf(dayOfMonth)
+                                            + "-0"
+                                            + String.valueOf(monthOfYear + 1)
+                                            + "-"
+                                            + String.valueOf(selectedYear);
+
+                                else if (dayOfMonth > 0 && dayOfMonth < 10)
+                                    date_selected = "0"
+                                            + String.valueOf(dayOfMonth) + "-"
+                                            + String.valueOf(monthOfYear + 1)
+                                            + "-"
+                                            + String.valueOf(selectedYear);
+
+                                else
+                                    date_selected = String.valueOf(dayOfMonth)
+                                            + "-"
+                                            + String.valueOf(monthOfYear + 1)
+                                            + "-"
+                                            + String.valueOf(selectedYear);
+
+                                dateEditText.setText(date_selected);
+                            }
+                        } else if (dateFlg == FLAG_OLD_AND_NEW) {
+                            String date_selected;
+                            if ((monthOfYear >= 0 && monthOfYear < 9)
+                                    && (dayOfMonth > 0 && dayOfMonth < 10))
+                                date_selected = "0"
+                                        + String.valueOf(dayOfMonth) + "-0"
+                                        + String.valueOf(monthOfYear + 1) + "-"
+                                        + String.valueOf(selectedYear);
+                            else if (monthOfYear >= 0 && monthOfYear < 9)
+                                date_selected = String.valueOf(dayOfMonth)
+                                        + "-0"
+                                        + String.valueOf(monthOfYear + 1) + "-"
+                                        + String.valueOf(selectedYear);
+                            else if (dayOfMonth > 0 && dayOfMonth < 10)
+                                date_selected = "0"
+                                        + String.valueOf(dayOfMonth) + "-"
+                                        + String.valueOf(monthOfYear + 1) + "-"
+                                        + String.valueOf(selectedYear);
+                            else
+                                date_selected = String.valueOf(dayOfMonth)
+                                        + "-" + String.valueOf(monthOfYear + 1)
+                                        + "-" + String.valueOf(selectedYear);
+                            dateEditText.setText(date_selected);
+                        } else if (dateFlg == FLAG_OLD_ONLY) {
+                            String date_selected;
+                            if ((monthOfYear >= 0 && monthOfYear < 9)
+                                    && (dayOfMonth > 0 && dayOfMonth < 10))
+                                date_selected = "0"
+                                        + String.valueOf(dayOfMonth) + "-0"
+                                        + String.valueOf(monthOfYear + 1) + "-"
+                                        + String.valueOf(selectedYear);
+                            else if (monthOfYear >= 0 && monthOfYear < 9)
+                                date_selected = String.valueOf(dayOfMonth) + "-0"
+                                        + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(selectedYear);
+                            else if (dayOfMonth > 0 && dayOfMonth < 10)
+                                date_selected = "0" + String.valueOf(dayOfMonth)
+                                        + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(selectedYear);
+                            else
+                                date_selected = String.valueOf(dayOfMonth)
+                                        + "-" + String.valueOf(monthOfYear + 1)
+                                        + "-" + String.valueOf(selectedYear);
+
+                           //dateEditText.setText(date_selected);
 
                         }
                     }

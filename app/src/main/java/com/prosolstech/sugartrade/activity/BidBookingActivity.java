@@ -215,11 +215,19 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
     }
 
     public boolean Validate() {
-        if (VU.isEmpty(edtReqQty)) {
+
+        if (VU.isEmpty(edtBookingRate)) {
+            edtBookingRate.setError("Please enter Price Per Qtl");
+            edtBookingRate.requestFocus();
+            return false;
+        }
+        if (VU.isEmpty(edtReqQty))
+        {
             edtReqQty.setError("Please enter quantity");
             edtReqQty.requestFocus();
             return false;
         }
+
         return true;
     }
 
@@ -257,9 +265,10 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
                 totalGst = 0;
                 if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {
                     edtBookingQty.setText(jobj.getString("original_qty"));
+                    txtRequiredQty.setText("Bid Quantity from Buyer");
                 } else {
                     //edtBookingQty.setText(jobj.getString("required_qty"));
-                    txtRequiredQty.setText("Available Quantity");                       // here text change if buyer login
+                    txtRequiredQty.setText("Bid Quantity from seller");                       // here text change if buyer login
                     txtAvailableQty.setText("Current Required Quantity");
                     edtBookingQty.setText(current_required_qty);// here text change if buyer login
                 }
@@ -271,7 +280,7 @@ public class BidBookingActivity extends AppCompatActivity implements View.OnClic
                 Log.e("strType", ": " + strType);
 
                 current_required_qty = jobj.getString("original_qty");
-
+                txtRequiredQty.setText("Bid Quantity from Buyer");
                 Log.e("setData_BUYER", " : " + jobj.toString());
                 if (!jobj.getString("type").equalsIgnoreCase("Tender"))
                 {

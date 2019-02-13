@@ -206,4 +206,22 @@ public class BuyBidModel {
         }
     };
 
+    //record decendind order
+    public static Comparator<BuyBidModel> recordInDesc = new Comparator<BuyBidModel>()
+    {
+
+        public int compare(BuyBidModel s1,BuyBidModel s2)
+        {
+            double price1 = Double.valueOf(s1.getId());
+            double price2 = Double.valueOf(s2.getId());
+
+            if (price1 == price2)
+                return 0;
+            else if (price1 < price2)
+                return 1;
+            else
+                return -1;
+        }
+    };
+
 }

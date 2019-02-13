@@ -939,18 +939,34 @@ public class PlaceSellBidActivity extends AppCompatActivity implements View.OnCl
                     }
                     else
                     {
+                        String available_qty = jsonObject.getString("available_qty");
+                        String original_qty = jsonObject.getString("original_qty");
+
+                        int claimed = Integer.valueOf(available_qty) - Integer.valueOf(original_qty);
+
                         //set total aquired qty
-                        total_aquired_qty.setText(jsonObject.getString("claimed"));
+                        total_aquired_qty.setText(""+claimed);
                     }
 
 
                 }
                 else
                 {
+                    if (jsonObject.getString("claimed").equalsIgnoreCase("null"))
+                    {
+                        //set total aquired qty
+                        total_aquired_qty.setText("0");
+                    }
+                    else
+                    {
+
+                        //set total aquired qty
+                        total_aquired_qty.setText(jsonObject.getString("claimed"));
+                    }
                     //total_aquired_qty.setVisibility(View.GONE);
                     //SellDetailsActivityTotalQtyValue.setVisibility(View.GONE);
                     //set total aquired qty
-                    total_aquired_qty.setText(jsonObject.getString("claimed"));
+
                 }
 
 

@@ -104,7 +104,7 @@
                         android:textColor="@color/grey_40"
                         android:textSize="@dimen/_12sdp" />
 
-                    <Button
+                    <!--<Button
                         android:id="@+id/DispatchActivityEdtDateArrival"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -113,7 +113,38 @@
                         android:paddingLeft="@dimen/_10sdp"
                         android:gravity="left|center_vertical"
                         android:paddingRight="@dimen/_10sdp"
-                        android:textColor="@color/color_black" />
+                        android:textColor="@color/color_black" />-->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:orientation="horizontal">
+                        <EditText
+                            android:id="@+id/DispatchActivityEdtDateArrival"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:clickable="false"
+                            android:background="@drawable/new_style_container"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/_10sdp"
+                            android:layout_weight="1"
+                            android:paddingRight="@dimen/_10sdp"
+                            android:singleLine="true"
+                            android:textColor="@color/color_black" />
+                        <Button
+                            android:id="@+id/select_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textAllCaps="false"
+                            android:layout_margin="2pt"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/color_white"
+                            android:background="@color/colorPrimary"
+                            android:text="Select"
+                            android:layout_weight="3"/>
+
+                    </LinearLayout>
 
 
                     <LinearLayout
@@ -293,6 +324,7 @@
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
 
+                        android:visibility="gone"
                         android:textSize="@dimen/_12sdp" />
 
 
