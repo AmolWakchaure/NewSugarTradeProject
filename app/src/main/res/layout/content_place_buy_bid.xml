@@ -657,6 +657,7 @@
                                 android:layout_weight="1"
                                 android:onClick="OnSendBid"
                                 android:text="Send To Favorite"
+                                android:visibility="gone"
                                 android:textAllCaps="true"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                 android:textColor="@color/grey_40"

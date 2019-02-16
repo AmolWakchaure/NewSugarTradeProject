@@ -116,13 +116,6 @@ public class BuySellDashBoardActivity extends AppCompatActivity
         db = new DataBaseHelper(context);
         fragmentManager = getSupportFragmentManager();
 
-//        if (!ACU.MySP.getSPBoolean(context, ACU.MySP.FLAG_ACCEPT, false)) {
-////            showCustomDialog();
-//            ConfirmationDialog confirmationDialog = new ConfirmationDialog(BuySellDashBoardActivity.this, dialogListner);
-//            confirmationDialog.show();
-//
-//
-//        }
         initializeUI();
 
         Intent intent = getIntent();
@@ -477,10 +470,18 @@ public class BuySellDashBoardActivity extends AppCompatActivity
             if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Seller")) {
                 if (!ACU.MySP.getSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, false)) {
                     Toast.makeText(context, "Create Sell offer", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(context, PlaceSellBidActivity.class));
+                    Intent i = new Intent(context, PlaceSellBidActivity.class);
+                    i.putExtra("flag","insert");
+                    i.putExtra("post_status", "dfsdf");
+                    i.putExtra("data","");
+                    startActivity(i);
                     ACU.MySP.setSPBoolean(context, ACU.MySP.IS_FIRST_TIME_LAUNCH, true);
                 } else {
-                    startActivity(new Intent(context, PlaceSellBidActivity.class));
+                    Intent i = new Intent(context, PlaceSellBidActivity.class);
+                    i.putExtra("flag","insert");
+                    i.putExtra("post_status", "dfsdf");
+                    i.putExtra("data","");
+                    startActivity(i);
                 }
 
             } else if (ACU.MySP.getFromSP(context, ACU.MySP.ROLE, "").equals("Buyer")) {

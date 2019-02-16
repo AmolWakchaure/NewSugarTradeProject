@@ -217,6 +217,7 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         in.putExtra("post_status", "dfsdf");
                         in.putExtra("data", String.valueOf(array.getJSONObject(position)));
                         ctx.startActivity(in);
+                        //((Activity)ctx).finish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -230,6 +231,7 @@ public class MySellOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         in.putExtra("check_flag", ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, ""));
                         in.putExtra("value", String.valueOf(array.getJSONObject(position)));
                         ctx.startActivity(in);
+                        ((Activity)ctx).finish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

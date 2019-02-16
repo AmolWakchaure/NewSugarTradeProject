@@ -173,28 +173,33 @@ public class MyRequestedActivity extends AppCompatActivity {
     }
 
 
-    MyRequestAdapter.RefreshListner listner = new MyRequestAdapter.RefreshListner() {
+    MyRequestAdapter.RefreshListner listner = new MyRequestAdapter.RefreshListner()
+    {
         @Override
-        public void refresh(Context context) {
-            if (VU.isConnectingToInternet(context)) {
+        public void refresh(Context context)
+        {
+            if (VU.isConnectingToInternet(context))
+            {
                 MyRequest();
             }
         }
     };
-
-
     @Override
-    public void onBackPressed() {
-        if (strRecordID != null) {
+    public void onBackPressed()
+    {
+        if (strRecordID != null)
+        {
             Intent intent = new Intent(this, BuySellDashBoardActivity.class);
             intent.putExtra("MyRequest", "val");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
-        } else {
+        }
+        else
+        {
             Intent intent = new Intent(this, BuySellDashBoardActivity.class);
             intent.putExtra("MyRequest", "val");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         }

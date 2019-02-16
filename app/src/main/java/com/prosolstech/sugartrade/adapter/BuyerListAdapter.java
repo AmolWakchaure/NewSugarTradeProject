@@ -162,16 +162,16 @@ public class BuyerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                    // view.imgUnFav.setVisibility(View.GONE);
                    // view.imgFav.setVisibility(View.VISIBLE);
                 }
-                if (buyerInfoDetails.getBuyerblockStatus().equalsIgnoreCase("N"))
-                {
-                    view.imgUnlock.setVisibility(View.VISIBLE);
-                    view.imglock.setVisibility(View.GONE);
+                if (buyerInfoDetails.getBuyerblockStatus().equalsIgnoreCase("N")) {
+
+                    view.imgUnlock.setImageResource(R.drawable.unlocked);
                 }
                 else
                 {
-                    view.imgUnlock.setVisibility(View.GONE);
-                    view.imglock.setVisibility(View.VISIBLE);
+
+                    view.imgUnlock.setImageResource(R.drawable.locked);
                 }
+
 
                 view.imgUnFav.setOnClickListener(new View.OnClickListener()
                 {
@@ -195,63 +195,75 @@ public class BuyerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                 });
 
-                view.imglock.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                        builder.setCancelable(false);
-                        builder.setMessage("Do you want to Unblock this person?");
-                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                blockDataForunBlock(buyerInfoDetails.getBuyerId());
-                                view.imgUnlock.setVisibility(View.VISIBLE);
-                                view.imglock.setVisibility(View.GONE);
-                                dialog.dismiss();
-
-
-                            }
-                        });
-                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    }
-                });
                 view.imgUnlock.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                        builder.setCancelable(false);
-                        builder.setMessage("Do you want to block this person?");
-                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-                                    blockData(buyerInfoDetails.getBuyerId());
-                                    view.imgUnlock.setVisibility(View.GONE);
-                                    view.imglock.setVisibility(View.VISIBLE);
+
+                        //check if user block or unblock
+                        if (buyerInfoDetails.getBuyerblockStatus().equalsIgnoreCase("N"))
+                        {
+                            // if seller unblock found block it
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                            builder.setCancelable(false);
+                            builder.setMessage("Do you want to block this person?");
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
                                     dialog.dismiss();
+                                    //blockData(buyerInfoDetails.getSellerrId());
+                                    blockData(buyerInfoDetails.getBuyerId(),"block");
+                                    view.imgUnlock.setImageResource(R.drawable.locked);
+                                    buyerListActivity.refreshListBlockUnblock(byerDetails,position,"Y");
 
-                            }
-                        });
-                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                                }
+                            });
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
+
+
+                        }
+                        else
+                        {
+                            // if seller block found unblock it
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                            builder.setCancelable(false);
+                            builder.setMessage("Do you want to unblock this person?");
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+                                    dialog.dismiss();
+                                    blockData(buyerInfoDetails.getBuyerId(),"unblock");
+                                    view.imgUnlock.setImageResource(R.drawable.unlocked);
+                                    buyerListActivity.refreshListBlockUnblock(byerDetails,position,"N");
+
+                                }
+                            });
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
 
                     }
                 });
+
 
                 view.btnViewRating.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -269,6 +281,59 @@ public class BuyerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             setAnimation(view.itemView, position);
         }
+    }
+    private void blockData(final String strUserId,final String blockUnblockStatus) {
+        String url = "";
+        final ProgressDialog pDialog = new ProgressDialog(ctx);
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+
+
+        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/blockUnblockUser";      //for server
+        Log.e("likeData", " ....." + url);
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the response string.
+                        Log.e("likeData", " RESPONSE " + response);
+                        pDialog.dismiss();
+                        try {
+                            JSONObject jobj = new JSONObject(response);
+                            if (jobj.getString("message").equalsIgnoreCase("success")) {
+                                Toast.makeText(ctx, "Your data save", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ctx, "Please Try Again", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("No Response", "FOUND");
+                pDialog.dismiss();
+                Toast.makeText(ctx, "No Data Found", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", strUserId);
+                params.put("user_by", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
+                params.put("blockUnblockStatus", blockUnblockStatus);
+                Log.e("SellerlikeData_PARAMS", " : " + params.toString());
+
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     @Override

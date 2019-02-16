@@ -211,7 +211,7 @@ public class MyBuyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         in.putExtra("check_flag", ACU.MySP.getFromSP(ctx, ACU.MySP.ROLE, ""));
                         in.putExtra("value", String.valueOf(array.getJSONObject(position)));
                         ctx.startActivity(in);
-                        ctx.finish();
+                        ((Activity)ctx).finish();
 
                     } catch (Exception e) {
                         e.printStackTrace();

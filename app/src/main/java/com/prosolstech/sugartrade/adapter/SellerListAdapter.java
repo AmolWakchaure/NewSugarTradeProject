@@ -84,7 +84,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public TextView txtName;
-        ImageView imgUnFav, imgUnlock, imgFav, imglock;
+        ImageView imgUnFav, imgUnlock, imgFav, imgBlock;
         Button btnViewRating;
         RatingBar ratingBar;
 
@@ -94,7 +94,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgUnFav = (ImageView) v.findViewById(R.id.SellerListAdapterImgUnFav);
             imgUnlock = (ImageView) v.findViewById(R.id.SellerListAdapterImgUnBlock);
             imgFav = (ImageView) v.findViewById(R.id.SellerListAdapterImgFav);
-            imglock = (ImageView) v.findViewById(R.id.SellerListAdapterImgBlock);
+            imgBlock = (ImageView) v.findViewById(R.id.SellerListAdapterImgBlock);
             ratingBar = (RatingBar) v.findViewById(R.id.SellerListAdapterReviewDialogRatingBar);
             btnViewRating = (Button) v.findViewById(R.id.SellerListAdapterBtnViewRating);
         }
@@ -149,23 +149,21 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (buyerInfoDetails.getSellerFavStatus().equalsIgnoreCase("N"))
                 {
                     view.imgUnFav.setImageResource(R.drawable.unfavorite);
-                    //view.imgUnFav.setVisibility(View.VISIBLE);
-                    //view.imgFav.setVisibility(View.GONE);
                 }
                 else
                 {
                     view.imgUnFav.setImageResource(R.drawable.favorite);
-                    //view.imgUnFav.setVisibility(View.GONE);
-                   // view.imgFav.setVisibility(View.VISIBLE);
                 }
 
 
                 if (buyerInfoDetails.getSellerblockStatus().equalsIgnoreCase("N")) {
-                    view.imgUnlock.setVisibility(View.VISIBLE);
-                    view.imglock.setVisibility(View.GONE);
-                } else {
-                    view.imgUnlock.setVisibility(View.GONE);
-                    view.imglock.setVisibility(View.VISIBLE);
+
+                    view.imgUnlock.setImageResource(R.drawable.unlocked);
+                }
+                else
+                {
+
+                    view.imgUnlock.setImageResource(R.drawable.locked);
                 }
 
             } catch (Exception e) {
@@ -200,47 +198,32 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         //view.imgFav.setVisibility(View.GONE);
                     }
 
-
-
                 }
             });
 
-            /*view.imgFav.setOnClickListener(new View.OnClickListener() {
+            view.imgUnlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                        likeDataForUnfavo(buyerInfoDetails.getSellerrId());
-                        view.imgUnFav.setVisibility(View.VISIBLE);
-                        view.imgFav.setVisibility(View.GONE);
 
-                }
-            });
-            view.imgUnFav.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                        likeData(buyerInfoDetails.getSellerrId());
-                        view.imgUnFav.setVisibility(View.GONE);
-                        view.imgFav.setVisibility(View.VISIBLE);
-
-                }
-            });*/
-            view.imglock.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try
+                    //check if user block or unblock
+                    if (buyerInfoDetails.getSellerblockStatus().equalsIgnoreCase("N"))
                     {
+                        // if seller unblock found block it
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                         builder.setCancelable(false);
-                        builder.setMessage("Do you want to Unblock this person?");
+                        builder.setMessage("Do you want to block this person?");
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                    dialog.dismiss();
-                                    blockDataForunBlock(buyerInfoDetails.getSellerrId());
-                                    view.imgUnlock.setVisibility(View.VISIBLE);
-                                    view.imglock.setVisibility(View.GONE);
+
+                                dialog.dismiss();
+                                //blockData(buyerInfoDetails.getSellerrId());
+                                blockData(buyerInfoDetails.getSellerrId(),"block");
+                                view.imgUnlock.setImageResource(R.drawable.locked);
+                                sellerListActivity.refreshListBlockUnblock(sellerDetails,position,"Y");
 
                             }
                         });
@@ -253,13 +236,40 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         AlertDialog alert = builder.create();
                         alert.show();
 
+
+
                     }
-                    catch (Exception e) {
-                        e.printStackTrace();
+                    else
+                    {
+                        // if seller block found unblock it
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                        builder.setCancelable(false);
+                        builder.setMessage("Do you want to unblock this person?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                dialog.dismiss();
+                                blockData(buyerInfoDetails.getSellerrId(),"unblock");
+                                view.imgUnlock.setImageResource(R.drawable.unlocked);
+                                sellerListActivity.refreshListBlockUnblock(sellerDetails,position,"N");
+
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     }
+
                 }
             });
-            view.imgUnlock.setOnClickListener(new View.OnClickListener() {
+            /*view.imgUnlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
@@ -271,7 +281,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                 blockData(buyerInfoDetails.getSellerrId());
                                 view.imgUnlock.setVisibility(View.GONE);
-                                view.imglock.setVisibility(View.VISIBLE);
+                                view.imgBlock.setVisibility(View.VISIBLE);
                                 dialog.dismiss();
 
                         }
@@ -286,7 +296,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     alert.show();
 
                 }
-            });
+            });*/
 
             view.btnViewRating.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -302,7 +312,6 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             setAnimation(view.itemView, position);
         }
     }
-
     private void blockDataForunBlock(final String strUserId) {
         String url = "";
         final ProgressDialog pDialog = new ProgressDialog(ctx);
@@ -487,6 +496,59 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 params.put("user_id", strUserId);
                 params.put("user_by", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
                 params.put("likeUnlikeStatus", likeUnlikeStatus);
+                Log.e("SellerlikeData_PARAMS", " : " + params.toString());
+
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+    private void blockData(final String strUserId,final String blockUnblockStatus) {
+        String url = "";
+        final ProgressDialog pDialog = new ProgressDialog(ctx);
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+
+
+        url = ACU.MySP.MAIN_URL + "sugar_trade/index.php/API/blockUnblockUser";      //for server
+        Log.e("likeData", " ....." + url);
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the response string.
+                        Log.e("likeData", " RESPONSE " + response);
+                        pDialog.dismiss();
+                        try {
+                            JSONObject jobj = new JSONObject(response);
+                            if (jobj.getString("message").equalsIgnoreCase("success")) {
+                                Toast.makeText(ctx, "Your data save", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ctx, "Please Try Again", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("No Response", "FOUND");
+                pDialog.dismiss();
+                Toast.makeText(ctx, "No Data Found", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", strUserId);
+                params.put("user_by", ACU.MySP.getFromSP(ctx, ACU.MySP.ID, ""));
+                params.put("blockUnblockStatus", blockUnblockStatus);
                 Log.e("SellerlikeData_PARAMS", " : " + params.toString());
 
                 return params;

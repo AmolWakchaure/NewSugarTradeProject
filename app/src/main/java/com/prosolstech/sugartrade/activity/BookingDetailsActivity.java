@@ -266,7 +266,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         {
             Intent intent = new Intent(this, BuySellDashBoardActivity.class);
             intent.putExtra("BookingDetails", "val");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }

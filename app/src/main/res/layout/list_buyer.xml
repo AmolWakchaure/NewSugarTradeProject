@@ -201,7 +201,7 @@
                     android:layout_marginLeft="@dimen/_8sdp"
                     android:layout_weight=".5"
                     android:src="@drawable/unlocked"
-                    android:visibility="gone" />
+                     />
 
                 <ImageView
                     android:id="@+id/BuyerListAdapterImgBlock"

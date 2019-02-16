@@ -10,9 +10,9 @@ public class ACU {
 
     public static class MySP {
 
-        public static String MAIN_URL = new String("http://www.sugarcatalog.com/anakantuser/sugar_trade/");   // this url on sugartrade server add on 30-10-18
+        public static String MAIN_URL = new String("http://www.sugarcatalog.com/anakantuser/");   // this url on sugartrade server add on 30-10-18
         //public static String MAIN_URL = new String("http://192.168.0.100:8080/");   //
-//        public static String MAIN_URL = new String("http://prosolstechin.ipage.com/");       // this url on ipage server commnet on 30-10-18
+        //public static String MAIN_URL = new String("http://prosolstechin.ipage.com/");       // this url on ipage server commnet on 30-10-18
 
         public static String FCM_TOKEN = "fcm_token";
         public static String ID = "id";
@@ -35,34 +35,29 @@ public class ACU {
         public static String GSTIN = "gstin";
         public static String STATE_NAME = "state_name";
         public static String DISTRICT_NAME = "district_name";
-
         public static String LOGIN_STATUS = "login_status";
         public static String FLAG_ACCEPT = "flag_accept";
         public static String IS_FIRST_TIME_LAUNCH = "is_first_time_launch";
-
-
-        public static String NOTIFY_ID= "notify_id";
+        public static String NOTIFY_ID = "notify_id";
         public static String NOTIFY_MY_BOOKINGS= "notify_id_my_booking";
 
-        public static void saveSP(Context mContext, String key, String data) {
+        public static void saveSP(Context mContext, String key, String data)
+        {
             final String PREFS_NAME = "SettingDetails";
-            final SharedPreferences SpyAppData = mContext.getSharedPreferences(
-                    PREFS_NAME, 0);
+            final SharedPreferences SpyAppData = mContext.getSharedPreferences(PREFS_NAME, 0);
             SharedPreferences.Editor editor = SpyAppData.edit();
             editor.putString(key, data);
             editor.commit();
         }
 
-        public static String getFromSP(Context mContext, String key, String dvalu) {
+        public static String getFromSP(Context mContext, String key, String dvalu)
+        {
             final String PREFS_NAME = "SettingDetails";
-            final SharedPreferences ToolsAppData = mContext.getSharedPreferences(
-                    PREFS_NAME, 0);
-
+            final SharedPreferences ToolsAppData = mContext.getSharedPreferences(PREFS_NAME, 0);
             final String preData = ToolsAppData.getString(key, dvalu).trim();
             return preData;
 
         }
-
 
         public static String getFromSPIs_firstTimeLaunch(Context mContext, String key, String dvalu) {
             final String PREFS_NAME = "SettingDetails";

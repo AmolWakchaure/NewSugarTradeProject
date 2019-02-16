@@ -283,6 +283,15 @@ public class SellerListActivity extends AppCompatActivity {
         sellerDetails.set(position,sellerInfoDetails);
         sellerListAdapter.notifyItemChanged(position);
     }
+    public void refreshListBlockUnblock(ArrayList<SellerInfoDetails> sellerDetails,int position,String status)
+    {
+
+        SellerInfoDetails sellerInfoDetails = sellerDetails.get(position);
+
+        sellerInfoDetails.setSellerblockStatus(status);
+        sellerDetails.set(position,sellerInfoDetails);
+        sellerListAdapter.notifyItemChanged(position);
+    }
 
 
     private void setListAdapter(String result) {
@@ -330,9 +339,9 @@ public class SellerListActivity extends AppCompatActivity {
                     {
                         FavStatus = Constants.N;
                     }
-                    if(buyerJsonObject.has("blkStatus") && !buyerJsonObject.isNull("blkStatus"))
+                    if(buyerJsonObject.has("is_blocked") && !buyerJsonObject.isNull("is_blocked"))
                     {
-                        blkStatus = buyerJsonObject.getString("blkStatus");
+                        blkStatus = buyerJsonObject.getString("is_blocked");
                     }
                     else
                     {
